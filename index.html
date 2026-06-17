@@ -1,0 +1,2724 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Dashboard Jurídico — IGSA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --c9:#4E121A;--c8:#6B1823;--c7:#7E1F2C;--c6:#9E3340;--c5:#BE5060;
+  --c4:#D47080;--c3:#E8A0A8;--c2:#F5D0D4;--c1:#FDF0F1;--c0:#FEF8F8;
+  --gd:#CDA736;--gd2:#E8D080;
+  --bg:#F7F2E9;--wh:#FFF;--tx:#2A2420;--mu:#7A6050;--bd:#E5D8C0;
+  --sh:0 2px 8px rgba(78,18,26,.1);--shm:0 4px 20px rgba(78,18,26,.15);
+  --r:8px;--r2:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);font-size:14px}
+h1,h2,.sf{font-family:'Libre Baskerville',serif}
+/* CONFIG */
+#cfg{min-height:100vh;background:linear-gradient(150deg,var(--c9),var(--c7) 60%,var(--c6));display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px}
+.cfgh{text-align:center;margin-bottom:24px}
+.cfgh img{height:84px;margin:0 auto 12px;display:block;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4))}
+.cfgh h1{color:#fff;font-size:1.7rem}
+.cfgh p{color:var(--c2);font-size:.82rem;margin-top:5px}
+.card{background:#fff;border-radius:var(--r2);box-shadow:0 8px 40px rgba(0,0,0,.28);padding:32px;width:100%;max-width:1080px}
+.grid2{display:grid;grid-template-columns:0.85fr 1.15fr;gap:28px}
+.stl{font-family:'Libre Baskerville',serif;font-size:.88rem;font-weight:700;color:var(--c7);padding-bottom:7px;border-bottom:2px solid var(--c1);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.sn{width:20px;height:20px;background:var(--c7);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0}
+.dz{border:2px dashed var(--c3);border-radius:var(--r);padding:14px 10px;text-align:center;cursor:pointer;background:var(--c0);transition:.2s;position:relative;overflow:hidden}
+.dz:hover{border-color:var(--c6);background:var(--c1)}
+.dz.ok{border-style:solid;border-color:var(--c7);background:var(--c1)}
+.dz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.dzi{font-size:1.5rem;margin-bottom:4px}
+.dzl{font-size:.75rem;color:var(--c7);font-weight:600}
+.dzs{font-size:.68rem;color:var(--mu);margin-top:2px}
+.dzst{font-size:.68rem;color:var(--c8);font-weight:700;margin-top:4px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.up3{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.up5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.fld{margin-bottom:12px}
+.fld label{display:block;font-size:.72rem;font-weight:600;color:var(--mu);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.fld input{width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.86rem;color:var(--tx);background:#fff;transition:border-color .2s;outline:none}
+.fld input:focus{border-color:var(--c6)}
+.fld small{display:block;font-size:.67rem;color:var(--mu);margin-top:3px}
+.bgen{width:100%;padding:13px;background:var(--c7);color:#fff;border:none;border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.92rem;font-weight:700;cursor:pointer;letter-spacing:.04em;transition:.2s;margin-top:4px}
+.bgen:hover{background:var(--c9)}
+.err{color:#900;font-size:.75rem;padding:8px 12px;background:#fff0f0;border-radius:6px;margin-top:8px;border-left:3px solid #c00;display:none}
+/* TOOLBAR */
+#dsh,#rpt{display:none}
+.tbar{background:var(--c9);padding:9px 22px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;gap:10px}
+.thi{font-size:.82rem;color:var(--c3);font-weight:500;letter-spacing:.01em}
+.tbtns{display:flex;gap:7px}
+.tb{padding:6px 13px;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;border:none;transition:.2s;letter-spacing:.03em}
+.tbk{background:rgba(255,255,255,.15);color:#fff}.tbk:hover{background:rgba(255,255,255,.28)}
+.trl{background:var(--gd);color:var(--c9)}.trl:hover{background:var(--gd2)}
+.tpd{background:var(--c3);color:var(--c9)}.tpd:hover{background:#fff}
+/* DASH */
+.dw{padding:0 26px 36px;max-width:1360px;margin:0 auto}
+.dh{display:flex;align-items:center;justify-content:space-between;padding:22px 0 16px;border-bottom:2px solid var(--c1);margin-bottom:20px;gap:14px}
+.dhl img{height:62px}
+.dht{text-align:center;flex:1;padding:0 14px}
+.dmt{font-size:1.6rem;font-weight:700;color:var(--c9)}
+.dsb{font-size:.7rem;color:var(--mu);margin-top:4px;text-transform:uppercase;letter-spacing:.05em}
+.clo img{max-height:56px;max-width:120px;object-fit:contain}
+.clph{width:110px;height:46px;border:1.5px solid var(--bd);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--mu);text-align:center}
+.warn{background:#FFF8E0;border:1.5px solid #C4A020;border-radius:var(--r);padding:10px 14px;margin-bottom:14px}
+.warn h4{color:#7A6000;font-size:.76rem;font-weight:700;margin-bottom:5px}
+.warn li{font-size:.7rem;color:#7A6000;padding:2px 0 2px 16px;position:relative;list-style:none}
+.warn li::before{content:'⚠';position:absolute;left:0}
+.sbn{background:var(--c8);color:#fff;padding:9px 16px;border-radius:var(--r);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sbn h2{font-family:'Libre Baskerville',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em}
+.kr{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:12px;margin-bottom:12px}
+.kp{background:var(--wh);border-radius:var(--r);padding:14px 14px 10px;box-shadow:var(--sh);border-top:3px solid var(--c6)}
+.kl{font-size:.62rem;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.kv{font-family:'Libre Baskerville',serif;font-size:2rem;color:var(--c8);font-weight:700;line-height:1;margin-top:2px}
+.kd{font-size:.64rem;color:var(--mu);margin-top:2px}
+.cg{display:grid;gap:12px;margin-bottom:12px}
+.c3{grid-template-columns:1fr 1fr 1fr}
+.c2{grid-template-columns:1fr 1fr}
+.c1{grid-template-columns:1fr}
+.cc{background:var(--wh);border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
+.ct{font-size:.67rem;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--c0)}
+.ch{position:relative}
+.sd{height:2px;background:var(--c1);margin:20px 0}
+/* REPORT */
+.rw{max-width:1100px;margin:0 auto;padding:28px 36px;background:#fff;min-height:100vh}
+.rh{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:3px solid var(--c7);margin-bottom:20px}
+.rh img{height:64px}
+.rtb h1{font-family:'Libre Baskerville',serif;font-size:1.3rem;color:var(--c9);text-align:right}
+.rtb p{font-size:.72rem;color:var(--mu);text-align:right;margin-top:3px}
+.rnote{background:#FFF8E0;border-left:3px solid var(--gd);padding:8px 14px;border-radius:4px;margin-bottom:16px;font-size:.71rem;color:#6A5000}
+.rbtns{display:flex;gap:10px;margin-bottom:18px}
+.rb{padding:9px 18px;border-radius:var(--r);font-size:.78rem;font-weight:700;cursor:pointer;border:none;transition:.2s}
+.rxl{background:var(--gd);color:var(--c9)}.rxl:hover{background:var(--gd2)}
+.rpf{background:var(--c7);color:#fff}.rpf:hover{background:var(--c9)}
+.rks{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+.rk{background:var(--c0);border-radius:var(--r);padding:12px;border-top:3px solid var(--c6);text-align:center}
+.rk .l{font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.rk .v{font-family:'Libre Baskerville',serif;font-size:1.65rem;color:var(--c8);font-weight:700}
+.rs{font-family:'Libre Baskerville',serif;font-size:.92rem;color:var(--c8);margin:18px 0 8px;padding-bottom:5px;border-bottom:2px solid var(--c2)}
+.pt{width:100%;border-collapse:collapse;font-size:.71rem}
+.pt th{background:var(--c8);color:#fff;padding:7px 8px;text-align:left;font-weight:600;font-size:.65rem;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.pt td{padding:6px 8px;border-bottom:1px solid var(--bd);vertical-align:top}
+.pt tr:nth-child(even) td{background:var(--c0)}
+@media print{
+  #cfg,.tbar,.rbtns{display:none!important}
+  body[data-print=dash] #rpt{display:none!important}
+  body[data-print=dash] #dsh{display:block!important}
+  body[data-print=report] #dsh{display:none!important}
+  body[data-print=report] #rpt{display:block!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cc,.kp,.rk{break-inside:avoid}
+  .rw{padding:14px}
+  .dw{padding:10px;max-width:none}
+}
+@media(max-width:860px){
+  .grid2,.up3,.c3,.c2{grid-template-columns:1fr}
+  .kr{grid-template-columns:repeat(2,1fr)}
+}
+
+
+.chk{display:flex;align-items:center;gap:7px;font-size:.74rem;color:var(--tx);cursor:pointer;padding:3px 0;line-height:1.3}
+.chk input[type=checkbox]{accent-color:var(--c7);width:14px;height:14px;flex-shrink:0;cursor:pointer}
+.cfg-sel{display:grid;grid-template-columns:1fr 1fr;gap:2px 14px;margin-bottom:6px}
+.cfg-grp{font-size:.62rem;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;padding:6px 0 2px;grid-column:1/-1;border-top:1px solid var(--c1);margin-top:4px}
+.cfg-grp:first-child{border-top:none;margin-top:0}
+.sto-bar{display:none;flex-wrap:wrap;gap:10px;align-items:center;padding:7px 10px;background:var(--c0);border-radius:var(--r);border:1px solid var(--c2);margin-bottom:12px;font-size:.67rem;color:var(--mu)}
+.sto-bar b{color:var(--c7)}
+.sbn-top{background:var(--c8);color:#fff;padding:9px 16px;border-radius:var(--r) var(--r) 0 0;display:flex;align-items:center;gap:8px;margin-bottom:0}
+.sbn-top h2{font-family:'Libre Baskerville',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em}
+.sbn-top span.tag{font-size:.68rem;opacity:.7;margin-left:auto;font-family:'Inter',sans-serif;font-weight:500}
+.cc-flush{border-radius:0 0 var(--r2) var(--r2)!important}
+.cp{font-size:.62rem;color:var(--mu);margin-top:6px;padding-top:5px;border-top:1px solid var(--c0);line-height:1.5}
+.cms{position:relative;width:100%}
+.cms-box{border:1px solid var(--bd);border-radius:6px;background:#fff;padding:0;width:100%;box-sizing:border-box}
+.cms-search{width:100%;padding:8px 11px;border:none;border-bottom:1px solid var(--bd);border-radius:6px 6px 0 0;font-size:.76rem;font-family:inherit;box-sizing:border-box;outline:none}
+.cms-search:focus{background:var(--c0)}
+.cms-actions{display:flex;flex-wrap:wrap;gap:6px;padding:7px 10px;border-bottom:1px solid var(--bd);background:var(--c0);align-items:center}
+.cms-act{font-size:.66rem;font-weight:700;color:var(--c7);cursor:pointer;padding:3px 8px;border:1px solid var(--c3);border-radius:4px;background:#fff;transition:.15s}
+.cms-act:hover{background:var(--c1);border-color:var(--c7)}
+.cms-count{margin-left:auto;font-size:.66rem;color:var(--mu);align-self:center}
+.cms-list{max-height:280px;overflow-y:auto;overflow-x:hidden;padding:3px 0;width:100%;box-sizing:border-box}
+.cms-item{display:flex;align-items:flex-start;gap:8px;padding:5px 12px;cursor:pointer;font-size:.72rem;transition:.1s;width:100%;box-sizing:border-box}
+.cms-item:hover{background:var(--c0)}
+.cms-item input{margin:2px 0 0 0;cursor:pointer;accent-color:var(--c7);flex:0 0 auto;width:14px;height:14px}
+.cms-item label{cursor:pointer;flex:1 1 auto;min-width:0;color:var(--tx);line-height:1.4;overflow-wrap:anywhere}
+.cms-empty{padding:14px;text-align:center;color:var(--mu);font-size:.74rem}
+.reldrop{position:relative;display:inline-block}
+.reldrop-menu{display:none;position:absolute;top:100%;right:0;background:#fff;border:1px solid var(--bd);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);min-width:230px;z-index:999;overflow:hidden}
+.reldrop-menu a{display:block;padding:9px 16px;font-size:.72rem;font-weight:600;color:var(--c8);text-decoration:none;cursor:pointer;border-bottom:1px solid #f0e8e8;transition:.15s}
+.reldrop-menu a:last-child{border-bottom:none}
+.reldrop-menu a:hover{background:var(--c0);color:var(--c7)}
+.reldrop-menu .reldrop-title{padding:7px 16px 4px;font-size:.65rem;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;cursor:default;pointer-events:none;border-bottom:1px solid #f0e8e8}
+.reldrop.open .reldrop-menu{display:block}
+.sto-warn{display:none;background:#FFF8E0;border:1px solid #C4A020;border-radius:6px;padding:7px 10px;font-size:.68rem;color:#7A6000;margin-top:6px}
+</style>
+</head>
+<body>
+
+<!-- CONFIG -->
+<div id="cfg">
+<div class="cfgh">
+  <img src="data:image/jpeg;base64,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" alt="IGSA">
+  <h1 class="sf">Gerador de Dashboard Jurídico</h1>
+  <p>Imaculada Gordiano Sociedade de Advogados</p>
+</div>
+<div class="card">
+<div id="sto-bar" class="sto-bar">
+  <span>💾 Cache: <b id="sto-proc">—</b> · <b id="sto-serv">—</b> · <b id="sto-aud">—</b></span>
+  <span id="sto-ts" style="color:var(--mu)"></span>
+  <button onclick="clearStorage()" style="margin-left:auto;font-size:.65rem;padding:3px 10px;background:transparent;border:1px solid var(--c3);border-radius:4px;color:var(--mu);cursor:pointer">Limpar dados</button>
+</div>
+<div id="sto-warn" class="sto-warn">⚠ Armazenamento local insuficiente. Os arquivos não serão mantidos após fechar o navegador. Para resolver, acesse as configurações do navegador e limpe o cache do site.</div>
+<div class="grid2">
+<div>
+  <div class="stl"><span class="sn">1</span>Planilhas de dados</div>
+  <div class="up5">
+    <div class="dz" id="dz-proc">
+      <input type="file" accept=".xlsx,.xls" onchange="loadF(this,'proc')">
+      <div class="dzi">📋</div><div class="dzl">Processos</div>
+      <div class="dzs">.xlsx / .xls</div><div class="dzst" id="sp">Nenhum arquivo</div>
+    </div>
+    <div class="dz" id="dz-serv">
+      <input type="file" accept=".xlsx,.xls" onchange="loadF(this,'serv')">
+      <div class="dzi">⚖️</div><div class="dzl">Serviços</div>
+      <div class="dzs">.xlsx / .xls</div><div class="dzst" id="ss">Nenhum arquivo</div>
+    </div>
+    <div class="dz" id="dz-aud">
+      <input type="file" accept=".xlsx,.xls" onchange="loadF(this,'aud')">
+      <div class="dzi">🗓️</div><div class="dzl">Aud / Prazos / Perícias</div>
+      <div class="dzs">.xlsx / .xls</div><div class="dzst" id="sa">Nenhum arquivo</div>
+    </div>
+    <div class="dz" id="dz-dec">
+      <input type="file" accept=".xlsx,.xls" onchange="loadF(this,'dec')">
+      <div class="dzi">⚖️</div><div class="dzl">Decisões <em style="font-size:.62rem;font-weight:400">(opcional)</em></div>
+      <div class="dzs">.xlsx / .xls</div><div class="dzst" id="sd">Nenhum arquivo</div>
+    </div>
+    <div class="dz" id="dz-audfut">
+      <input type="file" accept=".xlsx,.xls" onchange="loadF(this,'audfut')">
+      <div class="dzi">📅</div><div class="dzl">Aud. e Perícias Futuras <em style="font-size:.62rem;font-weight:400">(opcional)</em></div>
+      <div class="dzs">.xlsx / .xls</div><div class="dzst" id="saf">Nenhum arquivo</div>
+    </div>
+  </div>
+  <div class="stl"><span class="sn">2</span>Logo do cliente / grupo</div>
+  <div class="dz" id="dz-logo" style="display:flex;align-items:center;gap:12px;text-align:left">
+    <input type="file" accept="image/*" onchange="loadLogo(this)">
+    <div style="font-size:1.5rem">🏢</div>
+    <div style="flex:1"><div class="dzl">Carregar logo do cliente</div>
+    <div class="dzs">PNG, JPG, SVG</div><div class="dzst" id="sl">Nenhuma imagem</div></div>
+    <img id="lprev" style="display:none;max-height:42px;max-width:80px;border-radius:4px" src="" alt="">
+  </div>
+</div>
+<div>
+  <div class="stl"><span class="sn">3</span>Configurações</div>
+  <div class="fld"><label>Título do dashboard</label>
+    <input type="text" id="ttl" placeholder="Ex: Alscience Metrologia">
+  </div>
+  <div class="fld"><label>Cliente(s)</label>
+    <input type="hidden" id="cli">
+    <div class="cms" id="cms-wrap">
+      <div class="cms-box">
+        <input type="text" class="cms-search" id="cms-search" placeholder="🔍 Buscar cliente por nome..." oninput="cmsFilter()">
+        <div class="cms-actions">
+          <span class="cms-act" onclick="cmsSelectAll()">Selecionar todos</span>
+          <span class="cms-act" onclick="cmsClearAll()">Desmarcar todos</span>
+          <span class="cms-act" onclick="showClientAudit()" title="Ver tabela de auditoria dos clientes">🔍 Auditoria</span>
+          <span class="cms-count" id="cms-count">0 selecionados</span>
+        </div>
+        <div class="cms-list" id="cms-list">
+          <div class="cms-empty">Carregue a planilha de Processos ou Serviços para listar os clientes.</div>
+        </div>
+      </div>
+      <div id="cms-diag" style="font-size:.6rem;color:var(--mu);margin-top:5px;line-height:1.4"></div>
+    </div>
+    <small>💡 Deixe nenhum marcado para incluir todos os clientes.</small>
+  </div>
+  <div class="fld"><label>Ano de referência dos serviços <em style="font-weight:300;text-transform:none">(opcional)</em></label>
+    <input type="text" id="ayr" placeholder="Deixe em branco para usar o ano mais recente">
+  </div>
+  <div class="stl" style="margin-top:16px"><span class="sn">4</span>Seções do Dashboard</div>
+  <div class="cfg-sel">
+    <span class="cfg-grp">Processos</span>
+    <label class="chk"><input type="checkbox" id="vis-evolucao" checked> Evolução Anual</label>
+    <label class="chk"><input type="checkbox" id="vis-mensal" checked> Mês a Mês / Fase</label>
+    <span class="cfg-grp">Passivo</span>
+    <label class="chk"><input type="checkbox" id="vis-passivo-ativo" checked> Passivo Potencial (Ativos)</label>
+    <label class="chk"><input type="checkbox" id="vis-passivo-arq" checked> Redução do Passivo (Arquivados)</label>
+    <span class="cfg-grp">Audiências</span>
+    <label class="chk"><input type="checkbox" id="vis-aud-real" checked> Audiências Realizadas</label>
+    <label class="chk"><input type="checkbox" id="vis-aud-fut" checked> Próximas Audiências e Perícias</label>
+    <span class="cfg-grp">Outros</span>
+    <label class="chk"><input type="checkbox" id="vis-serv" checked> Serviços Realizados</label>
+    <label class="chk"><input type="checkbox" id="vis-dec" checked> Decisões Judiciais</label>
+  </div>
+  <div id="errbox" class="err"></div>
+  <button class="bgen" onclick="generate()">▶ Gerar Dashboard</button>
+  <div id="warnblock"></div>
+  <div style="text-align:center;font-size:.65rem;color:var(--mu);margin-top:7px">Processamento 100% local — sem envio de dados externos</div>
+
+</div>
+</div>
+</div>
+</div>
+
+<!-- VALIDAÇÃO DE DECISÕES -->
+<div id="dval" style="display:none">
+  <div class="tbar">
+    <button class="tb tbk" onclick="dvalBack()">← Voltar à configuração</button>
+    <span class="thi">Validação das Decisões · Conferência antes do painel</span>
+    <div class="tbtns">
+      <button class="tb tpd" onclick="dvalConfirm()">✓ Confirmar e gerar painel</button>
+    </div>
+  </div>
+  <div style="max-width:1400px;margin:0 auto;padding:20px">
+    <div class="cc">
+      <div class="ct">Conferência da Classificação das Decisões</div>
+      <div class="cp" id="dval-info">Revise a conclusão de cada decisão. Ajuste o que estiver incorreto no menu de seleção. As alterações ficam salvas.</div>
+      <div style="display:flex;gap:10px;align-items:center;margin:10px 0;flex-wrap:wrap">
+        <input type="text" id="dval-search" placeholder="🔍 Buscar por cliente, processo ou natureza..." oninput="dvalRender()" style="flex:1;min-width:240px;padding:8px 11px;border:1px solid var(--bd);border-radius:6px;font-size:.8rem;font-family:inherit">
+        <select id="dval-filter" onchange="dvalRender()" style="padding:8px 11px;border:1px solid var(--bd);border-radius:6px;font-size:.8rem;font-family:inherit;background:#fff">
+          <option value="">Todas as conclusões</option>
+          <option value="Favorável">Favorável</option>
+          <option value="Desfavorável">Desfavorável</option>
+          <option value="Extinção">Extinção</option>
+          <option value="Inconclusivo">Inconclusivo</option>
+          <option value="_ajustadas">Apenas ajustadas manualmente</option>
+        </select>
+        <span id="dval-count" style="font-size:.72rem;color:var(--mu)"></span>
+      </div>
+      <div style="max-height:62vh;overflow:auto;border:1px solid var(--bd);border-radius:8px">
+        <table style="width:100%;border-collapse:collapse;font-size:.7rem">
+          <thead style="position:sticky;top:0;z-index:2"><tr id="dval-head"></tr></thead>
+          <tbody id="dval-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dsh">
+<div class="tbar">
+  <button class="tb tbk" onclick="goBack()">← Voltar</button>
+  <span class="thi">Imaculada Gordiano Sociedade de Advogados · Dashboard Jurídico</span>
+  <div class="tbtns">
+    <div class="reldrop" id="reldropBtn">
+      <button class="tb trl" onclick="toggleRelDrop()">📊 Relatórios e Exportações ▾</button>
+      <div class="reldrop-menu" id="reldropMenu">
+        <div class="reldrop-title">Relatório de Processos</div>
+        <a onclick="showReport();closeRelDrop()">📄 Ver Relatório de Processos</a>
+        <div class="reldrop-title">Exportar Planilhas Excel</div>
+        <a onclick="exportXLS_proc();closeRelDrop()">⬇ Processos (.xls)</a>
+        <a onclick="exportXLS_serv();closeRelDrop()">⬇ Serviços (.xls)</a>
+        <a onclick="exportXLS_aud();closeRelDrop()">⬇ Aud / Prazos / Perícias (.xls)</a>
+        <a onclick="exportXLS_dec();closeRelDrop()">⬇ Decisões (.xls)</a>
+        <a onclick="exportXLS_fut();closeRelDrop()">⬇ Aud. e Perícias Futuras (.xls)</a>
+      </div>
+    </div>
+    <button class="tb tpd" onclick="printDash()">⬇ Exportar PDF</button>
+    <button class="tb tbk" onclick="shareDash()" title="Baixar o HTML do dashboard">📤 Compartilhar</button>
+    <button class="tb tpd" onclick="publishNetlify()" title="Publicar no Netlify e gerar link">🌐 Publicar</button>
+  </div>
+</div>
+<div class="dw">
+  <div class="dh">
+    <div class="dhl"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCADIAMgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9U6KKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiikzQAtFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFIaWigBmc4rI1PxVpWjz/Z7y8jhn2hthyTj8BSeJvEMPhrSZLqXBf7sceeXc9B/jXyL8cvjVD8OdMOq3qDUdXvpcQWhk2eZ03MTg4VRjt1KivCzHMvqrVOmryZ6mXZdXzOvHD4ePNKTskfWX/CwPD//AEE4v++W/wAKP+FgeH/+gnF/3y3+Ffm5/wANqX3/AEKlv/4HN/8AEUD9tO+JwPCcB/7fW/8AiK8f+2cT/Iv6+Z97/wAQ6z3/AJ8/+TRP0k/4WD4f/wCgnF/3y3+FJ/wsDw//ANBOL/vlv8K/N3/htC//AOhSh/8AA1v/AIikP7ad8Dg+E4Af+v1v/iKf9s4n+SP4kR8Pc7l8NL/yaP8AmfpEfiBoH/QTi/75b/CpdO8ZaJqt+llaajDLeOjSLCCQzKMZIB64yK/Nj/htS+/6FS3/APA5v/iK7fwZ8V5fHcFv4z0UtpuuaRKqXdkJPM8oZOxx0yjDIIx6j3rSlnNZzSqRSX9eZ5eZ8G5rlOHeJxNO0U0r3Ttfva5+hwxmjGK5P4b+PbP4i+FrbVrXCSn93cW+cmGUfeX6dwe4IrrO9fWRmpxUo7M+F2FooorQAooooAKKKKACiiigAooooAKKKKACiiigApDS0UAeL/Fie7bxGsMzf6OkStCo6AHqfrkH8hX5x/tO3OozfF7VI7+ZpYoUjW0XoqRFQcAf7xbPvmv0++MGk+dp1rqCj5oXMbn/AGW6fqP1r88P2vdC2+JLXVUXqqwyH2K5X/0Fvzr8+x1Nwxkubrqfrfh1jKeGzenCaXvpxXk9199j55qa0nnt7qKW1kkiuFYeW8LFXB9iOc1DXufijwuvwK+GOkTIoj8aeINxkuyP3ljAFBaOI/wt86AsOeWwelcjdtD+nsfmEMJKnQtzVKjtGPeyu2+yS1Z2txPr1t+yMZppdSh1ZJdzSSNItwF+19ST82Nv6e1fL11d3OoTvc3M0tzM2N80zl2PGBkn2H6V9IQX11bfsci6huZobtbves8blXDfbeoYc5ryrxF4us/EvwttYXs7S11yDVAbue3jWNrtDE2yRwMZYfMCfx6saxp6X9T4vh2rVoTxPuKSdecW1py7dO36nntes/swJqE3xZsYbOUpavBN9uUjKPBtOVYehbZ+OK8mr6W/ZP0D7B4c8XeKZFw3lGygf6Lvf8yY/wAq0n8J7HGGKhg8lxEpq/MrJPu9Pw3Pon9l6+1JfiVc21g+zSpbeSS7ibJXYv3CP9oMwGfQmvrvoK8B/ZJ8L/Y/Duqa9ImJL2YW8RP/ADzjHJH1ZiP+A177nivu8vg44eN+up/E03eQ6iiivTMwooooAKKKKACiiigAooooAKKKKACiiigApD0paKAMnxHpY1nQr2zxlpYiFz/eHK/qBXwJ+0toJ1bT7qIJmU2fmIMc70Zmx9T0/Gv0P4zXx5+0von9j+LIsLiOUySL6Yba38yw/Cvmc3o3lGqvR/mj1ssxcsFiYV4bxkmvkz8+/DKwt4k0kXGPs5u4hJnpt3jOfwr3/wDbTLjWvC+fufZ58fXcmf6V4J4r0n+wvEmoWIG1YZjs/wBw8r+hFe8618Q9Q+Mfwx01dE1a6sfGujnF1p9tctDJfx7QGeMKR5h+VW29R8wA5GflppqSZ/WuZOdTG4DN6KvTSabey50rN6Oy6XFH/Jlx/wCvn/29r5vrql8Z+N2uhp6674gNyW2fZlvJ9+7027s5r2j4g/EhvDnwS0Tw7Jr1x/wmxEclz9nuGaeEbmYrLIDkNggbSc+2KSvDTuysK8TklR0oQVR16jlo3onu3o9F3Pm2vuHwb4dPgv4CaVp/llbu5hSWRcfMZJXDkH3AO38K+Rfh54dk8dfEHRtLlLTm9vFNwzElmTO6Rie52hjX6M6H4fHibxr4Z04pm3iuvt0ygcbIVyAfYsUH41rGLq1YU11Z8R4oZjy0qOBT1d5P5aL9T3b4e+Gl8IeCtH0gAB7a3USY7yH5nP8A30WrpKMUtfo8YqMVFdD+aQooorQAooooAKKKKACiiigAooooAKKKKACiiigAopM0tABXif7R/wANtR8b2uj3OlwebNbOyTkclYyMg4HJwQenrXtlJjJrmr0VXpuEiovldz85/iL+ypb+K2+22OsPaawqBHFxFmGUjpwPmU9s/N06V83+NvhH4r+HcrNqumSrbIeL62/eQH0+cfd+jYPtX7Fa74N0rxApN1bgTdp4vlcfj3/HNeYeLPg1eiKRrGQ3keCAUwsqj0weGHtzn0r42vluJw75l70fLf7j9WyHj/G5VThhqqU6cdEno0uyf+aPylk8U6zNbeRJq9+9vjb5TXTlMemM4ra8IfCvxL42QT6fp7R2Gfm1C7Pk26/8Dbg/Rcn2r6l174Y6XoXi0KfBFhca9IcQvHbuUk56/Zvub/wr1jwr+zj4p8ZPDdeJrz+yLMAbYDh5tvoqD5UH6j0rno4erXdoRPtMw8T6NOny5dh7Se7drJ+i3Pnn4S/D7SPhVr0WqyXkviDWNjQgW0flwRbuDs3fM7ds4UYJ4r7i+DWgThJ9cvLK5sZJYhDBHdx+XIEJ3OSO2SE/75rd8FfCTwx4ARG0vTUe8Awb25PmTH/gR+7/AMBAFdqBx0x7V9Hg8rVCaq1HeSPxDNc5xecV3iMXLmk9O1l2SHUtJS19AeEFFJS0AFFFFABRRRQAUUUUAFFFFABRSUtADTSE89KXPOa8isfibr158d9X8BY09bWz0hNVW78iQud8uwRlfMxx13d/QVLko2v1OijQnXUnD7Ku/S6X6o9bz2PegccV5B8LfjTf+KfiZ4y8Ea/Z29jqWjuJrGWAsFvbXe0ZkCknBDqARk8tjtTvEfxe1W0+Ovh/wHp1raiy1C1uJZb6dWd0liVXKKoZRja6c56sfSo9rBq/nb5nV/ZuIVR0mtVHm8uW17/d/kevdx6UZ/GvOvjf8XIPgx4TttcntWuoWvra3nABPkwvKqyynHZVJx23FR3rq/EfijTPCnhi+17UrhbfTLO3a5mn6gIq7iRjrx0A61fNG7V9jm+q1uSNRRbUm0vNq11+KNojpnrR361w/hHxL4h8Y+FrHxFDa2dhFfwi6ttMuVYy+UwzGJJQ2EZlIJARgpOPmxk8R4m+NXiPSr74bxx6Za2R8WXpsprW8VpJLFgpJyyuA5BGMYH1pOokrs1p4GrVm6cLXV76rom3+CZ7SbWE3AnMSGYAqJNo3AemfTips4bHeue8UXOr2GjJNp89mlyrxq/2i3d0bc6qSArgjqT1P9a4O9+JXiG0+Oel+Ac6c8F3o76q179mkDApKIzGF8zHPXOePQ0XUTOlhZ103BrRNv0Su/wPXSBx7GlAA4NHNebaz8YLbRvjZoHgOW32jVrC4uEvGB2meMowhB6Z8su5HUfJ/eqnJLVmdGhUrtxpq7Sbfoldv7j0gnoM0HJ+nrXl/wAf/iVq3wn8IQa7psNpdbr23s2guY3OfNkCbgysMYznGOfUU74gfEPW/hTpaeINatLXV/DEboL+5sUeG4sUZgvmeUzOJUBI3YZSByA2Klzim0+h008DWqQhOKT520lfVtWuvXVep6a4GPWnAZrC1jxPbaZ4UutdhzfW8VqbmJLc7jcfLlFTHUsSAMdSRWP8G/iLB8V/hpoHimFUjbULcNLChyIpgSsif8BdWH4U+ZX5epz/AFep7J1uX3U0m/N3dvwZ29FJmlqjAKKKKACiiigAooooAaOfejIqvdXcNlA888qQwxqWeSRgqgDqST0FYlj8Q/DOqTww2uv6bcSznbCIrqNjKfRcH5vwouilCUk2k2jo89a+fNEI/wCG1/EZ7f8ACJW//pSa99S4jneREkV2jbawU5wcA4PocEH8RXMal4Y8HaJeXHiG/wBM0exumXZLqU8EUblSejSEA4yehPU1lOHNyvs7ndg6/wBX9rBptzjbT1T/AEPDfjJpeoeDvEPgv4p6DZy3t5petXOk6nbW4y9zZXF28YX3KyMu0er57Voa5psmm/tP/CaGV1a5bS9WmnZejSOFZyPbcxx7Yr1vw7qPgq0n/svRjpVlPcsZ1s4Y0haYg7i6pgF+TncAeTmrWv8AhvwjBeL4h1rTtJjuLf5RqV5FEHTdgY8xhkZ4HXnisnSvdp9U/u/4Y9WGZOmlTqQd1GcU+rUk0k/RtnM/EXwpN8UbPxPoptba502SxfS/MmnaNo5HUO7qBGwOD5WMkYaM14ppkuu/F/8AYv8AEnhFY5JfGGgo+i3dshy7y2sisFHcl40Ue5Jr3bQvGnwx0wX0Oka14XtQ7n7XHZ3NuuWJOd4U9fvdfervgZPh/c319eeEDoD3cjbrqbSDAzs3TLmPkn605QU3vumn8/8AIWHxlTCU+V037kozi2tmt7+T0v6If8MPENjqfwt8O6tDNHHYtpsLs7HAi2xgOG9CpBBz0IOeleNfGTxRa+KfEPwH8TQER6XceIcxzsTsxJE4jycDBbHANe067J4L8KytdavJo+kmZjcM928UIdgeZDuIBI4+br71m6h46+GeveHza32ueGL3RZusM91byW7/ADZ6Fip5/WnKPMuW66fhYwwtf2NZ4mNNu7a9FJNP1et/kdL4rkC6RGnBeS5t0T3JmT/65+gNeOaz/wAnr+Hfbwhcf+lIr2Dw9pGgCG3vNJitJoQv7i4hIkVV6YRsnA+nFYfiuP4caDrJ1TxEvhyw1TyubrUPIim8tm/vvg7Sw9cE1U48yTv1T+4wwlVUJygot3UltreStt5HS6p4is9L1KwsJpkSe7WV1DOFISNdzv8AQZUE9twr53/aJ0HXpPh1Z/ECxsIF1fw3qSeJIpFuGEzQggPE6eWAAINoYbv+WfevXdI8O/DTxjNNc6Vp/hrWJmg8qWa0hgmYwsfusVB+U46Hg4ro9Y0jw9YeGLi21Oz0+Hw/bRM80VxGgto4wCWLKRtC4znPHWiUfaRauVhMQsDXhNRbaeqa3Wt1v1TseG/tVeIrPxb+z7oes6fL51lf6npVzA/qjyqy/oa7H9p/V4LP4H+IdM2G41PWbU6Xp9jH80tzcTDYiovViM7jjoFJ7V2r/DDwbPpUOnN4Y0d9OhIaK1+wxGFCOQVTbgYwOgqrq1x4C8Bah9u1CTQNAvTHxcXBht5NhOPvHBwTx6VLh8Tb3SX5/wCZ0U8bBexp04N+zlKSXe/LZfgYXhLw7qfhvwL4C8IlILy+0zTrc3qTTFEPkxIgG4Kx/wBbtYcc+Wa4H9nmSf4a/F74g/DS9VLa3lm/4SPSIUcuggnOJkQkLhUkwAMete16DB4W8SXKeJ9HTStRnmGxdWs1jkaQLlSBKucgcjGeOayPEn/CuvD/AIkh1LXf+EdsNeIAjur/AMiO4wx42s2G5IPTqabjflae35EQxbtWo1It+0WqtqpJ3vby1Xo2d6KAQaqWOoW2pWcV1aXEVzbSDck0ThkYeoI4NY958QPD1hcTwTavarJbnbPiQEQH/poRwn/AsVtdI8SMJSbSTbR0mBR0qpp+o22q2kV1aXEV1bTKHjmhcOjqehDDgirZ6UyWmnZi0UUUAFITgE0tNkGUYeooA+VIfGUnx/8A2qdQ8JTOZPBHguJpprL/AJZ3t8GVAZV/iVGZsKeMx5719O6lpNlq+nTWN7axXVpKuySCVAyMvoQeK+Ov2ZbCTwV+2J8XdCvwUurwy31vv4LxNceYpHr8syn8D6V9harqE+m2fnQWFzqLgjMVsYw2PX946jH45rjw7coty3u7/efW8QUo4fE0aOH0goQa6XvFNv1bb1OI+EPw8n+GUPiqye5uruzudXkvbOa7naaXyWhhAQsxLEIVZBuOcIK8h+BPjOf9ob43eMvFF9IZPDvhaVbHQrInMSuxcPckdDIVXhj0WQgeteofC/4/aL8Z5dTi8OabqckNhMba7uLhI41gfBOCPM3HoRlQa8O/YA0ifwVrPxR8Iagpi1PStRiEiOMFlIdQw9QdoIPow9amUk501F+67/hsddChOGEzCtio2rxUEr7pSklJ281ZPyfmfSPxb8C2/wAQfAGq6TJmK7MTS2V0hKy2tyoJimjYcqytg5HuOhrzv9kL41Xfxo+E63OrkPr+lzGxvnAx5xCgpJjsWUjP+0G6CvatcvoNL0e9vLlxHBBC8kjnoqhSSfyFfKH/AATl8MXlj8NvE2u3MTQ2+raifs24Y3pGuC49tzMv1Q1c2414qPVO/wArWOLB0qdXJcVOrvCUOV+bupL7lf5Ef7FADfGf4/Fuv9tj/wBKbyqf7UFrHB+038KpvBHy+NJ7nGpLYcO1sJIsGYL/AA7TLkt/CDngCq/7I3hmx8SfGH49w3wnaNNawBDcyw5zc3ec7GXPTvVq8vZf2bP2s/D3h7RlU+EvGCJ50FwgkmjndnTKzsDIQGEZwzNwxHpjiWtBX25t+q94+yqJRzqvOn7040U1F6Rl+6V7vW9lra2rW6Pf/wBpUf8AGP8A49z1/sW6/wDRbVyv7FEEdx+y/wCEEkRXVlugVYZBH2qXgiur/aYOfgB49/7At1/6LNcx+xF/ybF4N+l1/wClUtdj/wB5X+F/mj5CD/4x2b/6fR/9IkeaftANJ+yh408O+P8AwijWXhrVr37H4g0KD5badipZZo4+iSbVfkY5VfVs9/8AtpXcOpfsq+KbuBhJDMllJGy9CpuoSD+Rrif+Cit19v8Ah54V8N2afadZ1XW4hbWqcvJtjkU4H+9JGP8AgVdL+1do7+Hv2M9X0qRzJJZWWnWzP/eKTwKT+lYT09tFbWv82me5g4wqf2Tian8V1eVvq4qUbN97XaT8rdD0P9mcY+AfgE9/7Ftf/RQrC/awstX8S/CTWvDWguV1O/s57h0QZd7eFQ8ir7uxjjx/00Nbn7M4x8AvABP/AEBrX/0WKtWeo6pf+K9d1S00Y6lZIV0y2l+0ogxGT5pAbnJlZkPr5K11pJ0lF9V+h8vKo8PmtTEJJ8k21e1m1LTfQ5j9kP4mD4nfAzQryebztT09P7OvSTk+ZEAAx92Qo31Y13Hxb0ay8R+C5dL1G2S7sby8sreeGQZV42uolZT9QTXy5+zXdXHwR/ag8afDW/gNhpmvA6jpduWBVCMyKqkcH5GdSfWECvrHx+M+H4c/9BLT/wD0shqMPJ1KVp7rR/I6s7wywWae1w+kJ2nFrtLVWt2d18j418J6xqf7Dfxnfw1rM0918L/EUpks718sLVsgbz/tLlVcDqu1h0xX2N4xe21LQtOmQpcQPqNi6OuGUj7TGQwP9ay/jN8ItG+NPgO98O6xHgyrvtroLl7aYA7JF+mcEdwSO9fLHwA+JviH4e+Il+BnjtZP7TsNRtTo10csssSzo/lhu6bAXQ9gCpxgCsl/s8vZv4Ht5Pt/kerWjHiHD/X6WmIpL94v5orTnXmtpfeeqftffFrVfCUHhXwP4au30/XfGF6tl9uiP7y1hLojMh7MTIoB7ANjBwR7v4T8Nad4S8O2WjaXbrbWNpEscca+nck92JySTySST1r5P/bS0WfR/jN8G/GMoP8AZFrqsNtcSn7sLC4jcZPuu/8A74NfY8ZAiXHTFa025VZ83S1vSx5GZUqdHLME6P21JyfeSlbX0SVl536nyzqHjGT4EftZad4dhcx+D/HMSz/ZCf3drflmQvGP4fMYJuA4Jkz2r6oUnOc8GvjT9pHSJfHX7YXwk0KwUyXGniPUrkp/yzhSfzCT6cQn8SPWvspVwoA6YooN8009k9PuDO6VOOHwVZfHOneXnaTSb82kvUkopKK6z5UWiiigDzPx/wDBey8XeLNJ8XabePoHjDSgVt9UhjEiyRnIaKaMkeZGQTxkEZ4YVsXNp40v9PktFvNJsJ2Xb/aMUMkp/wB5YWIAPpl2A75rscY6dPSgDafapUUm2up1vF1ZRhGb5lHRX1sr3t6eWx558HPgn4f+Cfh+fT9DSeWe7l8+8vbuTfNcy/3mxgD6KAKNe+FEU3juHxx4fu10fxN5H2S6dovMgv4MgiOZAVJKkDa4IZeh3D5a7TVL1tOtTMsZmO4AgkgAE9SQCQB9DVS517yGZlgE0UUKTyyLIMBWJxt4+b7pPasG6dNcu1i5YzE1Ksq85Nylo29brszlvGXgrXfiXok2g6td2+i6JdL5V9HpjtLPdRH70YkZVESsOGwrEgkAjrXSWfhyPw14ZttH8NQWunQ2kaw20LxkxRouBjCkHp79etX4NSkuL24iSEGCBtjys+Du2huFxyMMOc1VttfN1c2MawYFzbrOSWPyhu3CnP4kVXPTTvfV6GLrVHFU/sp3t0v3PH/gv+z3rnwh8a+NNfj8QWGpDxRfC8ngayePyP3krlVPmHP+tIyR2FX/AI9/s+yfFvXPCPiPStYTRvEPhq7FzbvNAZoZhvR9jgMCMMgwR6sMc8ep2mu+fPiWIQIVldX35BWNtrZ4GOoPeo7XxKt9psNzbRB3km8ny2kACk8jJAPbB/GsE6HLydN+vqek82xjxSxvN+8Stey25eWzWzVtDmPiP4H8QfEH4d6n4ZbUNPsX1SyltLm4FtJIE3ggFBvHQHv1PpWH8JPhX4r+E3w00rwfp+u6Tcrp4lCXlxp8pLb5HkyVEw6F8de1eiDX/MmsUSD5rnfncx+Qoyqw4BzyfYcdat6jqElnJBHFCJ3k3cF9uAoyex5rTmpt+0vqtOvWxzrHV44d4VW5HLmtZbpWv32bVjzrw/8AAqBPH0fjfxXq8vivxPbxmOyklhWG1sFPUQQgnaTk/MzM3vU/x7+F2q/GTwHqnhG21W00mx1FYd9xLbPNIrJKsnADqMHYB+Jrt7fXlu763giizHLAk4diQQrbscAEfw9yKfqWtw6Ze2cEgG64bGdwG0ZAB9/mZR+JPai9Jwkuj0fzCOPxMa8MRze9C3LorKzurLZWeuxxXgHwL4o8A/DjS/C9tq2lzzaZZxWdvdy2UmGCLt3Ogl5JwDgEd63Ph14e1rwt4bt9M1i/s9RlgjVftVrbtCZn5Mkjhnb5mY7jjuTWuNaY6g1uYP3ZlNukofOXCb+RjgYzzz0qJPEYlt3lSBmKiJCu4cSu23yz6YJGT70KpTWz2069DCriKtZyc7e87vTr/TZ438XP2cdZ+I/xO8L+NrDxFZaFqmgTboWSxeVriIOGSOQ+YOB84OOodq9B8W+HPGHiHR7a1tNX0mwnS4t7iWWSxklVjFOsoUL5owDsCnnPJx2rpW15lUqbcC6ExgMfmfIGCbyd2Om3npn2pLnxFb2408OUJuyMbJAQoyBkE4z8zKPxz2pKdKN5Xtff8jpqZhiKsKVOdmqatG6Wive3mr9y7piXq2Sf2g8El2M72t0ZU68YBJPT3riPHvwY0fxz4z8KeKpALbXPD10JoblF5li53RP6rzkeh+pz1y604vzbNAFjMxgWQPkl/L38jHAxnuelRQa+0yh/sjYlgeeAI25pFXHBGOCdwwOetW6lOS5Xr/wDkpV61CftKUuV2a07NWa9GiDxz4F0b4j+F73w/r1kt9pl4m2SNuCD1DKeqsDggjoRWToGjeL/AAzpEOl/brLXlhQRQ6hfM8M4UDC+YqBlkYDGWBTd6Cuq02/Oo2iy4RSSQQhLbSOxyAQfYir/AGzWqUZe8upKr1FD2Ld43vZ9H5dr9TgPA/wqs/C3iTV/E9/cHWPFurlVu9Tkj2hIlwEghTJ8uJcDjJJPLMxrvs7V5OTSik6DkVUYqKsiatapWlzVHd6L5LRJeSQ+iiimZBRRRQAUUUUAV7q0ju4THJuK5z8rFT+Y5qrJotnK0ZMCny1CKBwNo5AI6EDsDWjkUZFZuEZbod2U102AXbXAQiVh8xBIDcYyR0JxxmmppVtG8LpGUaBBHHtYjCjoMZ5H1q9kUZFPkj2C7M5dFsoxMBbjEwZXyScgnJHsCT0FPm0m1nDh4vvsHYqSpLAYB49qu4HpRgelT7OFrWQXZSOlWubciLZ9nGIthK7RwSOO3A49qdeaZb6gEE8fmBM4GSOowenb2q5kUZFPkja1guykNPtxcJOse2VFCAqxA2jOBgcEDJp1xp9vcu7SxK7OgQ59ASR+pq5RRyR2sFygul20d290sQ85jkvknnGCQOxwAOKX+y7TyJ4fJXZO5kkXH3mPf68D8qvUU+SPYLmf/Y1n9mEPlfuw/mD5ju3f3t2c5980DRrLy/L8hSnliLB7KOQP1q9ijFT7OHZBdlJNKto7trkQjzmOS5JPOMZA6A4AHFJDo1pbu7RxBTICpKk8A8kD0yeeMVfyKMin7OHYLsr2lnFZRbIlKqSWOSSST1JJ5JqzRRVJJKyEFFFFUAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB//2Q==" alt="IGSA"></div>
+    <div class="dht">
+      <div class="dmt sf" id="dtitle">—</div>
+      <div class="dsb" id="dsub">Dashboard Jurídico Executivo</div>
+    </div>
+    <div class="clo">
+      <img id="clogoimg" src="" style="display:none" alt="">
+      <div id="clph" class="clph">Logo do Cliente</div>
+    </div>
+  </div>
+  <div class="sbn" id="sbn-proc"><h2>📋 Processos Judiciais</h2></div>
+  <div class="kr" id="kpi1"></div>
+  <div class="kr" id="kpi2" style="margin-bottom:18px"></div>
+  <div class="cg c1" id="rowtop"></div>
+  <div class="cg c2" id="row-evolucao" style="margin-bottom:12px">
+    <div class="cc"><div class="ct">Processos Cadastrados por Ano</div><div class="cp" id="cp-regano"></div><div class="ch" style="height:190px"><canvas id="chry"></canvas></div></div>
+    <div class="cc"><div class="ct">Processos Encerrados por Ano</div><div class="cp" id="cp-arcano"></div><div class="ch" style="height:190px"><canvas id="chay"></canvas></div></div>
+  </div>
+  <div class="cg c2" id="row-mensal" style="margin-bottom:12px">
+    <div class="cc"><div class="ct" id="ctcmp">—</div><div class="ch" style="height:200px"><canvas id="chcmp2"></canvas></div></div>
+    <div class="cc"><div class="ct">Distribuição por Fase Processual</div><div class="cp" id="cp-fase"></div><div class="ch" style="height:200px"><canvas id="chfase"></canvas></div></div>
+  </div>
+  <div id="passivo-ativo-row" style="margin-bottom:12px">
+    <div class="sbn-top"><h2>📊 Exposição Financeira por Probabilidade de Perda</h2><span class="tag">PASSIVO · PROCESSOS ATIVOS</span></div>
+    <div class="cc cc-flush">
+      <div id="passivo-ativo-content" style="padding:8px 0"></div>
+    </div>
+  </div>
+  <div id="passivo-card-row" style="margin-bottom:12px">
+    <div class="sbn-top"><h2>🗂 Redução do Passivo Processual — Processos Arquivados</h2><span class="tag">ARQUIVADOS</span></div>
+    <div class="cc cc-flush" id="passivo-card">
+      <div id="passivo-content" style="padding:8px 0"></div>
+    </div>
+  </div>
+  <div id="aud-real-banner" class="sbn" style="background:var(--c7);margin-bottom:10px"><h2>📅 Audiências Realizadas</h2></div>
+  <div id="aud-real-row" style="margin-bottom:12px">
+    <div class="cc" id="aud-real-wrap">
+      <div class="ct" id="ctaud3">—</div>
+      <div class="cp" id="cp-aud3"></div>
+      <div class="ch" style="height:240px"><canvas id="chaud3"></canvas></div>
+    </div>
+  </div>
+  <div id="aud-future-row" style="margin-bottom:12px"></div>
+  <div id="decblock"></div>
+  <div class="sd"></div>
+  <div id="serv-section">
+  <div class="sbn" style="background:var(--c7)"><h2>⚖️ Serviços Realizados</h2></div>
+  <div class="cg c1" style="margin-bottom:12px">
+    <div class="cc"><div class="ct">Total de Serviços por Ano</div><div class="cp" id="cp-sy"></div><div class="ch" style="height:170px"><canvas id="chsy"></canvas></div></div>
+  </div>
+  <div id="rowserv"></div>
+  </div><!-- /serv-section -->
+</div>
+</div>
+
+<!-- RELATÓRIO -->
+<div id="rpt">
+<div class="tbar">
+  <button class="tb tbk" onclick="hideReport()">← Voltar ao Dashboard</button>
+  <span class="thi" style="color:var(--c3)">Relatório de Processos — Imaculada Gordiano</span>
+  <button class="tb tpd" onclick="printReport()">⬇ Exportar PDF</button>
+</div>
+<div class="rw">
+  <div class="rh">
+    <img src="data:image/jpeg;base64,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" alt="IGSA">
+    <div class="rtb">
+      <h1 id="rtitle">Relatório de Processos</h1>
+      <p id="rsub">—</p>
+    </div>
+  </div>
+  <div class="rnote" id="rnote"></div>
+  <div class="rbtns">
+    <button class="rb rxl" onclick="exportXLS()">⬇ Exportar Excel (.xls)</button>
+    <button class="rb rpf" onclick="printReport()">⬇ Exportar PDF (Imprimir)</button>
+  </div>
+  <div class="rks" id="rkpis"></div>
+  <div class="rs">Processos Ativos e Suspensos por Natureza</div>
+  <div id="rnat"></div>
+  <div class="rs">Lista Completa — Processos Ativos e Suspensos</div>
+  <table class="pt" id="rptable">
+    <thead><tr>
+      <th>#</th><th>Natureza</th><th>Ação</th><th>Data Distribuição</th>
+      <th>Cliente principal</th><th>Posição</th><th>Contrário principal</th>
+      <th>Órgão</th><th>Cidade</th><th>UF</th>
+      <th>Valor da causa</th><th>Valor envolvido</th>
+      <th>Probabilidade</th><th>Faixa</th><th>Classificação</th>
+    </tr></thead>
+    <tbody id="rtbody"></tbody>
+  </table>
+  <div style="margin-top:32px;padding-top:12px;border-top:1px solid var(--bd);font-size:.63rem;color:var(--mu);text-align:center">
+    Imaculada Gordiano Sociedade de Advogados · Gerado em <span id="rfdate"></span>
+  </div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<script>
+
+const ST={proc:null,serv:null,aud:null,audfut:null,dec:null,logo:null};
+
+/* ╔══════════════════════════════════════════════════════════════════╗
+   ║  TOKEN DO NETLIFY — COLE SEU TOKEN ENTRE AS ASPAS ABAIXO          ║
+   ║  app.netlify.com → User settings → Applications →                ║
+   ║  Personal access tokens → New access token                       ║
+   ║  Mantenha este index.html (gerador) privado — não compartilhe.   ║
+   ╚══════════════════════════════════════════════════════════════════╝ */
+const NETLIFY_TOKEN = "";  // ← cole aqui, ex: "nfp_AbC123..."
+
+
+
+const CH={};
+
+
+const TAX = {
+// AUDIÊNCIA
+'Audiência':'Audiência','Audiência - Cível':'Audiência','Audiência / Audiência Cível':'Audiência',
+'Audiência / Conciliação':'Audiência','Audiência / Inaugural':'Audiência',
+'Audiência / Instrução':'Audiência','Audiência / Instrução e Julgamento':'Audiência',
+'Audiência / Julgamento':'Audiência','Audiência / Justificação Prévia':'Audiência',
+'Audiência / Una':'Audiência','Audiência Una':'Audiência',
+'Serviço / Audiência':'Audiência','Pauta de Julgamento':'Audiência',
+'Workflow / Registro de audiência':'Audiência','Workflow / Sinalizar audiência':'Audiência',
+'Serviço / Conciliação Extrajudicial':'Audiência',
+// REUNIÃO
+'Reunião':'Reunião','Reunião / Cliente':'Reunião','Reunião / Coordenadores':'Reunião',
+'Reunião / Prospect':'Reunião','Reunião / Sócios':'Reunião','Reunião / Treinamento':'Reunião',
+'Reunião de Captação':'Reunião','Reunião de Consultoria':'Reunião','Reunião Interna':'Reunião',
+'Reunião / Reunião':'Reunião','Serviço / Reunião':'Reunião',
+'Serviço / Acompanhamento em Reunião':'Acompanhamento em Reunião',
+// CONSULTA
+'Serviço / Consulta':'Consulta','Serviço / Orientação':'Consulta',
+// DESPACHO
+'Despacho com Magistrado':'Despacho com Magistrado',
+// DILIGÊNCIA
+'Diligência externa':'Diligência','Serviço / Diligência':'Diligência',
+'Diversos / Diligência':'Diligência',
+// TREINAMENTO
+'TREINAMENTO':'Treinamento','Elaboração de Plano de Treinamento':'Elaboração de Plano de Treinamento',
+// PALESTRA
+'Serviço / Palestra':'Palestra',
+// PARECER
+'Serviço / Parecer':'Parecer','Serviço / Parecer Complexo':'Parecer',
+// ACOMPANHAMENTO
+'Serviço / Acompanhamento em Depoimento/Oitiva':'Acompanhamento em Depoimento/Oitiva',
+// DEMANDA SEFAZ
+'Serviço / Demanda Sefaz':'Demanda Sefaz',
+// SERVIÇOS ESPECÍFICOS
+'Serviço / Serviços Redesim':'Serviços Redesim','Serviço / Serviços Siscoex':'Serviços Siscoex',
+'Serviços Redesim':'Serviços Redesim','Serviços Siscoex':'Serviços Siscoex',
+// ANÁLISE CONTRATUAL/SOCIETÁRIA
+'Serviço / Análise de Aditivo':'Análise de Aditivo',
+'Serviço / Análise de Contrato':'Análise de Contrato',
+'Serviço / Revisão Contratual':'Análise de Contrato',
+'Serviço / Análise de Distrato':'Análise de Distrato',
+'Serviço / Análise de Inst. Societário':'Análise de Inst. Societário',
+// ALTERAÇÃO
+'Serviço / Alteração AGE':'Alteração AGE','Serviço / Alteração Contratual':'Alteração Contratual',
+'Serviço / Alteração Estatuto':'Alteração Estatuto',
+'Serviço / Alteração Inst. Societário':'Alteração Inst. Societário',
+// ELABORAÇÃO CONTRATUAL/SOCIETÁRIA
+'Serviço / Elaboração de Aditivo':'Elaboração de Aditivo',
+'Serviço / Protocolo de Aditivo':'Elaboração de Aditivo',
+'Aditivo contratual de cláusulas de Proteção de Dados':'Elaboração de Aditivo',
+'Serviço / Elaboração de cláusula':'Elaboração de Cláusula',
+'Elaboração de cláusula contratual':'Elaboração de Contrato',
+'Serviço / Elaboração de Contrato':'Elaboração de Contrato',
+'Serviço / Contratual Comum':'Elaboração de Contrato',
+'Serviço / Contratual Complexo':'Elaboração de Contrato',
+'Serviço / Contratual Extraordinário':'Elaboração de Contrato',
+'Serviço':'Elaboração de Contrato',
+'Serviço / Elaboração de Distrato':'Elaboração de Distrato',
+'Serviço / Elaboração de doc societário':'Elaboração de Inst. Societário',
+'Serviço / Elaboração de Inst. Societário':'Elaboração de Inst. Societário',
+'Serviço / Elaboração de Minuta':'Elaboração de Minuta',
+'Serviço / Elaboração de Notificação.':'Elaboração de Notificação',
+'Serviço / Elaboração de Ofício':'Elaboração de Ofício',
+'Serviço / Elaboração de Requerimento':'Elaboração de Requerimento',
+'Serviço / Elaboração de Termo de Compromisso':'Elaboração de Termo de Compromisso',
+'ELABORAÇÃO DE TERMO DE COMPROMISSO':'Elaboração de Termo de Compromisso',
+'Elaboração de Termo':'Elaboração de Termo',
+// LGPD
+'Análise de Inventario de processos com dados pessoais':'Análise de Inventário de Processos com Dados Pessoais',
+'Análise de Política de Privacidade':'Análise de Política de Privacidade',
+'Análise de Política de Segurança da Informação':'Análise de Política de Segurança da Informação',
+'ANÁLISE DE TERMO DE COMPROMISSO':'Análise de Termo de Compromisso',
+'Atendimento Titular de Dados -DPO':'Atendimento Titular de Dados DPO',
+'Atualização Be Compliance':'Atualização Be Compliance',
+'Elaboração de Aviso de cookies':'Elaboração de Aviso de Cookies',
+'Elaboração de Aviso de Privacidade':'Elaboração de Aviso de Privacidade',
+'Elaboração de Plano de Notificações':'Elaboração de Plano de Notificações',
+'Elaboração de Política':'Elaboração de Política',
+'Elaboração de Política de Privacidade':'Elaboração de Política de Privacidade',
+'Elaboração de Política de Segurança da Informação':'Elaboração de Política de Segurança da Informação',
+'Elaboração de relatório da análise dos riscos':'Elaboração de Relatório da Análise dos Riscos',
+'Elaboração de ROPA':'Elaboração de ROPA',
+'Elaboração de termos de uso':'Elaboração de Termos de Uso',
+// ELABORAÇÃO DE PEÇA PROCESSUAL
+'Prazo':'Elaboração de Peça Processual',
+'Prazo / Ação Rescisória-Razões Finais (art. 973 CPC)':'Elaboração de Peça Processual',
+'Prazo / Acompanhar Julgamento.':'Elaboração de Peça Processual',
+'Prazo / Aditivo do contrato':'Elaboração de Peça Processual',
+'Prazo / Agravo contra decisão que inadmite na origem Resp ou Rext - Contrarrazões (art. 1.042, § 3º, CPC)':'Elaboração de Peça Processual',
+'Prazo / Agravo contra decisão que inadmite na origem Resp ou Rext (art. 1.042 c/c art. 1.003, § 5º CPC)':'Elaboração de Peça Processual',
+'Prazo / Agravo de Instrumento':'Elaboração de Peça Processual',
+'Prazo / Agravo de Instrumento Civel pz em dobro (Art. 525 c/c 191 CPC)':'Elaboração de Peça Processual',
+'Prazo / Agravo de Instrumento Trabalhista':'Elaboração de Peça Processual',
+'Prazo / Agravo de Instrumento Trabalhista (art. 897, b CLT)':'Elaboração de Peça Processual',
+'Prazo / Agravo de Petição (art. 897, § 1º, CLT)':'Elaboração de Peça Processual',
+'Prazo / Agravo de Petição (art. 897, a, CLT)':'Elaboração de Peça Processual',
+'Prazo / Agravo Interno - Contrarrazões (art. 1.021, § 2º, CPC)':'Elaboração de Peça Processual',
+'Prazo / Agravo Interno de decisão TRT':'Elaboração de Peça Processual',
+'Prazo / Agravo Interno/Regimental':'Elaboração de Peça Processual',
+'Prazo / Agravo Retido':'Elaboração de Peça Processual',
+'Prazo / AIRO':'Elaboração de Peça Processual',
+'Prazo / AIRR':'Elaboração de Peça Processual',
+'Prazo / Apelação - Contrarrazões (art. 1.010, § 1º, CPC)':'Elaboração de Peça Processual',
+'Prazo / Apelação Civel':'Elaboração de Peça Processual',
+'Prazo / Apresentação De-Documentos':'Elaboração de Peça Processual',
+'Prazo / Ato processual sem prazo fixado (art. 218, § 3º CPC)':'Elaboração de Peça Processual',
+'Prazo / Contestação':'Elaboração de Peça Processual',
+'Contestação (art. 190 c/c 240, III CPC - Prazo em dobro)':'Elaboração de Peça Processual',
+'Prazo / Contestação (art. 335 CPC)':'Elaboração de Peça Processual',
+'Prazo / Contestação Trabalhista':'Elaboração de Peça Processual',
+'Prazo / Contra Razões em Recurso Trabalhista (4d)':'Elaboração de Peça Processual',
+'Prazo / Contrarrazões':'Elaboração de Peça Processual',
+'Prazo / Contrarrazões Embargos à Execução':'Elaboração de Peça Processual',
+'Prazo / Contrarrazões RO/RR':'Elaboração de Peça Processual',
+'Prazo / Cumprimento de Sentença':'Elaboração de Peça Processual',
+'Prazo / Defesa Administrativa':'Elaboração de Peça Processual',
+'Prazo / Defesa Administrativa - SEMACE':'Elaboração de Peça Processual',
+'Prazo / Defesa Penal':'Elaboração de Peça Processual',
+'Prazo / Defesa Penal - Arts. 396 e 396 A do CPP':'Elaboração de Peça Processual',
+'Prazo / Elaborar e protocolar Agravo para CARF':'Elaboração de Peça Processual',
+'Prazo / Elaborar e Protocolar ED para CARF':'Elaboração de Peça Processual',
+'Prazo / Embargos à Execução':'Elaboração de Peça Processual',
+'Prazo / Embargos à Execução Fiscal':'Elaboração de Peça Processual',
+'Prazo / Embargos à Execução Trabalhista':'Elaboração de Peça Processual',
+'Prazo / Embargos a Execução Trabalhista (art. 884 CLT)':'Elaboração de Peça Processual',
+'Prazo / Embargos de Declaração':'Elaboração de Peça Processual',
+'Prazo / Embargos de Declaração (art. 1.023/1.024 CPC)':'Elaboração de Peça Processual',
+'Prazo / Embargos de Divergência (art. 1.003 CPC)':'Elaboração de Peça Processual',
+'Prazo / Embargos de Terceiro':'Elaboração de Peça Processual',
+'Prazo / Embargos Monitórios':'Elaboração de Peça Processual',
+'Prazo / Emenda da petição inicial na tutela antecipada em caráter antecedente denegada (art. 303, § 6º, CPC)':'Elaboração de Peça Processual',
+'Prazo / Emendar Inicial':'Elaboração de Peça Processual',
+'Prazo / Especificar provas e temas sobre provas':'Elaboração de Peça Processual',
+'Prazo / Exceção de Pré-Executividade':'Elaboração de Peça Processual',
+'Prazo / Exceção Pré Executividade Trabalhista':'Elaboração de Peça Processual',
+'Prazo / Habilitação - Manifestação dos Requeridos (art. 690, CPC)':'Elaboração de Peça Processual',
+'Prazo / Impugnação aos Embargos Monitórios':'Elaboração de Peça Processual',
+'Prazo / Impugnação Auto de Infração SRFB':'Elaboração de Peça Processual',
+'Prazo / Impugnação de Cálculos Trabalhista 8d':'Elaboração de Peça Processual',
+'Prazo / Indicação de bens À-Penhora':'Elaboração de Peça Processual',
+'Prazo / Indicação de testemunhas (CPC art. 357) ou assistente técnico e apresentação de quesitos à perícia (art. 465, CPC)':'Elaboração de Peça Processual',
+'Prazo / Juntar Documentos':'Elaboração de Peça Processual',
+'Prazo / Liminar':'Elaboração de Peça Processual',
+'Prazo / Mandado de Segurança':'Elaboração de Peça Processual',
+'Prazo / Manfestação Diversa (20d)':'Elaboração de Peça Processual',
+'Prazo / Manif Trab 48h':'Elaboração de Peça Processual',
+'Prazo / Manifestação diversa':'Elaboração de Peça Processual',
+'Prazo / Manifestação Diversa (30d)':'Elaboração de Peça Processual',
+'Prazo / Manifestação Diversa 10d':'Elaboração de Peça Processual',
+'Prazo / Manifestação Diversa 15d':'Elaboração de Peça Processual',
+'Prazo / Manifestação Diversa 5d':'Elaboração de Peça Processual',
+'Prazo / Manifestação Diversa 8d':'Elaboração de Peça Processual',
+'Prazo / Manifestação do sócio ou da pessoa jurídica no pedido de desconsideração da personalidade jurídica (art. 135, CPC)':'Elaboração de Peça Processual',
+'Prazo / Manifestação Prévia - Improbidade Administrativa':'Elaboração de Peça Processual',
+'Prazo / Manifestação sobre documentos (art. 437, § 1º CPC)':'Elaboração de Peça Processual',
+'Prazo / Manifestação Sobre Laudo Pericial CONAT - CE':'Elaboração de Peça Processual',
+'Prazo / Nomeação de bens ou depósito em Execução Trabalhista':'Elaboração de Peça Processual',
+'Prazo / Pagamento de acordo':'Elaboração de Peça Processual',
+'Prazo / Pagamento de custas sob pena de cancelamento da distribuição (art. 290, CPC)':'Elaboração de Peça Processual',
+'Prazo / Pagamento em execução trabalhista -15d':'Elaboração de Peça Processual',
+'Prazo / Pagamento em execução trabalhista -48h':'Elaboração de Peça Processual',
+'Prazo / Pedido de esclarecimentos ou correções da decisão de saneamento e organização do processo (art. 357, § 1º, CPC)':'Elaboração de Peça Processual',
+'Prazo / Pedido Inicial- Emendar ou Completar (art. 321 e 801 CPC)':'Elaboração de Peça Processual',
+'Prazo para apresentação de rol de testemunhas (prazo máximo - art. 357, § 4º, CPC)':'Elaboração de Peça Processual',
+'Prazo / Protocolar apelação':'Elaboração de Peça Processual',
+'Prazo / Protocolar prova depósito 30% em Execução':'Elaboração de Peça Processual',
+'Prazo / PROTOCOLAR prova depósito parcelamento em Execução 1':'Elaboração de Peça Processual',
+'Prazo / PROTOCOLAR prova depósito parcelamento em Execução 2':'Elaboração de Peça Processual',
+'Prazo / PROTOCOLAR prova depósito parcelamento em Execução 3':'Elaboração de Peça Processual',
+'Prazo / PROTOCOLAR prova depósito parcelamento em Execução 4':'Elaboração de Peça Processual',
+'Prazo / PROTOCOLAR prova depósito parcelamento em Execução 5':'Elaboração de Peça Processual',
+'Prazo / PROTOCOLAR prova depósito parcelamento em Execução 6':'Elaboração de Peça Processual',
+'Prazo / Protocolar Recurso decisao TJ TRF':'Elaboração de Peça Processual',
+'Prazo / Protocolar Recurso Hierárquico DRF':'Elaboração de Peça Processual',
+'Prazo / Protocolar Recurso sobre decisão de Relator e Colegiados TJ TRF':'Elaboração de Peça Processual',
+'Prazo / Protocolar Recurso sobre Decisão STJ STF':'Elaboração de Peça Processual',
+'Prazo / Protocolar recurso sobre Decisão TJ TRF de inadmissibilidade de REsp / RE':'Elaboração de Peça Processual',
+'Prazo / Protocolar recurso sobre decisão TST (4d)':'Elaboração de Peça Processual',
+'Prazo / Protocolar recurso sobre sentença':'Elaboração de Peça Processual',
+'Prazo / Protocolar Recurso voluntário para CARF':'Elaboração de Peça Processual',
+'Prazo / Protocolar Recurso Voluntario Sefaz':'Elaboração de Peça Processual',
+'Prazo / Protocolar REsp para CARF':'Elaboração de Peça Processual',
+'Prazo / Protocolo Penal 2d corridos D-0':'Elaboração de Peça Processual',
+'Prazo / Razões Finais Trabalhista (10 dias)':'Elaboração de Peça Processual',
+'Prazo / Razões Finais Trabalhista (5 dias)':'Elaboração de Peça Processual',
+'Prazo / Recurso Adesivo':'Elaboração de Peça Processual',
+'Prazo / Recurso Administrativo':'Elaboração de Peça Processual',
+'Prazo / Recurso de Revista':'Elaboração de Peça Processual',
+'Prazo / Recurso Especial':'Elaboração de Peça Processual',
+'Prazo / Recurso Especial - CARF':'Elaboração de Peça Processual',
+'Prazo / Recurso Especial ou Extraordinário - Contrarrazões (art. 1.030, caput, CPC)':'Elaboração de Peça Processual',
+'Prazo / Recurso Extraordinário':'Elaboração de Peça Processual',
+'Prazo / Recurso Extraordinário PAF SEFAZ':'Elaboração de Peça Processual',
+'Prazo / Recurso Inominado':'Elaboração de Peça Processual',
+'Prazo / Recurso Ordinário':'Elaboração de Peça Processual',
+'Prazo / Recurso Ordinário (JECF)':'Elaboração de Peça Processual',
+'Prazo / Recurso Ordinário em Habeas Corpus':'Elaboração de Peça Processual',
+'Prazo / Recurso Ordinário-Trabalhista (art. 895 CLT)':'Elaboração de Peça Processual',
+'Prazo / Recurso Voluntário':'Elaboração de Peça Processual',
+'Prazo / Recurso Voluntário - SEFIN - FOR':'Elaboração de Peça Processual',
+'Prazo / Réplica':'Elaboração de Peça Processual',
+'Prazo / Réplica a contestação - (art 350 e 351 CPC)':'Elaboração de Peça Processual',
+'Prazo / Requerer o que entender De-Direito':'Elaboração de Peça Processual',
+'Prazo / Vista aos Autos (art. 107, II CPC)':'Elaboração de Peça Processual',
+'Razões finais escritas - Prazos sucessivos autor réu Ministério Público (art. 364 § 2º CPC)':'Elaboração de Peça Processual',
+'Protocolo':'Elaboração de Peça Processual',
+'Protocolo / Protocolar REsp Sefaz':'Elaboração de Peça Processual',
+'Serviços/COOP':'Elaboração de Peça Processual',
+'Serviço / Notificação Extrajudicial':'Elaboração de Peça Processual',
+'Serviço / Requerimento':'Elaboração de Peça Processual',
+'Serviço / Requerimento Administrativo':'Elaboração de Peça Processual',
+'Serviço / Requerimento Complexo':'Elaboração de Peça Processual',
+'Elaboração de Manifestação':'Elaboração de Peça Processual',
+'Diversos / Elaborar apelação':'Elaboração de Peça Processual',
+'Diversos / Manifestação Diversa (1d)':'Elaboração de Peça Processual',
+'Diversos / Manifestação diversa (2d)':'Elaboração de Peça Processual',
+'Diversos / Manifestação diversa (5d)':'Elaboração de Peça Processual',
+'Workflow / Elaborar Agravo':'Elaboração de Peça Processual',
+'Workflow / Elaborar agravo de petição':'Elaboração de Peça Processual',
+'Workflow / Elaborar Agravo Interno - negativa de segmento a RE e REsp (duas peças)':'Elaboração de Peça Processual',
+'Workflow / Elaborar Agravo Interno - negativa de segmento a RE ou REsp':'Elaboração de Peça Processual',
+'Workflow / Elaborar Agravo Interno TST':'Elaboração de Peça Processual',
+'Workflow / Elaborar apelação':'Elaboração de Peça Processual',
+'Workflow / Elaborar Apelação Penal':'Elaboração de Peça Processual',
+'Workflow / Elaborar ARE e AREsp (duas peças)':'Elaboração de Peça Processual',
+'Workflow / Elaborar ARE ou AREsp':'Elaboração de Peça Processual',
+'Workflow / Elaborar ED':'Elaboração de Peça Processual',
+'Workflow / Elaborar ED Penal':'Elaboração de Peça Processual',
+'Workflow / Elaborar Embargos à Execução':'Elaboração de Peça Processual',
+'Workflow / Elaborar Embargos de Divergência':'Elaboração de Peça Processual',
+'Workflow / Elaborar Emenda a inicial':'Elaboração de Peça Processual',
+'Workflow / Elaborar Mandado de Segurança':'Elaboração de Peça Processual',
+'Workflow / Elaborar Manifestação Diversa 10d':'Elaboração de Peça Processual',
+'Workflow / Elaborar Manifestação Diversa 15d':'Elaboração de Peça Processual',
+'Workflow / Elaborar Manifestação Diversa 20d':'Elaboração de Peça Processual',
+'Workflow / Elaborar Manifestação Diversa 30d':'Elaboração de Peça Processual',
+'Workflow / Elaborar Manifestação Diversa 5d':'Elaboração de Peça Processual',
+'Workflow / Elaborar Manifestação Diversa 8 d':'Elaboração de Peça Processual',
+'Workflow / Elaborar Pet Custas complementares':'Elaboração de Peça Processual',
+'Workflow / Elaborar Razões Finais':'Elaboração de Peça Processual',
+'Workflow / Elaborar RE':'Elaboração de Peça Processual',
+'Workflow / Elaborar RE e REsp':'Elaboração de Peça Processual',
+'Workflow / Elaborar Recurso de Sentença Penal em Juizado':'Elaboração de Peça Processual',
+'Workflow / Elaborar Recurso Hierárquico Lei 9.874/99':'Elaboração de Peça Processual',
+'Workflow / Elaborar Recurso para Juizado':'Elaboração de Peça Processual',
+'Workflow / Elaborar Recurso Sefin':'Elaboração de Peça Processual',
+'Workflow / Elaborar Recurso voluntário para CARF':'Elaboração de Peça Processual',
+'Workflow / Elaborar Recurso Voluntário Sefaz':'Elaboração de Peça Processual',
+'Workflow / Elaborar Replica à contestação':'Elaboração de Peça Processual',
+'Workflow / Elaborar REsp':'Elaboração de Peça Processual',
+'Workflow / Elaborar REsp para CARF':'Elaboração de Peça Processual',
+'Workflow / Elaborar RO':'Elaboração de Peça Processual',
+'Workflow / Elaborar: Especificar provas e temas sobre provas':'Elaboração de Peça Processual',
+// CONTRATOS ESPECIAIS
+'Diversos / Reajuste contratual':'Reajuste contratual',
+'Diversos / Renovação contratual':'Renovação contratual',
+// ATIVIDADE INTERNA
+'Alvara':'Atividade Interna','ANÁLISE DE DOCUMENTAÇÃO':'Atividade Interna',
+'ANÁLISE DE PROPOSTA':'Atividade Interna','Andamento':'Atividade Interna',
+'Atendimento/Ligação':'Atividade Interna','Canal de Denúncia':'Atividade Interna',
+'Criação de conteúdo':'Atividade Interna','Diversos':'Atividade Interna',
+'Diversos / Contato Telefônico':'Atividade Interna',
+'Diversos / Informar sentença ao cliente':'Atividade Interna',
+'Diversos / Resposta de E-mail':'Atividade Interna',
+'Edital':'Atividade Interna','Elaboração de certificados':'Atividade Interna',
+'Elaboração de material treinamento':'Atividade Interna',
+'Estudo de Caso':'Atividade Interna','Intimação':'Atividade Interna',
+'Intimação Eletrônica':'Atividade Interna','Intimação Eletrônica / Verificação':'Atividade Interna',
+'Intimações Iprazos':'Atividade Interna','Pesquisas/Estudos':'Atividade Interna',
+'Pesquisas/Estudos / Elaboração de Nova Tese':'Atividade Interna',
+'Pesquisas/Estudos / Elaboração de Relatório':'Atividade Interna',
+'Publicação':'Atividade Interna','Publicação / Intimação':'Atividade Interna',
+'Publicação / Verificação':'Atividade Interna','Publicações Iprazos':'Atividade Interna',
+'Relatório de Processos':'Atividade Interna','Resposta de E-mail':'Atividade Interna',
+'Revisão':'Atividade Interna','Revisão / Agravo contra decisão que inadmite na origem Resp ou Rext (art. 1.042 c/c art. 1.003, § 5º CPC)':'Atividade Interna',
+'Saneamento de relatório':'Atividade Interna','Tratativa de Acordo':'Atividade Interna',
+'Venda':'Atividade Interna','Verificar protocolo':'Atividade Interna',
+'Verificar protocolo / Apelação':'Atividade Interna',
+'VISTO JURÍDICO':'Atividade Interna',
+'Workflow / Informar acórdão ao cliente':'Atividade Interna',
+'Workflow / Enviar ao cliente petição inicial RT e documentos':'Atividade Interna',
+'Workflow / Enviar sentença ao cliente (2d)':'Atividade Interna',
+'Workflow / Enviar sentença ao cliente (3d)':'Atividade Interna',
+'Workflow / Informar sentença ao cliente (4d)':'Atividade Interna',
+'Workflow / Analisar se há honorários contratuais':'Atividade Interna',
+'Workflow / Análise de execução de honorários (20d)':'Atividade Interna',
+'Workflow / Atos de Impulso (15d)':'Atividade Interna','Workflow / Atos de Impulso (5d)':'Atividade Interna',
+'Workflow / Conferência (4d)':'Atividade Interna','Workflow / Conferencia (7d)':'Atividade Interna',
+'Workflow / Decidir providências PAT':'Atividade Interna',
+'Workflow / Habilitar Dra. Imaculada no Processo':'Atividade Interna',
+'Workflow / Interlocutória CPC':'Atividade Interna','Workflow / Interlocutória trabalhista':'Atividade Interna',
+'Workflow / Interlocutória Trabalhista em Audiência':'Atividade Interna',
+'Workflow / Memoriais (25d)':'Atividade Interna',
+'Workflow / Pagamento de parcelamento execução CPC Art. 916':'Atividade Interna',
+'Workflow / Parcelamento CPC Art. 916 em execução parcela 1':'Atividade Interna',
+'Workflow / Parcelamento CPC Art. 916 em execução parcela 2':'Atividade Interna',
+'Workflow / Parcelamento CPC Art. 916 em execução parcela 3':'Atividade Interna',
+'Workflow / Parcelamento CPC Art. 916 em execução parcela 4':'Atividade Interna',
+'Workflow / Parcelamento CPC Art. 916 em execução parcela 5':'Atividade Interna',
+'Workflow / Parcelamento CPC Art. 916 em execução parcela 6':'Atividade Interna',
+'Workflow / Protocolo (14d)':'Atividade Interna','Workflow / Protocolo (2d)':'Atividade Interna',
+'Workflow / Protocolo (4d)':'Atividade Interna','Workflow / Protocolo (7d)':'Atividade Interna',
+'Workflow / Protocolo (9d)':'Atividade Interna',
+'Workflow / Providenciar REsp Sefaz':'Atividade Interna',
+'Workflow / Providências (1d)':'Atividade Interna','Workflow / Providências (2d)':'Atividade Interna',
+'Workflow / Providencias em Execução Trabalhista':'Atividade Interna',
+'Workflow / Saneamento de dados (10d)':'Atividade Interna','Workflow / Saneamento de dados (1d)':'Atividade Interna',
+'Workflow / Saneamento de dados (20d)':'Atividade Interna','Workflow / Saneamento de dados (35d)':'Atividade Interna',
+'Workflow / Sinalizar':'Atividade Interna','Workflow / Sinalizar Perícia':'Atividade Interna',
+'Workflow / Acordão TJ TRF':'Atividade Interna','Workflow / Acórdão TRT':'Atividade Interna',
+'Workflow / Contrarrazões Trabalhista':'Atividade Interna',
+'Workflow / Decidir providências PAT':'Atividade Interna',
+'Workflow / Decisão complexa':'Atividade Interna','Workflow / Decisão Presidencia TRT':'Atividade Interna',
+'Workflow / Decisão STJ/STF':'Atividade Interna','Workflow / Decisão TJ TRF sobre REsp e RE':'Atividade Interna',
+'Workflow / Decisão TST':'Atividade Interna',
+'Workflow / Elaborar Pet Custas complementares':'Elaboração de Peça Processual',
+'Workflow / Gerar taxa recurso Sefaz':'Atividade Interna',
+'Workflow / Providenciar REsp Sefaz':'Atividade Interna',
+'Workflow / Registro de audiência':'Audiência',
+'Memoriais':'Atividade Interna',
+'Elaboração de Política de Segurança da Informação':'Elaboração de Política de Segurança da Informação',
+'Serviço / Análise de Procuração':'Atividade Interna',
+'Serviço / Elaboração de Procuração':'Atividade Interna',
+'Serviço / Elaboração de Proposta':'Atividade Interna',
+'Serviço / Elaboração de Recibo':'Atividade Interna',
+'Pagamento Solidário/Subsidiário':'Atividade Interna',
+'Honorários - Verificar / Monitorar':'Atividade Interna',
+'Cobrança de honorarios':'Atividade Interna',
+'Diversos / Reajuste contratual':'Reajuste contratual',
+'Diversos / Renovação contratual':'Renovação contratual',
+'Diversos / Ida à Delegacia':'Atividade Interna','Diversos / Ida à Secretaria':'Atividade Interna',
+'Diversos / CJ Atualizar Sistema de Cliente':'Atividade Interna',
+'Diversos / CJ Solicitações equipe técnica':'Atividade Interna',
+'Diversos / CJ Verificar Trânsito em Julgado/ Cadastrar eSocial':'Atividade Interna',
+'Diversos / ET Solicitações CJ':'Atividade Interna',
+'Diversos / Encaminhar inicial e solicitar documentos / habilitar no processo':'Atividade Interna',
+'Diversos / Verificar Processo Especial':'Atividade Interna',
+'Diversos / Verificar se contrato é por ato e fazer a cobrança':'Atividade Interna',
+'Reunião / Prospect':'Reunião',
+  'Audiência / Audiência - Cível':'Audiência',
+  'Serviço /':'Elaboração de Contrato',
+  'Audiência /':'Audiência',
+  'Reunião /':'Reunião',
+  'Reunião / Reunião':'Reunião',
+};
+
+// Natureza simplification map (from services spreadsheet full name → short name)
+const NAT_MAP = {
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área administrativa':'Societária',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Ambiental':'Ambiental',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Cível':'Cível',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Cível / Consultas':'Consultas',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Cível / Processos':'Cível',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Contratual':'Contratual',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Empresarial / Societária':'Societária',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Hospitalar':'Hospitalar',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Hospitalar / Pareceres':'Hospitalar',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / LGPD':'LGPD',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Operações e Negocios':'Operações e Negócios',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Penal':'Penal',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Penal / Processos':'Penal',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Regulatório':'Regulatório',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Trabalhista':'Trabalhista',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Trabalhista / Consultas':'Consultas',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Trabalhista / Pareceres':'Trabalhista',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Trabalhista / Processos':'Trabalhista',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Tributário':'Tributário',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Tributário / Consultas':'Consultas',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Tributário / Processos':'Tributário',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Direito Administrativo':'Direito Administrativo',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Direito Administrativo / Processos':'Direito Administrativo',
+'IMACULADA GORDIANO SOCIEDADE DE ADVOGADOS / Área operacional / Consumidor':'Consumidor',
+};
+
+// Robust year extractor — handles dd/MM/yyyy, yyyy-MM-dd, Date objects, any format
+function numBR(v){
+  // Converte valores em formato BR ('1.172.337,53') ou numérico para Number
+  if(v===null||v===undefined||v==='') return 0;
+  if(typeof v==='number') return isNaN(v)?0:v;
+  var s=String(v).trim();
+  if(!s||s==='null'||s==='undefined'||s==='-') return 0;
+  // remover R$, espaços e qualquer caractere não-numérico exceto . , -
+  s=s.replace(/[R$\s]/gi,'').replace(/[^0-9.,-]/g,'');
+  if(!s) return 0;
+  var hasComma=s.indexOf(',')>=0;
+  var hasDot=s.indexOf('.')>=0;
+  if(hasComma&&hasDot){
+    // formato BR: ponto=milhar, vírgula=decimal → remover pontos, vírgula vira ponto
+    s=s.replace(/\./g,'').replace(',','.');
+  } else if(hasComma){
+    // só vírgula → decimal BR
+    s=s.replace(',','.');
+  } else if(hasDot){
+    // só ponto: pode ser milhar BR (1.234) ou decimal US (1234.56)
+    var parts=s.split('.');
+    if(parts.length>2){
+      // múltiplos pontos = separador de milhar → remover todos
+      s=s.replace(/\./g,'');
+    } else if(parts[1] && parts[1].length===3 && parts[0].length<=3){
+      // padrão X.XXX (3 dígitos após ponto, sem vírgula) = milhar BR → remover ponto
+      s=s.replace(/\./g,'');
+    }
+    // senão mantém como decimal (ex: 1234.56)
+  }
+  var n=parseFloat(s);
+  return isNaN(n)?0:n;
+}
+function parseYear(d){
+  if(d===null||d===undefined||d==='') return NaN;
+  if(d instanceof Date) return isNaN(d.getTime()) ? NaN : d.getFullYear();
+  // Número serial do Excel (dias desde 1900)
+  if(typeof d==='number' && d>0 && d<60000){
+    var ed=new Date(Date.UTC(1899,11,30)+d*86400000);
+    if(!isNaN(ed.getTime())) return ed.getFullYear();
+  }
+  var s=String(d).trim();
+  if(!s||s==='null'||s==='undefined') return NaN;
+  // ISO: 2020-10-19...
+  var iso=s.match(/^(\d{4})-\d{1,2}-\d{1,2}/); if(iso) return parseInt(iso[1],10);
+  // 4 dígitos em qualquer lugar
+  var m4=s.match(/\b(19\d{2}|20\d{2})\b/); if(m4) return parseInt(m4[1],10);
+  // dd/mm/yy ou mm-dd-yy (2 dígitos) → assume 20yy se <=40, senão 19yy
+  var m2=s.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2})(?!\d)/);
+  if(m2){var yy=parseInt(m2[3],10); return yy<=40?2000+yy:1900+yy;}
+  return NaN;
+}
+
+function uT(t){
+  if(!t || String(t).trim()==='' || t==='nan') return 'Consulta';
+  var raw = String(t).trim();
+  if(TAX[raw]) return TAX[raw];
+  // Normalize new export format: 'Tipo - Subtipo' or 'Tipo - ' (trailing dash)
+  var s = raw.replace(/\s*-\s*$/, '').trim();   // strip trailing ' - ' or ' -'
+  if(TAX[s]) return TAX[s];
+  s = s.replace(/ - /, ' / ');                    // replace first ' - ' with ' / '
+  if(TAX[s]) return TAX[s];
+  return raw;
+}
+var POS_MAP={
+  'Ativo':'Ativo','Autor':'Ativo',
+  'Interessado':'Terceiro Interessado',
+  'Terceiro':'Terceiro Interessado',
+  'Terceiro Envolvido':'Terceiro Interessado',
+  'TERCEIRO INTERESSADO':'Terceiro Interessado',
+  'Outros':'Outros',
+  'Parte':'Passivo','Passivo':'Passivo',
+  'Réu':'Passivo','Reu':'Passivo',
+  'Testemunha':'Passivo'
+};
+function uPos(p){
+  if(!p||String(p).trim()==='') return 'Não informado';
+  var raw=String(p).trim();
+  if(POS_MAP[raw]) return POS_MAP[raw];
+  // tentar case-insensitive
+  var low=raw.toLowerCase();
+  for(var k in POS_MAP){ if(k.toLowerCase()===low) return POS_MAP[k]; }
+  return raw;
+}
+function uNat(n){
+  if(!n || String(n).trim()==='') return 'Não informado';
+  return NAT_MAP[String(n).trim()] || String(n).trim();
+}
+
+
+function uT(t){
+  if(!t || String(t).trim()==='' || t==='nan') return 'Consulta';
+  var raw = String(t).trim();
+  if(TAX[raw]) return TAX[raw];
+  // Normalize new export format: 'Tipo - Subtipo' or 'Tipo - ' (trailing dash)
+  var s = raw.replace(/\s*-\s*$/, '').trim();   // strip trailing ' - ' or ' -'
+  if(TAX[s]) return TAX[s];
+  s = s.replace(/ - /, ' / ');                    // replace first ' - ' with ' / '
+  if(TAX[s]) return TAX[s];
+  return raw;
+}
+
+
+
+function isVis(id){var el=document.getElementById(id);return el?el.checked:true;}
+
+/* ── IndexedDB storage ─────────────────────────────────────── */
+var _IDB=null;
+function openIDB(cb){
+  if(_IDB){cb(_IDB);return;}
+  try{
+    var req=indexedDB.open('igsa_dash_v1',1);
+    req.onupgradeneeded=function(e){
+      var db=e.target.result;
+      ['proc','serv','aud','audfut','dec','meta'].forEach(function(s){
+        if(!db.objectStoreNames.contains(s)) db.createObjectStore(s);
+      });
+    };
+    req.onsuccess=function(e){_IDB=e.target.result;cb(_IDB);};
+    req.onerror=function(){cb(null);};
+  }catch(e){cb(null);}
+}
+
+function saveToStorage(key,data){
+  openIDB(function(db){
+    if(!db){_showStoWarn();return;}
+    try{
+      var ts=new Date().toLocaleDateString('pt-BR');
+      var tx=db.transaction([key,'meta'],'readwrite');
+      tx.objectStore(key).put(JSON.stringify(data),'data');
+      tx.objectStore(key).put(ts,'ts');
+      tx.objectStore('meta').put(ts,'ts');
+      tx.oncomplete=function(){updateStoBar();};
+      tx.onerror=function(){_showStoWarn();};
+    }catch(e){_showStoWarn();}
+  });
+}
+
+function idbLoad(key,cb){
+  openIDB(function(db){
+    if(!db){cb(null,null);return;}
+    try{
+      var tx=db.transaction(key,'readonly');
+      var d=null,ts=null,done=0;
+      var rData=tx.objectStore(key).get('data');
+      var rTs=tx.objectStore(key).get('ts');
+      rData.onsuccess=function(e){try{d=e.target.result?JSON.parse(e.target.result):null;}catch(ex){}};
+      rTs.onsuccess=function(e){ts=e.target.result||null;};
+      tx.oncomplete=function(){cb(d,ts);};
+      tx.onerror=function(){cb(null,null);};
+    }catch(e){cb(null,null);}
+  });
+}
+
+function clearStorage(){
+  openIDB(function(db){
+    if(db){
+      ['proc','serv','aud','audfut','dec','meta'].forEach(function(s){
+        try{var tx=db.transaction(s,'readwrite');tx.objectStore(s).clear();}catch(e){}
+      });
+    }
+  });
+  try{['igsa_logo','igsa_title','igsa_cli','igsa_yr'].forEach(function(k){localStorage.removeItem(k);});}catch(e){}
+  var ids={proc:'sp',serv:'ss',aud:'sa',audfut:'saf',dec:'sd'};
+  ['proc','serv','aud','audfut','dec'].forEach(function(k){
+    ST[k]=null;
+    var dz=document.getElementById('dz-'+k);if(dz)dz.classList.remove('ok');
+    var lbl=document.getElementById(ids[k]);if(lbl)lbl.textContent='Nenhum arquivo';
+  });
+  ST.logo=null;
+  var dzl=document.getElementById('dz-logo');if(dzl)dzl.classList.remove('ok');
+  var lp=document.getElementById('lprev');if(lp){lp.src='';lp.style.display='none';}
+  var sl=document.getElementById('sl');if(sl)sl.textContent='Nenhuma imagem';
+  document.getElementById('sto-bar').style.display='none';
+  document.getElementById('sto-warn').style.display='none';
+  // Limpar lista e seleção de clientes
+  _allClients=[]; _clientSrcDiag={};
+  var cliInp=document.getElementById('cli'); if(cliInp) cliInp.value='';
+  var srch=document.getElementById('cms-search'); if(srch) srch.value='';
+  buildClientList();
+  // Limpar ajustes de classificação de decisões
+  _dvalOverrides={};
+  try{localStorage.removeItem('igsa_dec_ov');}catch(e){}
+  openIDB(function(db){ if(db){ try{var tx=db.transaction('meta','readwrite');tx.objectStore('meta').delete('dec_overrides');}catch(e){} } });
+}
+
+function _showStoWarn(){
+  var el=document.getElementById('sto-warn');if(el)el.style.display='block';
+}
+
+function updateStoBar(){
+  openIDB(function(db){
+    if(!db)return;
+    var keys=['proc','serv','aud','audfut','dec'];
+    var res={},done=0;
+    keys.forEach(function(k){
+      try{
+        var tx=db.transaction(k,'readonly');
+        var req=tx.objectStore(k).get('data');
+        req.onsuccess=function(e){
+          try{var d=e.target.result?JSON.parse(e.target.result):null;res[k]=d?d.length:0;}catch(ex){res[k]=0;}
+          done++;if(done===keys.length)_renderStoBar(db,res);
+        };
+        req.onerror=function(){res[k]=0;done++;if(done===keys.length)_renderStoBar(db,res);};
+      }catch(e){res[k]=0;done++;if(done===keys.length)_renderStoBar(db,res);}
+    });
+  });
+}
+
+function _renderStoBar(db,res){
+  var bar=document.getElementById('sto-bar');if(!bar)return;
+  var any=false;
+  var ids={proc:'sto-proc',serv:'sto-serv',aud:'sto-aud'};
+  Object.keys(ids).forEach(function(k){
+    var el=document.getElementById(ids[k]);
+    if(el){if(res[k]>0){el.textContent=k.toUpperCase()+': '+res[k]+' reg';any=true;}else el.textContent=k.toUpperCase()+': —';}
+  });
+  try{
+    var txm=db.transaction('meta','readonly');
+    var reqTs=txm.objectStore('meta').get('ts');
+    reqTs.onsuccess=function(e){
+      var tsel=document.getElementById('sto-ts');
+      if(tsel&&e.target.result)tsel.textContent='Atualizado em '+e.target.result;
+    };
+  }catch(e){}
+  bar.style.display=any?'flex':'none';
+}
+
+function showErr(m){
+  var el = document.getElementById('errbox');
+  el.textContent = m;
+  el.style.display = 'block';
+}
+function clrErr(){
+  var el = document.getElementById('errbox');
+  el.textContent = '';
+  el.style.display = 'none';
+}
+function showWarns(list){
+  var el = document.getElementById('warnblock');
+  if(!list || list.length===0){ el.innerHTML=''; return; }
+  var html = '<div class="warn"><h4>Atenção — '+list.length+' inconsistência(s)</h4><ul>';
+  list.forEach(function(w){ html += '<li>'+w+'</li>'; });
+  html += '</ul></div>';
+  el.innerHTML = html;
+}
+
+function loadF(inp, key){
+  var f = inp.files[0];
+  if(!f) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      var wb = XLSX.read(new Uint8Array(e.target.result), {type:'array', cellDates:true});
+      var ws = wb.Sheets[wb.SheetNames[0]];
+      var rows = XLSX.utils.sheet_to_json(ws, {defval:null, raw:true, cellDates:true});
+      if(key==='serv' && rows.length>0){
+        var firstVals = Object.values(rows[0]);
+        if(firstVals.indexOf('Pasta')>=0 || firstVals.indexOf('Natureza')>=0){
+          var oldKeys = Object.keys(rows[0]);
+          var newKeys = oldKeys.map(function(k){ return rows[0][k]; });
+          rows = rows.slice(1).map(function(r){
+            var o={};
+            oldKeys.forEach(function(ok,i){ if(newKeys[i]) o[newKeys[i]]=r[ok]; });
+            return o;
+          });
+        }
+      }
+      // Normalizar nomes de colunas de Processos (aceita formato novo com nomes longos)
+      if(key==='proc' && rows.length>0){ rows = _normalizeProcCols(rows); }
+      ST[key] = rows;
+      if(rows.length>0){ ST[key+'_cols'] = Object.keys(rows[0]); }
+      saveToStorage(key, rows);
+      document.getElementById('dz-'+key).classList.add('ok');
+      if(key==='proc'||key==='serv'||key==='aud'||key==='dec') buildClientList();
+      var ids = {proc:'sp', serv:'ss', aud:'sa', dec:'sd', audfut:'saf'};
+      document.getElementById(ids[key]).textContent = '✓ '+f.name+' ('+rows.length+')';
+    }catch(ex){
+      showErr('Erro ao ler '+f.name+': '+ex.message);
+    }
+  };
+  reader.readAsArrayBuffer(f);
+}
+
+function loadLogo(inp){
+  var f = inp.files[0]; if(!f) return;
+  var r = new FileReader();
+  r.onload = function(e){
+    ST.logo = e.target.result;
+    openIDB(function(db){
+      if(db){try{var txL=db.transaction('meta','readwrite');txL.objectStore('meta').put(e.target.result,'logo');txL.objectStore('meta').put(new Date().toLocaleDateString('pt-BR'),'ts');}catch(ex){}}
+      else{try{localStorage.setItem('igsa_logo',e.target.result);}catch(ex2){}}
+      updateStoBar();
+    });
+    var p = document.getElementById('lprev');
+    p.src = e.target.result; p.style.display='block';
+    document.getElementById('sl').textContent = '✓ '+f.name;
+    document.getElementById('dz-logo').classList.add('ok');
+  };
+  r.readAsDataURL(f);
+}
+
+var COLORS = ['#7E1F2C','#9E3340','#CDA736','#BE5060','#D47080','#A89840','#E8A0A8','#F5D0D4','#6B1823','#4E121A'];
+var GOLD = '#CDA736';
+
+function mkBar(id, labels, vals, horiz, colors){
+  if(CH[id]) CH[id].destroy();
+  var bg = colors || vals.map(function(_,i){ return COLORS[i]||COLORS[COLORS.length-1]; });
+  var dlPlugin = {};
+  try{
+    if(window.ChartDataLabels){
+      dlPlugin = {datalabels:{
+        anchor: horiz?'end':'end', align: horiz?'end':'top',
+        color: '#333', font:{size:10, weight:'700', family:"Inter,sans-serif"},
+        formatter: function(v){ return v>0?v:''; },
+        clamp:true, clip:false,
+        padding: horiz?{right:6}:{top:2}
+      }};
+    }
+  }catch(e){}
+  CH[id] = new Chart(document.getElementById(id), {
+    type:'bar',
+    data:{labels:labels, datasets:[{data:vals, backgroundColor:bg, borderRadius:4, borderSkipped:false}]},
+    options:{
+      indexAxis: horiz?'y':'x', responsive:true, maintainAspectRatio:false,
+      plugins: Object.assign({legend:{display:false}}, dlPlugin),
+      scales:{
+        x:{grid:{color:horiz?'#F5E8EA':'transparent'}, ticks:{color:'#7A4050',font:{size:10}}, border:{display:false}},
+        y:{grid:{color:horiz?'transparent':'#F5E8EA'},
+           ticks:{color:'#3A2020',font:{size:10},
+             autoSkip:false,
+             callback:function(val){
+               var lbl=this.getLabelForValue(val);
+               return lbl; // texto completo, sem truncar
+             }},
+           afterFit: horiz?function(scale){
+             // largura adaptativa: ~6.2px por caractere do maior rótulo, entre 150 e 340
+             var maxLen=0;
+             (scale.ticks||[]).forEach(function(t){var L=String(t.label||'').length; if(L>maxLen)maxLen=L;});
+             var want=Math.min(340, Math.max(150, maxLen*6.2+16));
+             scale.width = Math.max(scale.width, want);
+           }:undefined,
+           border:{display:false}}
+      },
+      layout:{padding:{right:horiz?52:0, top:24}}
+    }
+  });
+}
+
+function mkDonut(id, labels, vals){
+  if(CH[id]) CH[id].destroy();
+  var dlPlugin = {};
+  try{
+    if(window.ChartDataLabels){
+      dlPlugin = {datalabels:{
+        color:'#fff', font:{size:10, weight:'700'},
+        formatter:function(v,ctx){
+          var t=ctx.dataset.data.reduce(function(a,b){return a+b;},0);
+          return v>0 ? Math.round(v/t*100)+'%' : '';
+        }
+      }};
+    }
+  }catch(e){}
+  CH[id] = new Chart(document.getElementById(id), {
+    type:'doughnut',
+    data:{labels:labels, datasets:[{data:vals, backgroundColor:['#7E1F2C','#E8A0A8','#CDA736'], borderWidth:2, borderColor:'#fff'}]},
+    options:{
+      cutout:'56%', responsive:true, maintainAspectRatio:false,
+      plugins: Object.assign({legend:{position:'bottom', labels:{font:{family:'Inter,sans-serif',size:10},color:'#3A2020',padding:8}},
+        tooltip:{callbacks:{label:function(ctx){return ' '+ctx.label+': '+ctx.parsed;}}}
+      }, dlPlugin)
+    }
+  });
+}
+
+function fDate(v){
+  if(!v) return '';
+  try{ var d=new Date(v); return isNaN(d)?String(v):d.toLocaleDateString('pt-BR'); }catch(e){return String(v);}
+}
+function fVal(v){
+  var n=parseFloat(v);
+  return isNaN(n)||n===0?'R$ 0,00':'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function fValBlankAsZero(v){
+  var n=parseFloat(v);
+  return isNaN(n)?'R$ 0,00':'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function esc(v){
+  return String(v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function getField(rows, candidates){
+  if(!rows||rows.length===0) return null;
+  for(var i=0;i<candidates.length;i++){
+    if(candidates[i] in rows[0]) return candidates[i];
+  }
+  return null;
+}
+
+// Normaliza nome de cliente: sem acento, sem espaços duplicados, maiúsculo
+function _normCli(s){
+  return String(s||'').trim().toUpperCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/\s+/g,' ');
+}
+// Conjunto normalizado dos clientes selecionados (cache por chamada)
+function _normSet(clients){
+  var set={};
+  (clients||[]).forEach(function(c){ set[_normCli(c)]=true; });
+  return set;
+}
+function filterClients(rows, field, clients){
+  if(!rows||!field||!clients||!clients.length) return rows||[];
+  var set=_normSet(clients);
+  // célula pode ter vários clientes (;): inclui se QUALQUER um estiver selecionado
+  return rows.filter(function(r){
+    if(r[field]==null) return false;
+    var names=splitClients(r[field]);
+    for(var i=0;i<names.length;i++){ if(set[_normCli(names[i])]) return true; }
+    return false;
+  });
+}
+
+// ════ Validação de Decisões ════
+var _dvalRows = [];          // decisões preparadas p/ validação
+var _dvalOverrides = {};     // {decKey: 'Favorável'|...} ajustes manuais
+var _dvalOpts = ['Favorável','Desfavorável','Extinção','Inconclusivo'];
+function _decKey(proc, polo, texto){
+  var s=String(proc||'')+'|'+String(polo||'')+'|'+String(texto||'').substring(0,60);
+  var hh=0; for(var i=0;i<s.length;i++){ hh=((hh<<5)-hh+s.charCodeAt(i))|0; }
+  return 'd'+(hh>>>0);
+}
+// classificação automática REDUZIDA (parciais unificadas)
+function autoDecLabel(polo, texto){
+  var cls=classifyDecisionGlobal(polo, texto);
+  if(cls==='favoravel'||cls==='favoravel_parcial') return 'Favorável';
+  if(cls==='desfavoravel'||cls==='desfavoravel_parcial') return 'Desfavorável';
+  if(cls==='extinto') return 'Extinção';
+  return 'Inconclusivo';
+}
+function loadDvalOverrides(cb){
+  openIDB(function(db){
+    if(!db){ try{var s=localStorage.getItem('igsa_dec_ov'); _dvalOverrides=s?JSON.parse(s):{};}catch(e){_dvalOverrides={};} cb&&cb(); return; }
+    try{
+      var tx=db.transaction('meta','readonly');
+      var rq=tx.objectStore('meta').get('dec_overrides');
+      rq.onsuccess=function(e){ try{_dvalOverrides=e.target.result?JSON.parse(e.target.result):{};}catch(_){_dvalOverrides={};} cb&&cb(); };
+      rq.onerror=function(){ _dvalOverrides={}; cb&&cb(); };
+    }catch(ex){ _dvalOverrides={}; cb&&cb(); }
+  });
+}
+function saveDvalOverrides(){
+  var json=JSON.stringify(_dvalOverrides);
+  try{localStorage.setItem('igsa_dec_ov',json);}catch(e){}
+  openIDB(function(db){
+    if(!db) return;
+    try{ var tx=db.transaction('meta','readwrite'); tx.objectStore('meta').put(json,'dec_overrides'); }catch(ex){}
+  });
+}
+// prepara as linhas de decisão (aplica filtro de cliente) — retorna array
+function prepareDvalRows(clients){
+  var rows=[];
+  if(!ST.dec || !ST.dec.length) return rows;
+  var keys=Object.keys(ST.dec[0]);
+  var natFld=keys[0]||'', procFld=keys[1]||'', clientFld=keys[2]||'',
+      poloFld=keys[3]||'', dataPubFld=keys[21]||'', textoFld=keys[keys.length-1]||'';
+  var _cset = clients ? _normSet(clients) : null;
+  var src = _cset ? ST.dec.filter(function(r){ if(r[clientFld]==null) return false; var ns=splitClients(r[clientFld]); for(var i=0;i<ns.length;i++){if(_cset[_normCli(ns[i])])return true;} return false; }) : ST.dec;
+  src.forEach(function(r){
+    var proc=r[procFld]||'', polo=r[poloFld]||'', texto=r[textoFld]||'';
+    var key=_decKey(proc,polo,texto);
+    var auto=autoDecLabel(polo,texto);
+    var fin=_dvalOverrides[key]||auto;
+    rows.push({key:key, nat:r[natFld]||'', proc:proc, cliente:r[clientFld]||'', polo:polo,
+      data:r[dataPubFld]||'', texto:String(texto), auto:auto, final:fin});
+  });
+  return rows;
+}
+function dvalRender(){
+  var head=document.getElementById('dval-head');
+  var body=document.getElementById('dval-body');
+  if(!head||!body) return;
+  head.innerHTML=['Natureza','Processo','Cliente','Polo','Data','Classificação automática','Conclusão (ajustável)','Trecho da decisão']
+    .map(function(hh){return '<th style="text-align:left;padding:7px 9px;background:var(--c8);color:#fff;font-size:.62rem;white-space:nowrap">'+hh+'</th>';}).join('');
+  var fSearch=(document.getElementById('dval-search').value||'').toLowerCase();
+  var fSel=document.getElementById('dval-filter').value;
+  var shown=0, adj=0;
+  var html='';
+  _dvalRows.forEach(function(d,i){
+    var isAdj=!!_dvalOverrides[d.key];
+    if(isAdj) adj++;
+    if(fSearch){ var hay=(d.cliente+' '+d.proc+' '+d.nat).toLowerCase(); if(hay.indexOf(fSearch)<0) return; }
+    if(fSel){ if(fSel==='_ajustadas'){ if(!isAdj) return; } else if(d.final!==fSel) return; }
+    shown++;
+    var bg=i%2?'var(--c0)':'#fff';
+    var selHtml='<select onchange="dvalSet(\''+d.key+'\',this.value)" style="padding:4px 6px;border:1px solid '+(isAdj?'var(--gd)':'var(--bd)')+';border-radius:5px;font-size:.68rem;font-family:inherit;background:'+(isAdj?'#FFF8E0':'#fff')+';font-weight:'+(isAdj?'700':'400')+'">';
+    _dvalOpts.forEach(function(o){ selHtml+='<option value="'+o+'" '+(d.final===o?'selected':'')+'>'+o+'</option>'; });
+    selHtml+='</select>'+(isAdj?' <span title="ajustado manualmente" style="color:var(--gd)">●</span>':'');
+    html+='<tr style="background:'+bg+'">';
+    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(d.nat)+'</td>';
+    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd);font-family:monospace;font-size:.6rem">'+esc(d.proc)+'</td>';
+    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(String(d.cliente).substring(0,28))+'</td>';
+    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(d.polo)+'</td>';
+    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd);white-space:nowrap">'+esc(fDate(d.data))+'</td>';
+    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd);color:var(--mu)">'+esc(d.auto)+'</td>';
+    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+selHtml+'</td>';
+    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd);color:var(--mu)">'+esc(d.texto.substring(0,160))+'…</td>';
+    html+='</tr>';
+  });
+  body.innerHTML=html||'<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--mu)">Nenhuma decisão para os filtros aplicados.</td></tr>';
+  document.getElementById('dval-count').textContent=shown+' de '+_dvalRows.length+' decisões · '+adj+' ajustadas';
+}
+function dvalSet(key,val){
+  var auto=null;
+  for(var i=0;i<_dvalRows.length;i++){ if(_dvalRows[i].key===key){ _dvalRows[i].final=val; auto=_dvalRows[i].auto; break; } }
+  // se igual ao automático, remove override; senão grava
+  if(val===auto) delete _dvalOverrides[key]; else _dvalOverrides[key]=val;
+  saveDvalOverrides();
+  dvalRender();
+}
+var _pendingGenerate=null;
+var _dvalDone=false;
+function showDval(clients){
+  loadDvalOverrides(function(){
+    _dvalRows=prepareDvalRows(clients);
+    document.getElementById('cfg').style.display='none';
+    document.getElementById('dsh').style.display='none';
+    document.getElementById('dval').style.display='block';
+    document.getElementById('dval-search').value='';
+    document.getElementById('dval-filter').value='';
+    dvalRender();
+    window.scrollTo(0,0);
+  });
+}
+function dvalBack(){
+  document.getElementById('dval').style.display='none';
+  document.getElementById('dsh').style.display='none';
+  document.getElementById('cfg').style.display='block';
+  window.scrollTo(0,0);
+}
+function dvalConfirm(){
+  document.getElementById('dval').style.display='none';
+  if(_pendingGenerate){ var fn=_pendingGenerate; _pendingGenerate=null; fn(); }
+}
+// retorna a conclusão final (revisada) de uma decisão
+function finalDecLabel(proc, polo, texto){
+  var key=_decKey(proc,polo,texto);
+  return _dvalOverrides[key] || autoDecLabel(polo,texto);
+}
+
+// ════ Filtro de clientes (multiselect com busca) ════
+var _allClients = [];
+// Formata nome para exibição: Title Case com preposições minúsculas e siglas preservadas
+function _titleCase(s){
+  if(!s) return '';
+  var low=['de','da','do','das','dos','e','em','a','o','para','com','sob','sem'];
+  var keepUpper=['LTDA','S.A.','S/A','SA','ME','EPP','EIRELI','S/S','LTDA.','CJ','UPA','S.S.'];
+  var words=String(s).trim().split(/\s+/);
+  return words.map(function(w,i){
+    var upper=w.toUpperCase();
+    // preserva siglas conhecidas
+    if(keepUpper.indexOf(upper)>=0) return upper;
+    // preserva tokens curtos só de consoantes/pontos (siglas)
+    if(w.length<=4 && /^[A-Z.\/]+$/.test(upper) && !/[AEIOU]/.test(upper.replace(/[.\/]/g,''))) return upper;
+    var lw=w.toLowerCase();
+    // preposições minúsculas (exceto se 1ª palavra)
+    if(i>0 && low.indexOf(lw)>=0) return lw;
+    // capitaliza 1ª letra, trata hífen
+    return lw.replace(/(^|[-\/(])([a-zà-ú])/g, function(m,p,c){return p+c.toUpperCase();});
+  }).join(' ');
+}
+// Normaliza colunas de Processos: mapeia nomes longos/variações p/ nomes padrão
+function _normalizeProcCols(rows){
+  if(!rows||!rows.length) return rows;
+  var keys=Object.keys(rows[0]);
+  // mapa de variações → nome padrão
+  var rename={};
+  keys.forEach(function(k){
+    var kl=k.toLowerCase().trim();
+    // Cliente principal (nome/razão social) → 'Cliente principal'
+    if(kl==='cliente principal / contato / nome/razão social' || kl==='cliente principal / contato / nome/razao social') rename[k]='Cliente principal';
+    // Posição → 'Posição'
+    else if(kl==='cliente principal / posição' || kl==='cliente principal / posicao') rename[k]='Posição';
+  });
+  if(Object.keys(rename).length===0) return rows; // já está no formato padrão
+  return rows.map(function(r){
+    var o={};
+    for(var k in r){ o[rename[k]||k]=r[k]; }
+    return o;
+  });
+}
+// Separa uma célula de cliente em nomes individuais (campos podem ter vários com ';')
+function splitClients(v){
+  if(v==null) return [];
+  return String(v).split(/\s*;\s*/).map(function(s){return s.trim();}).filter(Boolean);
+}
+// Detecta a coluna de cliente por NOME (nunca por posição fixa)
+var CLIENT_FIELD_NAMES = ['Cliente principal','cliente principal','Cliente Processo','Cliente processo','Cliente do Processo','Cliente do processo','Cliente','cliente'];
+function detectClientField(rows){
+  if(!rows||!rows.length) return null;
+  var keys=Object.keys(rows[0]||{});
+  for(var i=0;i<CLIENT_FIELD_NAMES.length;i++){ if(keys.indexOf(CLIENT_FIELD_NAMES[i])>=0) return CLIENT_FIELD_NAMES[i]; }
+  return null;
+}
+var _clientSrcDiag = {};  // diagnóstico: planilha → campo usado / contagem
+var _clientAudit = {};    // nome → {count, sheets:{}, norm}
+function buildClientList(){
+  var set = {};
+  _clientSrcDiag = {};
+  _clientAudit = {};
+  function collect(rows, label){
+    if(!rows||!rows.length){ return; }
+    var fld=detectClientField(rows);
+    if(!fld){ _clientSrcDiag[label]='campo de cliente NÃO encontrado'; return; }
+    var before=Object.keys(set).length;
+    rows.forEach(function(r){
+      var names=splitClients(r[fld]);
+      names.forEach(function(nm){
+        set[nm]=true;
+        if(!_clientAudit[nm]) _clientAudit[nm]={count:0,sheets:{},norm:_normCli(nm)};
+        _clientAudit[nm].count++;
+        _clientAudit[nm].sheets[label]=(_clientAudit[nm].sheets[label]||0)+1;
+      });
+    });
+    _clientSrcDiag[label]='campo "'+fld+'" ('+(Object.keys(set).length-before)+' novos)';
+  }
+  collect(ST.proc, 'Processos');
+  collect(ST.serv, 'Serviços');
+  collect(ST.aud,  'Audiências');
+  collect(ST.dec,  'Decisões');
+  _allClients = Object.keys(set).sort(function(a,b){return a.localeCompare(b,'pt-BR');});
+  renderClientList('');
+}
+// Auditoria: abre janela com nome, contagem, origem e chave de agrupamento
+function showClientAudit(){
+  var term=(document.getElementById('cms-search').value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  var rows=Object.keys(_clientAudit).filter(function(nm){
+    if(!term) return true;
+    return nm.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').indexOf(term)>=0;
+  }).sort(function(a,b){return _clientAudit[b].count-_clientAudit[a].count;});
+  var body='';
+  rows.forEach(function(nm,i){
+    var a=_clientAudit[nm];
+    var src=Object.keys(a.sheets).map(function(s){return s+': '+a.sheets[s];}).join(' · ');
+    var bg=i%2?'#FDF0F1':'#fff';
+    body+='<tr style="background:'+bg+'"><td style="padding:5px 9px;border-bottom:1px solid #E5D8C0">'+(i+1)+'</td>'+
+      '<td style="padding:5px 9px;border-bottom:1px solid #E5D8C0">'+_esc(nm)+'</td>'+
+      '<td style="padding:5px 9px;border-bottom:1px solid #E5D8C0;text-align:right">'+a.count+'</td>'+
+      '<td style="padding:5px 9px;border-bottom:1px solid #E5D8C0">'+_esc(src)+'</td>'+
+      '<td style="padding:5px 9px;border-bottom:1px solid #E5D8C0;font-family:monospace;font-size:.62rem;color:#888">'+_esc(a.norm)+'</td></tr>';
+  });
+  var grp=Object.keys(_groupByNorm()).length;
+  var head='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'+
+    '<h3 style="margin:0;color:var(--c8);font-family:Libre Baskerville,serif">Auditoria de Clientes'+(term?' — "'+_esc(term)+'"':'')+'</h3>'+
+    '<button onclick="document.getElementById(\'audit-modal\').remove()" style="background:var(--c7);color:#fff;border:none;border-radius:6px;padding:7px 16px;cursor:pointer;font-weight:700">Fechar</button></div>'+
+    '<p style="font-size:.74rem;color:var(--mu);margin:0 0 10px">'+rows.length+' nomes distintos · Total no filtro: '+_allClients.length+' · Clientes reais (após unificação por grafia): '+grp+'</p>';
+  var table='<div style="max-height:60vh;overflow:auto;border:1px solid var(--bd);border-radius:8px"><table style="width:100%;border-collapse:collapse;font-size:.7rem">'+
+    '<thead style="position:sticky;top:0"><tr>'+
+    ['#','Nome na base (exato)','Registros','Origem (planilhas)','Chave de agrupamento'].map(function(hh){return '<th style="background:var(--c8);color:#fff;padding:7px 9px;text-align:left;font-size:.62rem">'+hh+'</th>';}).join('')+
+    '</tr></thead><tbody>'+(body||'<tr><td colspan="5" style="padding:20px;text-align:center;color:#888">Nenhum cliente.</td></tr>')+'</tbody></table></div>';
+  var modal=document.getElementById('audit-modal');
+  if(modal) modal.remove();
+  modal=document.createElement('div');
+  modal.id='audit-modal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(42,20,20,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px';
+  modal.innerHTML='<div style="background:#fff;border-radius:12px;padding:22px;max-width:1000px;width:100%;max-height:86vh;overflow:hidden;display:flex;flex-direction:column" onclick="event.stopPropagation()">'+head+table+'</div>';
+  modal.onclick=function(){ modal.remove(); };
+  document.body.appendChild(modal);
+}
+function _esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function _groupByNorm(){
+  var g={}; Object.keys(_clientAudit).forEach(function(nm){ var k=_clientAudit[nm].norm; (g[k]=g[k]||[]).push(nm); }); return g;
+}
+function renderClientList(filter){
+  var list=document.getElementById('cms-list'); if(!list) return;
+  var sel=_getSelectedClients();
+  var f=(filter||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  var filtered=_allClients.filter(function(c){
+    if(!f) return true;
+    return c.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').indexOf(f)>=0;
+  });
+  if(_allClients.length===0){ list.innerHTML='<div class="cms-empty">Carregue uma planilha para listar os clientes.</div>'; return; }
+  if(filtered.length===0){ list.innerHTML='<div class="cms-empty">Nenhum cliente encontrado para "'+esc(filter)+'".</div>'; _updateCmsCount(); return; }
+  var html='';
+  filtered.forEach(function(c,i){
+    var id='cms-'+i;
+    var checked=sel.indexOf(c)>=0?'checked':'';
+    html+='<div class="cms-item"><input type="checkbox" id="'+id+'" value="'+esc(c)+'" '+checked+' onchange="cmsToggle(this)"><label for="'+id+'" title="'+esc(c)+'">'+esc(_titleCase(c))+'</label></div>';
+  });
+  list.innerHTML=html;
+  _updateCmsCount();
+}
+function _getSelectedClients(){
+  var v=document.getElementById('cli').value.trim();
+  return v?v.split(';').map(function(s){return s.trim();}).filter(Boolean):[];
+}
+function _setSelectedClients(arr){
+  document.getElementById('cli').value=arr.join(';');
+  try{localStorage.setItem('igsa_cli',arr.join(';'));}catch(e){}
+  _updateCmsCount();
+}
+function cmsToggle(cb){
+  var sel=_getSelectedClients();
+  var val=cb.value;
+  if(cb.checked){ if(sel.indexOf(val)<0) sel.push(val); }
+  else { sel=sel.filter(function(c){return c!==val;}); }
+  _setSelectedClients(sel);
+}
+function cmsFilter(){ renderClientList(document.getElementById('cms-search').value); }
+function cmsSelectAll(){
+  // seleciona todos os atualmente visíveis (respeitando a busca)
+  var f=document.getElementById('cms-search').value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  var visible=_allClients.filter(function(c){ return !f||c.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').indexOf(f)>=0; });
+  var sel=_getSelectedClients();
+  visible.forEach(function(c){ if(sel.indexOf(c)<0) sel.push(c); });
+  _setSelectedClients(sel);
+  renderClientList(document.getElementById('cms-search').value);
+}
+function cmsClearAll(){ _setSelectedClients([]); renderClientList(document.getElementById('cms-search').value); }
+function _updateCmsCount(){
+  var el=document.getElementById('cms-count'); if(!el) return;
+  var n=_getSelectedClients().length;
+  el.textContent = n===0 ? ('Todos ('+_allClients.length+')') : (n+' selecionado'+(n!==1?'s':''));
+  // diagnóstico de origem
+  var diag=document.getElementById('cms-diag');
+  if(diag){
+    var parts=[]; for(var k in _clientSrcDiag){ parts.push(k+': '+_clientSrcDiag[k]); }
+    diag.textContent = parts.length? ('Origem dos nomes → '+parts.join(' · ')) : '';
+  }
+}
+
+function generate(){
+  clrErr();
+  // Nenhuma planilha é obrigatória, mas é preciso ao menos uma
+  if(!ST.proc && !ST.serv && !ST.aud && !ST.audfut && !ST.dec){
+    showErr('Carregue ao menos uma planilha para gerar o painel.'); return;
+  }
+  // Se houver planilha de Decisões, passar pela etapa de validação primeiro
+  if(ST.dec && ST.dec.length && !_dvalDone){
+    var _cliRaw=document.getElementById('cli').value.trim();
+    var _cli=_cliRaw?_cliRaw.split(';').map(function(s){return s.trim();}).filter(Boolean):null;
+    _pendingGenerate=function(){ _dvalDone=true; generate(); _dvalDone=false; };
+    showDval(_cli);
+    return;
+  }
+
+  var title = document.getElementById('ttl').value.trim() || 'Dashboard Jurídico';
+  try{localStorage.setItem('igsa_title',document.getElementById('ttl').value.trim());localStorage.setItem('igsa_cli',document.getElementById('cli').value.trim());localStorage.setItem('igsa_yr',document.getElementById('ayr').value.trim());}catch(e){}
+  var cliRaw = document.getElementById('cli').value.trim();
+  var yrRaw = document.getElementById('ayr').value.trim();
+  var clients = cliRaw ? cliRaw.split(';').map(function(s){return s.trim();}).filter(Boolean) : null;
+
+  Object.keys(CH).forEach(function(k){ try{CH[k].destroy();}catch(e){} });
+  var warns = [];
+
+  var procFld = getField(ST.proc, ['Cliente principal','cliente principal']);
+  var servFld = getField(ST.serv, ['Cliente principal','cliente principal']);
+  var audFld  = ST.aud ? getField(ST.aud,  ['Cliente Processo','Cliente processo']) : null;
+
+  if(clients && !procFld) warns.push('Campo "Cliente principal" não encontrado na planilha de Processos.');
+  if(clients && !servFld) warns.push('Campo "Cliente principal" não encontrado na planilha de Serviços.');
+  if(ST.aud && clients && !audFld) warns.push('Campo "Cliente Processo" não encontrado na planilha de Audiências/Prazos.');
+
+  var proc = !ST.proc ? [] : ((clients && procFld) ? filterClients(ST.proc, procFld, clients) : ST.proc);
+  var serv = !ST.serv ? [] : ((clients && servFld) ? filterClients(ST.serv, servFld, clients) : ST.serv);
+  var aud  = ST.aud ? ((clients && audFld) ? filterClients(ST.aud, audFld, clients) : ST.aud) : [];
+  var audfutFld = ST.audfut ? getField(ST.audfut, ['Cliente Processo','Cliente processo','Cliente principal']) : null;
+  var audfut = ST.audfut ? ((clients && audfutFld) ? filterClients(ST.audfut, audfutFld, clients) : ST.audfut) : [];
+
+  if(ST.proc && proc.length===0){
+    warns.push('Aviso: nenhum processo encontrado para os clientes informados.');
+  }
+
+  // Processes — Ativo+Suspenso = Ativo; ignore Inativo
+  var active   = proc.filter(function(r){ return r['Status']==='Ativo'||r['Status']==='Suspenso'; });
+  var archived = proc.filter(function(r){ return r['Status']==='Arquivado'; });
+
+  var natC={};
+  active.forEach(function(r){ var n=r['Natureza']||'N/A'; natC[n]=(natC[n]||0)+1; });
+  var natSort = Object.entries(natC).sort(function(a,b){return b[1]-a[1];});
+
+  var compC={};
+  active.forEach(function(r){ var c=r[procFld||'Cliente principal']||'N/A'; compC[c]=(compC[c]||0)+1; });
+  var compSort = Object.entries(compC).sort(function(a,b){return b[1]-a[1];}).slice(0,8);
+  var multi = compSort.length > 1;
+
+  var regY={};
+  proc.filter(function(r){ return r['Status']==='Ativo'||r['Status']==='Suspenso'||r['Status']==='Arquivado'; })
+      .forEach(function(r){
+        var d=r['Data do cadastro']; if(!d) return;
+        var y=parseYear(d); if(y>=2008&&y<=2030) regY[y]=(regY[y]||0)+1;
+      });
+
+  var archY={};
+  // ── Detectar campo de encerramento ──────────────────────────────────────
+  var _archFldName = null;
+  var _archDiagFields = [];
+  if(archived.length>0){
+    var _row0 = archived[0];
+    var _allKeys = Object.keys(_row0);
+    // 1. Lista explícita de candidatos
+    var _candidates=[
+      'Coluna S',
+      'Data do encerramento','Data de encerramento','Data Encerramento',
+      'Data de Encerramento','DataEncerramento','Data_encerramento',
+      'Encerramento','Data de Baixa','Data Baixa','Data de Saída',
+      'Saída','Baixa','Data de Saida','Saida','Data Arquivamento',
+      'Data do Arquivamento','Data Arquivado'
+    ];
+    for(var _ci=0;_ci<_candidates.length;_ci++){
+      if(_candidates[_ci] in _row0){_archFldName=_candidates[_ci];break;}
+    }
+    // 2. Busca parcial em todos os campos
+    if(!_archFldName){
+      _allKeys.forEach(function(k){
+        var kl=k.toLowerCase().replace(/[áàâã]/g,'a').replace(/[éê]/g,'e').replace(/[í]/g,'i').replace(/[óôõ]/g,'o').replace(/[ú]/g,'u');
+        if(!_archFldName&&(kl.indexOf('encerr')>=0||kl.indexOf('baixa')>=0||
+           kl.indexOf('saida')>=0||kl.indexOf('arquiv')>=0||kl.indexOf('fecham')>=0)) _archFldName=k;
+      });
+    }
+    // 3. FALLBACK por posição: coluna S = 19ª coluna = índice 18 (ordem original do Excel)
+    if(!_archFldName){
+      var _procCols = ST['proc_cols'] || _allKeys;
+      if(_procCols.length>18) _archFldName = _procCols[18]; // coluna S
+    }
+    // 4. Coletar TODOS os campos para diagnóstico (com índice/letra)
+    var _procCols2 = ST['proc_cols'] || _allKeys;
+    _archDiagFields = _procCols2.map(function(k,i){
+      var letter = i<26 ? String.fromCharCode(65+i) : String.fromCharCode(64+Math.floor(i/26))+String.fromCharCode(65+(i%26));
+      return letter+'='+k;
+    });
+  }
+  // Preencher archY
+  archived.forEach(function(r){
+    var d=_archFldName?r[_archFldName]:null; if(!d) return;
+    var y=parseYear(d); if(y>=2008&&y<=2030) archY[y]=(archY[y]||0)+1;
+  });
+  // Nota de diagnóstico no gráfico
+  var _archTotal=Object.values(archY).reduce(function(a,b){return a+b;},0);
+  if(_archFldName&&_archTotal>0){
+    _setCp('cp-arcano','Campo: "'+_archFldName+'" · '+_archTotal+' com data preenchida');
+  } else {
+    var _diagMsg=_archFldName
+      ? 'Campo "'+_archFldName+'" encontrado mas sem datas válidas ('+_archTotal+' de '+archived.length+' registros). Colunas: '+_archDiagFields.slice(0,25).join(', ')
+      : 'Campo de encerramento não detectado. Colunas: '+ (_archDiagFields.length?_archDiagFields.slice(0,25).join(', '):'nenhum');
+    _setCp('cp-arcano','⚠ '+_diagMsg);
+  }
+
+  // Services
+  // Detect date column name (old files use 'Data', new exports use 'Data do cadastro')
+  var servDateFld = (serv.length>0 && serv[0]['Data do cadastro']!==undefined) ? 'Data do cadastro' : 'Data';
+  var servY={};
+  serv.forEach(function(r){
+    var d=r[servDateFld]; if(!d) return;
+    var y=parseYear(d); if(y>=2012&&y<=2030) servY[y]=(servY[y]||0)+1;
+  });
+  var syArr = Object.keys(servY).map(Number).sort();
+  var refY = yrRaw ? parseInt(yrRaw) : (syArr[syArr.length-1] || new Date().getFullYear());
+  var refYCount = servY[refY] || 0;
+  if(refYCount===0 && serv.length>0) warns.push('Nenhum serviço encontrado para '+refY+'. Deixe o campo em branco para usar o ano mais recente.');
+
+  // Audiências — separar realizadas (passado) / agendadas (futuro)
+  var today=new Date(); today.setHours(0,0,0,0);
+  var nAud=0, nPrz=0, nPer=0;
+  var nAudFut=0, nPerFut=0, nextAudDate=null, nextPerDate=null;
+  if(aud.length===0 && ST.aud && clients) warns.push('Nenhum registro de Aud/Prazos/Perícias encontrado para os clientes. Verifique os nomes no campo "Cliente Processo".');
+  aud.forEach(function(r){
+    var d=r['Data de início']; if(!d) return;
+    var dt=d instanceof Date?new Date(d.getTime()):new Date(String(d).trim());
+    if(isNaN(dt.getTime())) return;
+    var dtz=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate());
+    var t=String(r['Tipo']||'');
+    var yr=parseYear(d);
+    if(dtz<today && yr===refY){
+      if(t==='Audiência') nAud++;
+      else if(t==='Prazo') nPrz++;
+      else if(t==='Perícia'||t==='Pauta de Julgamento') nPer++;
+    }
+    if(dtz>=today){
+      if(t==='Audiência'){
+        nAudFut++;
+        if(!nextAudDate||dtz<nextAudDate) nextAudDate=new Date(dtz);
+      } else if(t==='Perícia'||t==='Pauta de Julgamento'){
+        nPerFut++;
+        if(!nextPerDate||dtz<nextPerDate) nextPerDate=new Date(dtz);
+      }
+    }
+  });
+
+
+  // ── Item 2: Cadastrados vs Encerrados por mês no ano vigente ──
+  var MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  var cmpRegMon = new Array(12).fill(0);
+  var cmpArcMon = new Array(12).fill(0);
+  proc.filter(function(r){return r['Status']==='Ativo'||r['Status']==='Suspenso'||r['Status']==='Arquivado';})
+      .forEach(function(r){
+        var d=r['Data do cadastro']; if(!d) return;
+        var dt=d instanceof Date?d:new Date(String(d).trim());
+        if(isNaN(dt.getTime())) return;
+        if(parseYear(d)===refY) cmpRegMon[dt.getMonth()]++;
+      });
+  proc.filter(function(r){return r['Status']==='Arquivado';})
+      .forEach(function(r){
+        var d=_archFldName?r[_archFldName]:null; if(!d) return;
+        var dt=d instanceof Date?d:new Date(String(d).trim());
+        if(isNaN(dt.getTime())) return;
+        if(parseYear(d)===refY) cmpArcMon[dt.getMonth()]++;
+      });
+
+  // ── Item 3: Distribuição de fases (ativos+suspensos) ──
+  var faseC = {};
+  active.forEach(function(r){
+    var f = r['Fase'] || 'Não informado';
+    faseC[f] = (faseC[f]||0)+1;
+  });
+  var faseSort = Object.entries(faseC).sort(function(a,b){return b[1]-a[1];});
+
+  // ── Item 4a: Exposição Financeira por Probabilidade — ATIVOS ──
+  var expProb={
+    'Provável':{causa:0,envol:0,qtd:0},
+    'Possível':{causa:0,envol:0,qtd:0},
+    'Remota':{causa:0,envol:0,qtd:0}
+  };
+  active.forEach(function(r){
+    // Faixa de probabilidade atual (coluna O): Provável / Possível / Remota
+    var prob=String(
+      r['Faixa de probabilidade atual']||
+      r['Faixa de Probabilidade Atual']||''
+    ).trim();
+    var probN=(prob.normalize?prob.normalize('NFD').replace(/[̀-ͯ]/g,''):prob).toLowerCase();
+    var cat;
+    if(probN.indexOf('prov')>=0)      cat='Provável';
+    else if(probN.indexOf('remot')>=0) cat='Remota';
+    else                               cat='Possível'; // inclui branco e Possível
+    var causa=numBR(r['Valor da causa']);
+    var envol=numBR(r['Valor envolvido']);
+    expProb[cat].causa+=causa;
+    expProb[cat].envol+=envol;
+    expProb[cat].qtd++;
+  });
+  var expTotalCausa=expProb['Provável'].causa+expProb['Possível'].causa+expProb['Remota'].causa;
+  var expTotalEnvol=expProb['Provável'].envol+expProb['Possível'].envol+expProb['Remota'].envol;
+  var expTotalSaldo=expTotalCausa-expTotalEnvol;
+  var expPctReducao=expTotalCausa>0?Math.round(expTotalSaldo/expTotalCausa*100):0;
+
+  // ── Item 4b: Redução do passivo — ARQUIVADOS com valores ──
+  var provTotalCausa=0, provTotalEnvolvido=0, provQtd=0;
+  archived.forEach(function(r){
+    var causa=numBR(r['Valor da causa']);
+    var envol=numBR(r['Valor envolvido']);
+    if(causa>0||envol>0){
+      provTotalCausa+=causa;
+      provTotalEnvolvido+=envol;
+      provQtd++;
+    }
+  });
+  var provReducao=provTotalCausa-provTotalEnvolvido;
+
+  // Se audfut disponível, usar como fonte de eventos futuros
+  if(ST.audfut && audfut.length>=0){
+    nAudFut=0; nPerFut=0; nextAudDate=null; nextPerDate=null;
+    audfut.forEach(function(r){
+      var d=r['Data de início']; if(!d) return;
+      var dt=d instanceof Date?new Date(d.getTime()):new Date(String(d).trim());
+      if(isNaN(dt.getTime())) return;
+      var dtz=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate());
+      var t=String(r['Tipo']||'');
+      if(t==='Audiência'){
+        nAudFut++;
+        if(!nextAudDate||dtz<nextAudDate) nextAudDate=new Date(dtz);
+      } else if(t==='Perícia'||t==='Pauta de Julgamento'){
+        nPerFut++;
+        if(!nextPerDate||dtz<nextPerDate) nextPerDate=new Date(dtz);
+      }
+    });
+  }
+
+  // ── Item 5: Audiências últimos 3 anos ──
+  var audYears = [refY-2, refY-1, refY];
+  var audByYear = {};
+  audYears.forEach(function(y){ audByYear[y]=0; });
+  aud.forEach(function(r){
+    var d=r['Data de início']; if(!d) return;
+    var dt=d instanceof Date?new Date(d.getTime()):new Date(String(d).trim());
+    if(isNaN(dt.getTime())) return;
+    var dtz=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate());
+    if(dtz>=today) return; // somente realizadas
+    var y=parseYear(d);
+    if(audYears.indexOf(y)>=0 && String(r['Tipo']||'')==='Audiência') audByYear[y]=(audByYear[y]||0)+1;
+  });
+
+  var sCompY={};
+  serv.forEach(function(r){
+    var d=r[servDateFld]; if(!d) return;
+    if(parseYear(d)!==refY) return;
+    var c=r[servFld||'Cliente principal']||'N/A'; sCompY[c]=(sCompY[c]||0)+1;
+  });
+  var sCYS = Object.entries(sCompY).sort(function(a,b){return b[1]-a[1];}).slice(0,8);
+
+  var sTipoY={};
+  serv.forEach(function(r){
+    var d=r[servDateFld]; if(!d) return;
+    if(parseYear(d)!==refY) return;
+    var t=uT(r['Tipo']); if(t==='Atividade Interna') return;
+    sTipoY[t]=(sTipoY[t]||0)+1;
+  });
+  var sTYS = Object.entries(sTipoY).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+  // Services by Natureza (refYear)
+  var sNatY={};
+  serv.forEach(function(r){
+    var d=r[servDateFld]; if(!d) return;
+    if(parseYear(d)!==refY) return;
+    var n=uNat(r['Natureza']); sNatY[n]=(sNatY[n]||0)+1;
+  });
+  var sNYS = Object.entries(sNatY).sort(function(a,b){return b[1]-a[1];}).slice(0,12);
+
+
+  showWarns(warns);
+
+  // Header
+  document.getElementById('dtitle').textContent = title;
+  document.getElementById('dsub').textContent = 'Dashboard Jurídico Executivo — Referência '+refY;
+  // Build services row dynamically — hide company chart for single client
+  var sMulti = sCYS.length > 1;
+  var rowserv = document.getElementById('rowserv');
+  rowserv.className = '';
+  // Empresa: full-width (linha própria). Atividades + Natureza: lado a lado (c2).
+  var compCard = sMulti
+    ? '<div class="cg c1" style="margin-bottom:12px"><div class="cc"><div class="ct" id="sct1">—</div><div class="cp" id="cp-sc"></div><div class="ch" style="height:300px"><canvas id="chsc"></canvas></div></div></div>'
+    : '';
+  rowserv.innerHTML = compCard +
+    '<div class="cg c2">' +
+    '<div class="cc"><div class="ct" id="sct2">—</div><div class="cp" id="cp-st"></div><div class="ch" style="height:320px"><canvas id="chst"></canvas></div></div>' +
+    '<div class="cc"><div class="ct" id="sct3">—</div><div class="cp" id="cp-sn"></div><div class="ch" style="height:320px"><canvas id="chsn"></canvas></div></div>' +
+    '</div>';
+
+  if(sMulti){
+    document.getElementById('sct1').textContent = 'Total de Serviços por Empresa Realizados em '+refY;
+    _setCp('cp-sc', sCYS.length+' empresas');
+  }
+  document.getElementById('sct2').textContent = 'Total de Serviços Realizados em '+refY+' – As 10 Atividades Mais Executadas';
+  _setCp('cp-st', 'Top 10 atividades · Excluíndo Atividade Interna');
+  _setCp('cp-sn', 'Por natureza jurídica');
+  document.getElementById('sct3').textContent = 'Total de Serviços Realizados em '+refY+' por Natureza';
+  if(ST.logo){
+    document.getElementById('clogoimg').src=ST.logo;
+    document.getElementById('clogoimg').style.display='block';
+    document.getElementById('clph').style.display='none';
+  }
+
+  // KPI row 1
+  document.getElementById('kpi1').innerHTML =
+    kpiCard('c7','Processos Ativos',active.length,'Ativos') +
+    kpiCard('c8x','Processos Arquivados',archived.length,'Encerrados') +
+    kpiCard('c4','Total da Carteira',active.length+archived.length,'Ativos e Encerrados') +
+    kpiCard('gd','Serviços em '+refY,refYCount,'Serviços realizados');
+
+  var audLbl = ST.aud ? 'Realizadas em '+refY : 'Planilha não carregada';
+  document.getElementById('kpi2').innerHTML =
+    kpiCard('c6','Audiências Realizadas',nAud,audLbl) +
+    kpiCard('c5','Prazos Realizados',nPrz,audLbl) +
+    kpiCard('gd','Perícias Realizadas',nPer,audLbl);
+
+  // Chart parameter notes
+  var _allNat = Object.keys(natC).join(', ');
+  var _cpBase = active.length+' proc. ativos | '+archived.length+' arquivados';
+  function _setCp(id,txt){var el=document.getElementById(id);if(el)el.textContent=txt;}
+  _setCp('cp-regano', 'Todas as naturezas · Status: Ativo, Suspenso e Arquivado');
+  _setCp('cp-fase',   Object.keys(faseC).length+' fases identificadas');
+
+  // Top charts row
+  var rtop = document.getElementById('rowtop');
+  rtop.className = 'cg c2';
+  rtop.innerHTML =
+    '<div class="cc"><div class="ct">Distribuição por Status</div><div class="cp">Ativos+Suspensos vs Arquivados · Total: '+(active.length+archived.length)+' processos</div><div class="ch" style="height:230px"><canvas id="chpie"></canvas></div></div>' +
+    '<div class="cc"><div class="ct">Processos Ativos por Natureza</div><div class="cp">'+active.length+' processos ativos e suspensos · '+natSort.length+' naturezas</div><div class="ch" style="height:230px"><canvas id="chnat"></canvas></div></div>';
+  // Empresa em linha própria full-width (quando multi-cliente)
+  if(multi){
+    var empRow=document.getElementById('row-empresa');
+    if(!empRow){
+      empRow=document.createElement('div');
+      empRow.id='row-empresa'; empRow.className='cg c1'; empRow.style.marginBottom='12px';
+      rtop.parentNode.insertBefore(empRow, rtop.nextSibling);
+    }
+    empRow.innerHTML='<div class="cc"><div class="ct">Processos Ativos por Empresa</div><div class="cp">'+active.length+' processos ativos e suspensos · '+compSort.length+' empresas</div><div class="ch" style="height:300px"><canvas id="chcmp"></canvas></div></div>';
+  }
+
+  // Draw charts
+  mkDonut('chpie', ['Ativos','Arquivados'], [active.length, archived.length]);
+  mkBar('chnat', natSort.map(function(e){return e[0];}), natSort.map(function(e){return e[1];}), true,
+    natSort.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
+  if(multi && document.getElementById('chcmp')){
+    mkBar('chcmp',
+      compSort.map(function(e){return e[0].length>44?e[0].substring(0,44)+'…':e[0];}),
+      compSort.map(function(e){return e[1];}), true,
+      compSort.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
+  }
+
+  var ryK = Object.keys(regY).map(Number).sort();
+  mkBar('chry', ryK, ryK.map(function(y){return regY[y]||0;}), false,
+    ryK.map(function(y){return y>=2017?'#7E1F2C':'#E8A0A8';}));
+
+  var ayK = Object.keys(archY).map(Number).sort();
+  mkBar('chay', ayK, ayK.map(function(y){return archY[y]||0;}), false,
+    ayK.map(function(){return GOLD;}));
+
+  // ── Item 2: Cadastrados vs Encerrados por mês no ano vigente ──
+  document.getElementById('ctcmp').textContent = 'Processos Cadastrados × Encerrados em '+refY+' (por mês)';
+  (function(){var el=document.querySelector('#row-mensal .cc:first-child .cp');if(!el){var ct=document.getElementById('ctcmp');if(ct){var d=document.createElement('div');d.className='cp';d.textContent='Todos os status · Ano: '+refY+' · Todas as naturezas';ct.parentNode.insertBefore(d,ct.nextSibling);}}})();
+  if(CH['chcmp2']) CH['chcmp2'].destroy();
+  // Ocultar meses futuros: se refY for o ano corrente, limitar ao mês atual
+  var _monthsToShow = 12;
+  if(refY === today.getFullYear()) _monthsToShow = today.getMonth() + 1;
+  var _mLabels = MONTHS.slice(0, _monthsToShow);
+  var _mReg = cmpRegMon.slice(0, _monthsToShow);
+  var _mArc = cmpArcMon.slice(0, _monthsToShow);
+  CH['chcmp2'] = new Chart(document.getElementById('chcmp2'), {
+    type:'bar',
+    data:{
+      labels: _mLabels,
+      datasets:[
+        {label:'Cadastrados', data:_mReg,
+          backgroundColor:'#7E1F2C',borderRadius:3,borderSkipped:false},
+        {label:'Encerrados',  data:_mArc,
+          backgroundColor:GOLD,borderRadius:3,borderSkipped:false}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{font:{family:'Inter,sans-serif',size:10},color:'#3A2020',padding:8}},
+        datalabels:{anchor:'end',align:'top',color:'#333',font:{size:9,weight:'700'},
+          formatter:function(v){return v>0?v:'';},clamp:true,clip:false}},
+      scales:{
+        x:{grid:{display:false},ticks:{color:'#3A2020',font:{size:10}},border:{display:false}},
+        y:{grid:{color:'#F5E8EA'},ticks:{color:'#7A4050',font:{size:10},stepSize:1},border:{display:false}}},
+      layout:{padding:{top:24}}}
+  });
+
+  // ── Item 3: Fases processuais ──
+  if(CH['chfase']) CH['chfase'].destroy();
+  CH['chfase'] = new Chart(document.getElementById('chfase'), {
+    type:'bar',
+    data:{labels:faseSort.map(function(e){return e[0];}),
+      datasets:[{data:faseSort.map(function(e){return e[1];}),
+        backgroundColor:faseSort.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}),
+        borderRadius:4,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        datalabels:{anchor:'end',align:'end',color:'#333',font:{size:10,weight:'700'},
+          formatter:function(v){return v;},clamp:true,clip:false,padding:{right:6}}},
+      scales:{x:{grid:{color:'#F5E8EA'},ticks:{color:'#7A4050',font:{size:10}},border:{display:false}},
+              y:{grid:{display:false},ticks:{color:'#3A2020',font:{size:11}},border:{display:false}}},
+      layout:{padding:{right:40}}}
+  });
+
+  // ── Item 4: Passivo processual ──
+  (function(){
+    var fmt = function(v){
+      if(v>=1e9) return 'R$ '+(v/1e9).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' Bi';
+      if(v>=1e6) return 'R$ '+(v/1e6).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' Mi';
+      return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
+    };
+    var pct = provTotalCausa>0 ? Math.round(provReducao/provTotalCausa*100) : 0;
+    var _cpArq='<div class="cp">'+provQtd+' proc. arquivados com valor registrado · Inclui todas as naturezas e probabilidades</div>';
+    var html = '';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:4px">';
+    html += '<div style="background:var(--c0);border-radius:8px;padding:14px;text-align:center;border-top:3px solid var(--c6)">';
+    html += '<div style="font-size:.62rem;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;font-weight:600">Valor da Causa</div>';
+    html += '<div style="font-family:Libre Baskerville,serif;font-size:1.5rem;color:var(--c8);font-weight:700;margin-top:4px">'+fmt(provTotalCausa)+'</div>';
+    html += '<div style="font-size:.65rem;color:var(--mu);margin-top:3px">'+provQtd+' processo'+(provQtd!==1?'s':'')+'</div></div>';
+    html += '<div style="background:var(--c0);border-radius:8px;padding:14px;text-align:center;border-top:3px solid var(--gd)">';
+    html += '<div style="font-size:.62rem;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;font-weight:600">Valor Envolvido</div>';
+    html += '<div style="font-family:Libre Baskerville,serif;font-size:1.5rem;color:var(--c8);font-weight:700;margin-top:4px">'+fmt(provTotalEnvolvido)+'</div>';
+    html += '<div style="font-size:.65rem;color:var(--mu);margin-top:3px">Exposição real</div></div>';
+    html += '<div style="background:#EAF5EA;border-radius:8px;padding:14px;text-align:center;border-top:3px solid #4A8A4A">';
+    html += '<div style="font-size:.62rem;color:#2A5A2A;text-transform:uppercase;letter-spacing:.05em;font-weight:600">Redução Obtida</div>';
+    html += '<div style="font-family:Libre Baskerville,serif;font-size:1.5rem;color:#2A5A2A;font-weight:700;margin-top:4px">'+fmt(provReducao)+'</div>';
+    html += '<div style="font-size:.65rem;color:#2A5A2A;margin-top:3px">'+pct+'% de redução</div></div>';
+    html += '</div>';
+    if(provQtd===0) html='<div style="padding:20px;text-align:center;color:var(--mu);font-size:.82rem">Nenhum processo arquivado com valores cadastrados.</div>';
+    document.getElementById('passivo-content').innerHTML=html+_cpArq;
+  })();
+
+  // ── Exposição Financeira por Probabilidade — render ──
+  (function(){
+    var row=document.getElementById('passivo-ativo-row');
+    if(!isVis('vis-passivo-ativo')){row.style.display='none';return;}
+    row.style.display='';
+
+    var fmtM=function(v){
+      if(v>=1e9) return 'R$ '+(v/1e9).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' Bi';
+      if(v>=1e6) return 'R$ '+(v/1e6).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' Mi';
+      return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
+    };
+
+    // KPI cards
+    var kpi='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">';
+    kpi+='<div style="background:var(--c0);border-radius:8px;padding:12px;text-align:center;border-top:3px solid var(--c7)">';
+    kpi+='<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;font-weight:600">Valor da Causa</div>';
+    kpi+='<div style="font-family:Libre Baskerville,serif;font-size:1.1rem;color:var(--c8);font-weight:700;margin-top:3px">'+fmtM(expTotalCausa)+'</div>';
+    kpi+='<div style="font-size:.62rem;color:var(--mu);margin-top:2px">'+active.length+' processos ativos</div></div>';
+    kpi+='<div style="background:var(--c0);border-radius:8px;padding:12px;text-align:center;border-top:3px solid var(--gd)">';
+    kpi+='<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;font-weight:600">Valor Envolvido</div>';
+    kpi+='<div style="font-family:Libre Baskerville,serif;font-size:1.1rem;color:var(--c8);font-weight:700;margin-top:3px">'+fmtM(expTotalEnvol)+'</div>';
+    kpi+='<div style="font-size:.62rem;color:var(--mu);margin-top:2px">Exposição real estimada</div></div>';
+    kpi+='<div style="background:#EAF5EA;border-radius:8px;padding:12px;text-align:center;border-top:3px solid #5A8A5A">';
+    kpi+='<div style="font-size:.6rem;color:#2A5A2A;text-transform:uppercase;letter-spacing:.05em;font-weight:600">Saldo / Redução</div>';
+    kpi+='<div style="font-family:Libre Baskerville,serif;font-size:1.1rem;color:#2A5A2A;font-weight:700;margin-top:3px">'+fmtM(expTotalSaldo)+'</div>';
+    kpi+='<div style="font-size:.62rem;color:#2A5A2A;margin-top:2px">Causa − Envolvido</div></div>';
+    kpi+='<div style="background:var(--c0);border-radius:8px;padding:12px;text-align:center;border-top:3px solid var(--c6)">';
+    kpi+='<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;font-weight:600">% de Redução</div>';
+    kpi+='<div style="font-family:Libre Baskerville,serif;font-size:1.9rem;color:var(--c8);font-weight:700;line-height:1;margin-top:3px">'+expPctReducao+'%</div>';
+    kpi+='<div style="font-size:.62rem;color:var(--mu);margin-top:2px">Causa vs Envolvido</div></div>';
+    kpi+='</div>';
+    kpi+='<div style="height:1px;background:var(--c1);margin:14px 0 10px"></div>';
+    var cpAtivo='<div style="font-size:.62rem;color:var(--mu);background:var(--c0);border-radius:6px;padding:6px 10px;margin-bottom:12px;line-height:1.6">Processos ativos e suspensos · Agrupamento: Faixa de probabilidade atual (Provável / Possível / Remota)</div>';
+
+    // Detail table
+    var cats=['Provável','Possível','Remota'];
+    var catC={'Provável':'var(--c7)','Possível':'var(--gd)','Remota':'#5A8A5A'};
+    var tbl='<table style="width:100%;border-collapse:collapse;font-size:.7rem;margin-top:2px">';
+    tbl+='<thead><tr>';
+    tbl+='<th style="text-align:left;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Probabilidade</th>';
+    tbl+='<th style="text-align:right;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Qtd.</th>';
+    tbl+='<th style="text-align:right;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Valor da Causa</th>';
+    tbl+='<th style="text-align:right;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Valor Envolvido</th>';
+    tbl+='<th style="text-align:right;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Saldo</th>';
+    tbl+='</tr></thead><tbody>';
+    cats.forEach(function(cat,i){
+      var d=expProb[cat];
+      var saldo=d.causa-d.envol;
+      var bg=i%2===0?'#fff':'var(--c0)';
+      tbl+='<tr style="background:'+bg+'">';
+      tbl+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd)"><b style="color:'+catC[cat]+'">'+cat+'</b></td>';
+      tbl+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd);text-align:right">'+d.qtd+'</td>';
+      tbl+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd);text-align:right">'+fmtM(d.causa)+'</td>';
+      tbl+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd);text-align:right">'+fmtM(d.envol)+'</td>';
+      tbl+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd);text-align:right;color:#5A8A5A;font-weight:600">'+fmtM(saldo)+'</td>';
+      tbl+='</tr>';
+    });
+    // Total row
+    tbl+='<tr style="background:var(--c0);font-weight:700">';
+    tbl+='<td style="padding:6px 8px;color:var(--c8)">Total Geral</td>';
+    tbl+='<td style="padding:6px 8px;text-align:right;color:var(--c8)">'+active.length+'</td>';
+    tbl+='<td style="padding:6px 8px;text-align:right;color:var(--c8)">'+fmtM(expTotalCausa)+'</td>';
+    tbl+='<td style="padding:6px 8px;text-align:right;color:var(--c8)">'+fmtM(expTotalEnvol)+'</td>';
+    tbl+='<td style="padding:6px 8px;text-align:right;color:#5A8A5A">'+fmtM(expTotalSaldo)+'</td>';
+    tbl+='</tr>';
+    tbl+='</tbody></table>';
+
+    // Chart + table side by side
+    var body='<div style="display:grid;grid-template-columns:1.3fr 1fr;gap:24px;align-items:start;margin-top:4px">';
+    body+='<div>';
+    body+='<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--gd)">Causa vs Envolvido por Categoria (R$ Mi)</div>';
+    body+='<div style="position:relative;height:280px"><canvas id="ch-exp-prob"></canvas></div>';
+    body+='</div>';
+    body+='<div style="padding-left:8px;border-left:2px solid var(--c1)">'+tbl+'</div>';
+    body+='</div>';
+
+    document.getElementById('passivo-ativo-content').innerHTML=kpi+cpAtivo+body;
+
+    // Draw chart
+    if(CH['ch-exp-prob']) CH['ch-exp-prob'].destroy();
+    var CATS=['Provável','Possível','Remota'];
+    var causaVals=CATS.map(function(c){return Math.round(expProb[c].causa/1e4)/100;});
+    var envolVals=CATS.map(function(c){return Math.round(expProb[c].envol/1e4)/100;});
+    CH['ch-exp-prob']=new Chart(document.getElementById('ch-exp-prob'),{
+      type:'bar',
+      data:{
+        labels:CATS,
+        datasets:[
+          {label:'Valor da Causa',data:causaVals,
+           backgroundColor:['#7E1F2C','#9E3340','#BE5060'],
+           borderRadius:4,borderSkipped:false,
+           barPercentage:0.45,categoryPercentage:0.75},
+          {label:'Valor Envolvido',data:envolVals,
+           backgroundColor:['#CDA736','#D4B040','#DBC060'],
+           borderRadius:4,borderSkipped:false,
+           barPercentage:0.45,categoryPercentage:0.75}
+        ]
+      },
+      options:{
+        indexAxis:'y',responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{position:'bottom',labels:{font:{family:'Inter,sans-serif',size:10},color:'#3A2020',padding:12,usePointStyle:true,pointStyleWidth:10}},
+          datalabels:{
+            anchor:'end',align:'end',
+            color:'#2A2420',font:{size:9,weight:'700'},
+            formatter:function(v,ctx){
+              if(!v||v<=0) return '';
+              return v>=1000?'R$ '+(v/1000).toLocaleString('pt-BR',{minimumFractionDigits:1})+'Bi':'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:0})+'Mi';
+            },
+            clamp:true,clip:false,padding:{right:6}
+          }
+        },
+        scales:{
+          x:{grid:{color:'var(--c1)'},
+             ticks:{color:'#7A4050',font:{size:9},callback:function(v){return v>=1000?(v/1000).toFixed(1)+'Bi':v+'Mi';}},
+             border:{display:false}},
+          y:{grid:{color:'var(--c0)'},
+             ticks:{color:'#3A2020',font:{size:12,weight:'700'},padding:10},
+             border:{display:false}}
+        },
+        layout:{padding:{right:110,top:8,bottom:8}}
+      }
+    });
+  })();
+
+  // ── Item 5: Audiências últimos 3 anos ──
+  document.getElementById('ctaud3').textContent = 'Audiências Realizadas — '+audYears[0]+' a '+audYears[2];
+  _setCp('cp-aud3', 'Período: '+audYears[0]+'–'+audYears[2]+' · Somente datas anteriores a hoje');
+  if(CH['chaud3']) CH['chaud3'].destroy();
+  CH['chaud3'] = new Chart(document.getElementById('chaud3'), {
+    type:'bar',
+    data:{labels:audYears.map(String),
+      datasets:[{data:audYears.map(function(y){return audByYear[y]||0;}),
+        backgroundColor:audYears.map(function(y,i){return i===2?'#7E1F2C':i===1?'#9E3340':'#E8A0A8';}),
+        borderRadius:5,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        datalabels:{anchor:'end',align:'top',color:'#333',font:{size:14,weight:'700'},
+          formatter:function(v){return v||0;},clamp:true,clip:false}},
+      scales:{x:{grid:{display:false},ticks:{color:'#3A2020',font:{size:12,weight:'600'}},border:{display:false}},
+              y:{grid:{color:'#F5E8EA'},ticks:{color:'#7A4050',font:{size:10}},border:{display:false}}},
+      layout:{padding:{top:30}}}
+  });
+
+
+  // ── Audiências e Perícias Futuras cards ──
+  (function(){
+    var row=document.getElementById('aud-future-row');
+    var hasFutSource = (ST.audfut && ST.audfut.length) || (ST.aud && ST.aud.length);
+    if(!hasFutSource||!isVis('vis-aud-fut')){row.style.display='none';return;}
+    row.style.display='';
+    var fmtD=function(d){return d?d.toLocaleDateString('pt-BR'):'Não agendada';};
+    var s='<div class="sbn" style="background:var(--c7);margin-bottom:10px"><h2>📅 Audiências e Perícias Futuras</h2></div>';
+    s+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">';
+    s+='<div class="kp" style="border-top-color:var(--c7)"><div class="kl">AUDIÊNCIAS FUTURAS</div><div class="kv">'+nAudFut+'</div><div class="kd">Agendadas a partir de hoje</div></div>';
+    s+='<div class="kp" style="border-top-color:var(--gd)"><div class="kl">PERÍCIAS FUTURAS</div><div class="kv">'+nPerFut+'</div><div class="kd">Agendadas a partir de hoje</div></div>';
+    s+='<div class="kp" style="border-top-color:var(--c6)"><div class="kl">PRÓXIMA AUDIÊNCIA</div>';
+    s+='<div class="kv" style="font-size:1.25rem;color:var(--c7)">'+fmtD(nextAudDate)+'</div>';
+    s+='<div class="kd">Data mais próxima</div></div>';
+    s+='<div class="kp" style="border-top-color:var(--gd)"><div class="kl">PRÓXIMA PERÍCIA</div>';
+    s+='<div class="kv" style="font-size:1.25rem;color:var(--c7)">'+fmtD(nextPerDate)+'</div>';
+    s+='<div class="kd">Data mais próxima</div></div>';
+    s+='</div>';
+    row.innerHTML=s;
+  })();
+
+  mkBar('chsy', syArr, syArr.map(function(y){return servY[y]||0;}), false,
+    syArr.map(function(y){return y===refY?'#7E1F2C':'#E8A0A8';}));
+  _setCp('cp-sy', serv.length+' serviços no total · '+syArr.length+' anos · Ano destacado: '+refY);
+
+  if(sMulti && document.getElementById('chsc')){
+    mkBar('chsc',
+      sCYS.map(function(e){return e[0].length>22?e[0].substring(0,22)+'…':e[0];}),
+      sCYS.map(function(e){return e[1];}), true,
+      sCYS.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
+  }
+
+  mkBar('chst',
+    sTYS.map(function(e){return e[0];}),
+    sTYS.map(function(e){return e[1];}), true,
+    sTYS.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
+
+  mkBar('chsn',
+    sNYS.map(function(e){return e[0];}),
+    sNYS.map(function(e){return e[1];}), true,
+    sNYS.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
+
+  // ── Decisões: classification & chart ──
+  (function(){
+    var decBlock = document.getElementById('decblock');
+    if(!ST.dec || ST.dec.length===0 || !isVis('vis-dec')){ decBlock.innerHTML=''; return; }
+
+    var keys = Object.keys(ST.dec[0]);
+    var poloFld=keys[3]||'', dataPubFld=keys[21]||'', clientFld=keys[2]||'',
+        textoFld=keys[keys.length-1]||'', procFld_d=keys[1]||'';
+
+    var _cset = clients ? _normSet(clients) : null;
+    var decRows = _cset
+      ? ST.dec.filter(function(r){ if(r[clientFld]==null) return false; var ns=splitClients(r[clientFld]); for(var i=0;i<ns.length;i++){if(_cset[_normCli(ns[i])])return true;} return false; })
+      : ST.dec;
+    if(decRows.length===0){ decBlock.innerHTML=''; return; }
+
+    // Usa a conclusão REVISADA pelo usuário (validação). Parciais já unificadas.
+    var nFav=0, nDesfav=0;
+    var minDate=null, maxDate=null;
+    decRows.forEach(function(r){
+      var datePub=r[dataPubFld];
+      if(datePub){ var dp=datePub instanceof Date?datePub:new Date(String(datePub).split('/').reverse().join('-')); if(!isNaN(dp.getTime())){ if(!minDate||dp<minDate)minDate=dp; if(!maxDate||dp>maxDate)maxDate=dp; } }
+      var lbl=finalDecLabel(r[procFld_d], r[poloFld], r[textoFld]);
+      if(lbl==='Favorável') nFav++;
+      else if(lbl==='Desfavorável') nDesfav++;
+      // Extinção e Inconclusivo NÃO entram no gráfico
+    });
+    var totalGraf=nFav+nDesfav;
+    if(totalGraf===0){ decBlock.innerHTML=''; return; }
+
+    var fmtD=function(d){ return d?d.toLocaleDateString('pt-BR',{month:'short',year:'numeric'}):''; };
+    var period=(minDate&&maxDate)?(minDate.getMonth()===maxDate.getMonth()&&minDate.getFullYear()===maxDate.getFullYear()?fmtD(minDate):fmtD(minDate)+' a '+fmtD(maxDate)):'';
+    var chartTitle='Resultado das Decisões'+(period?' — '+period:'');
+
+    // Apenas gráfico + KPIs (a tabela de conferência NÃO aparece no painel final)
+    decBlock.innerHTML = '<div class="sd"></div><div class="sbn" style="background:var(--c9)"><h2>🏛️ Decisões Judiciais</h2></div>' +
+      '<div class="cg c2" style="margin-bottom:12px">' +
+      '<div class="cc"><div class="ct">'+chartTitle+'</div>' +
+      '<div class="cp">Apenas decisões Favoráveis e Desfavoráveis · Classificações revisadas na etapa de validação</div>' +
+      '<div class="ch" style="height:220px"><canvas id="chdec"></canvas></div></div>' +
+      '<div class="cc"><div class="ct">Resultado por Tipo</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 0" id="dec-kpis"></div></div>' +
+      '</div>';
+
+    var pctFav=totalGraf>0?Math.round(nFav/totalGraf*100):0;
+    var pctDesfav=totalGraf>0?Math.round(nDesfav/totalGraf*100):0;
+    document.getElementById('dec-kpis').innerHTML =
+      '<div style="background:#EAF5EA;border-radius:8px;padding:14px;text-align:center;border-top:3px solid #4A8A4A">'+
+        '<div style="font-size:.6rem;color:#2A5A2A;text-transform:uppercase;letter-spacing:.05em;font-weight:600">Favoráveis</div>'+
+        '<div style="font-family:Libre Baskerville,serif;font-size:1.8rem;color:#2A5A2A;font-weight:700">'+nFav+'</div>'+
+        '<div style="font-size:.65rem;color:#2A5A2A">'+pctFav+'% (de '+totalGraf+')</div></div>'+
+      '<div style="background:var(--c0);border-radius:8px;padding:14px;text-align:center;border-top:3px solid var(--c7)">'+
+        '<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;font-weight:600">Desfavoráveis</div>'+
+        '<div style="font-family:Libre Baskerville,serif;font-size:1.8rem;color:var(--c8);font-weight:700">'+nDesfav+'</div>'+
+        '<div style="font-size:.65rem;color:var(--mu)">'+pctDesfav+'% (de '+totalGraf+')</div></div>';
+
+    if(CH['chdec']) CH['chdec'].destroy();
+    CH['chdec'] = new Chart(document.getElementById('chdec'),{
+      type:'doughnut',
+      data:{labels:['Favoráveis','Desfavoráveis'],datasets:[{data:[nFav,nDesfav],backgroundColor:['#4A8A4A','#7E1F2C'],borderWidth:3,borderColor:'#fff'}]},
+      options:{cutout:'55%',responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{position:'bottom',labels:{font:{family:'Inter,sans-serif',size:11},color:'#3A2020',padding:10}},
+          datalabels:{color:'#fff',font:{size:11,weight:'700'},
+            formatter:function(v,ctx){var t=ctx.dataset.data.reduce(function(a,b){return a+b;},0);return v>0&&t>0?Math.round(v/t*100)+'%':'';}},
+          tooltip:{callbacks:{label:function(ctx){return ' '+ctx.label+': '+ctx.parsed+(totalGraf>0?' ('+Math.round(ctx.parsed/totalGraf*100)+'%)':'');}}}
+        }}
+    });
+  })();
+
+    // dec filtrado por cliente (mesma lógica do decblock)
+  var decFiltered = [];
+  if(ST.dec && ST.dec.length){
+    var _decClientFld = Object.keys(ST.dec[0])[2] || '';
+    var _cset2 = clients ? _normSet(clients) : null;
+    decFiltered = _cset2
+      ? ST.dec.filter(function(r){ if(r[_decClientFld]==null) return false; var ns=splitClients(r[_decClientFld]); for(var i=0;i<ns.length;i++){if(_cset2[_normCli(ns[i])])return true;} return false; })
+      : ST.dec;
+  }
+  window._rpt = {proc:proc, active:active, archived:archived, natSort:natSort, title:title, refY:refY, nAud:nAud, nPrz:nPrz, nPer:nPer,
+    serv:serv||[], aud:aud||[], dec:decFiltered, audfut:audfut||[]};
+
+  // Apply section visibility (checkbox E presença da planilha)
+  (function(){
+    var hasProc = !!(ST.proc && proc.length);
+    var hasAud = !!(ST.aud && ST.aud.length);
+    var hasServ = !!(ST.serv && ST.serv.length);
+    // mapa: id do bloco → [checkbox, condição de dados]
+    var map={
+      'row-evolucao':   ['vis-evolucao',     hasProc],
+      'row-mensal':     ['vis-mensal',       hasProc],
+      'passivo-ativo-row':['vis-passivo-ativo', hasProc],
+      'passivo-card-row': ['vis-passivo-arq',   hasProc],
+      'aud-real-banner':['vis-aud-real',     hasAud],
+      'aud-real-row':   ['vis-aud-real',     hasAud],
+      'aud-real-wrap':  ['vis-aud-real',     hasAud],
+      'serv-section':   ['vis-serv',         hasServ]
+    };
+    Object.keys(map).forEach(function(id){
+      var el=document.getElementById(id); if(!el) return;
+      var cfg=map[id];
+      el.style.display=(isVis(cfg[0])&&cfg[1])?'':'none';
+    });
+    // KPIs e topo de processos: ocultar se sem planilha de processos
+    var kpi1=document.getElementById('kpi1'); if(kpi1) kpi1.style.display=hasProc?'':'none';
+    var rowtop=document.getElementById('rowtop'); if(rowtop) rowtop.style.display=hasProc?'':'none';
+    var sbnProc=document.getElementById('sbn-proc'); if(sbnProc) sbnProc.style.display=hasProc?'':'none';
+    var kpi2=document.getElementById('kpi2'); if(kpi2) kpi2.style.display=(hasProc&&hasAud)?'':'none';
+    var rowEmp=document.getElementById('row-empresa'); if(rowEmp) rowEmp.style.display=hasProc?'':'none';
+    // dec vis tratado no render do decblock
+  })();
+
+  document.getElementById('cfg').style.display = 'none';
+  document.getElementById('dsh').style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+function kpiCard(col, lbl, val, det){
+  var colors = {'c7':'var(--c7)','c8x':'#8A6060','c4':'var(--c4)','gd':'var(--gd)','c6':'var(--c6)','c5':'var(--c5)'};
+  var bc = colors[col] || 'var(--c6)';
+  return '<div class="kp" style="border-top-color:'+bc+'">' +
+    '<div class="kl">'+lbl+'</div>' +
+    '<div class="kv">'+val+'</div>' +
+    '<div class="kd">'+det+'</div></div>';
+}
+
+function showReport(){
+  var d = window._rpt; if(!d) return;
+  document.getElementById('rtitle').textContent = 'Relatório de Processos — '+d.title;
+  var now = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('rsub').textContent = 'Gerado em: '+now;
+  document.getElementById('rfdate').textContent = now;
+  document.getElementById('rnote').textContent = 'Processos com status Ativo e Suspenso, ordenados por Natureza. Os campos Data da Distribuição e Contrário principal são preenchidos quando disponíveis na planilha.';
+  document.getElementById('rkpis').innerHTML =
+    '<div class="rk"><div class="l">Ativos</div><div class="v">'+d.active.length+'</div></div>' +
+    '<div class="rk"><div class="l">Arquivados</div><div class="v">'+d.archived.length+'</div></div>' +
+    '<div class="rk"><div class="l">Total</div><div class="v">'+(d.active.length+d.archived.length)+'</div></div>' +
+    '<div class="rk"><div class="l">Audiências '+d.refY+'</div><div class="v">'+d.nAud+'</div></div>' +
+    '<div class="rk"><div class="l">Prazos '+d.refY+'</div><div class="v">'+d.nPrz+'</div></div>';
+
+  var nh = '<table class="pt"><thead><tr><th>Natureza</th><th style="text-align:right">Qtd.</th><th style="text-align:right">%</th></tr></thead><tbody>';
+  d.natSort.forEach(function(e){
+    nh += '<tr><td>'+esc(e[0])+'</td><td style="text-align:right;font-weight:700">'+e[1]+'</td><td style="text-align:right">'+Math.round(e[1]/d.active.length*100)+'%</td></tr>';
+  });
+  nh += '</tbody></table>';
+  document.getElementById('rnat').innerHTML = nh;
+
+  var sorted = d.active.slice().sort(function(a,b){return (a['Natureza']||'').localeCompare(b['Natureza']||'');});
+  var tbody = document.getElementById('rtbody'); tbody.innerHTML='';
+  sorted.forEach(function(r,i){
+    var dtD = r['Data da distribuição'] || r['Data do cadastro'];
+    var tr = '<tr>' +
+      '<td>'+(i+1)+'</td>' +
+      '<td><b>'+esc(r['Natureza'])+'</b></td>' +
+      '<td title="'+esc(r['Ação'])+'">'+esc((r['Ação']||'').substring(0,35))+'</td>' +
+      '<td style="white-space:nowrap">'+fDate(dtD)+'</td>' +
+      '<td>'+esc((r['Cliente principal']||'').substring(0,28))+'</td>' +
+      '<td>'+esc(uPos(r['Posição'])||'')+'</td>' +
+      '<td>'+esc((r['Contrário principal']||'').substring(0,28))+'</td>' +
+      '<td>'+esc((r['Órgão']||'').substring(0,25))+'</td>' +
+      '<td>'+esc(r['Cidade']||'')+'</td><td>'+esc(r['UF']||'')+'</td>' +
+      '<td style="text-align:right;white-space:nowrap">'+fVal(r['Valor da causa'])+'</td>' +
+      '<td style="text-align:right;white-space:nowrap">'+fVal(r['Valor envolvido'])+'</td>' +
+      '<td>'+esc(r['Tipo da probabilidade atual']||'')+'</td>' +
+      '<td>'+esc(r['Faixa de probabilidade atual']||'')+'</td>' +
+      '<td>'+esc(r['Classificação do Processo']||'Comum')+'</td>' +
+      '</tr>';
+    tbody.innerHTML += tr;
+  });
+  document.getElementById('dsh').style.display = 'none';
+  document.getElementById('rpt').style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+// ════ Dropdown helpers ════
+function toggleRelDrop(){var el=document.getElementById('reldropBtn');if(el)el.classList.toggle('open');}
+function closeRelDrop(){var el=document.getElementById('reldropBtn');if(el)el.classList.remove('open');}
+document.addEventListener('click',function(e){var btn=document.getElementById('reldropBtn');if(btn&&!btn.contains(e.target))btn.classList.remove('open');});
+
+// ════ Excel helpers ════
+function _xlsDl(blob,name){var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(url);},5000);}
+function _xlsWrap(tbl){return '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8"></head><body>'+tbl+'</body></html>';}
+function _xlsName(title,suffix){return (title||'Dashboard').replace(/[^a-zA-Z0-9\u00C0-\u024F ]/g,'_')+' - '+suffix+'.xls';}
+function _xlsGeneric(rows,hdrs,title,label){
+  var H='#7E1F2C',H2='#9E3340',ALT='#FDE8EA',BD='#EDD8DA';
+  var coH='style="padding:7px 8px;background:'+H+';color:#fff;font-weight:700;border:1px solid #6B0010;font-family:Calibri;font-size:9pt;text-align:left"';
+  var hRow='<tr>'+hdrs.map(function(hh){return '<th '+coH+'>'+esc(hh)+'</th>';}).join('')+'</tr>';
+  var dRows=rows.map(function(r,i){var bg=i%2?ALT:'#fff';var co='style="padding:5px 8px;border:1px solid '+BD+';font-family:Calibri;font-size:9pt;vertical-align:top;background:'+bg+'"';return '<tr>'+hdrs.map(function(hh){return '<td '+co+'>'+esc(r[hh]!=null?r[hh]:'')+'</td>';}).join('')+'</tr>';}).join('');
+  return '<table>'+
+    '<tr><td colspan="'+hdrs.length+'" style="padding:12px;background:'+H+';color:#fff;font-size:14pt;font-weight:700;font-family:Calibri">'+esc(title)+' — '+esc(label)+'</td></tr>'+
+    '<tr><td colspan="'+hdrs.length+'" style="padding:5px 12px;background:'+H2+';color:#fff;font-size:9pt;font-family:Calibri">Total: '+rows.length+' registros · Gerado em '+new Date().toLocaleDateString('pt-BR')+'</td></tr>'+
+    hRow+dRows+'</table>';
+}
+
+// ════ Processos ════
+function exportXLS_proc(){
+  var d=window._rpt; if(!d){alert('Gere o dashboard primeiro.');return;}
+  var rows=d.active.slice().sort(function(a,b){return (a['Natureza']||'').localeCompare(b['Natureza']||'');});
+  // aplicar mapeamento de posição numa cópia
+  var mapped=rows.map(function(r){var o={};for(var k in r)o[k]=r[k];o['Posição']=uPos(r['Posição']);return o;});
+  // Ordem da planilha nova, OCULTANDO as 6 colunas finais (Status, Pasta,
+  // Resultado Processo, Classificação do Processo, Data do cadastro, Data do encerramento)
+  var hdrs=['Natureza','Tipo','Ação','Posição','Cliente principal','Contrário principal',
+    'Número do Processo','Objetos / Nome','Objetos / Observações','Órgão','Cidade','UF',
+    'Nº da vara','Data da distribuição','Fase','Valor da causa','Valor envolvido',
+    'Tipo da probabilidade atual','Faixa de probabilidade atual',
+    'Garantias/depósitos / Garantia/depósito','Garantias/depósitos / Valor',
+    'Advogado Responsável','Data do Andamento','Último andamento'];
+  // mantém apenas cabeçalhos que existem nos dados
+  var present={}; if(rows[0]) Object.keys(rows[0]).forEach(function(k){present[k]=true;});
+  hdrs=hdrs.filter(function(x){return present[x];});
+  var tbl=_xlsGeneric(mapped,hdrs,d.title,'Processos Ativos');
+  _xlsDl(new Blob(['\ufeff'+_xlsWrap(tbl)],{type:'application/vnd.ms-excel;charset=utf-8'}),_xlsName(d.title,'Processos'));
+}
+
+// ════ Serviços ════
+function exportXLS_serv(){
+  var d=window._rpt; if(!d||!d.serv||!d.serv.length){alert('Planilha de Serviços não carregada.');return;}
+  var hdrs=Object.keys(d.serv[0]||{});
+  var tbl=_xlsGeneric(d.serv,hdrs,d.title,'Serviços');
+  _xlsDl(new Blob(['\ufeff'+_xlsWrap(tbl)],{type:'application/vnd.ms-excel;charset=utf-8'}),_xlsName(d.title,'Servicos'));
+}
+
+// ════ Aud / Prazos / Perícias ════
+function exportXLS_aud(){
+  var d=window._rpt; if(!d||!d.aud||!d.aud.length){alert('Planilha de Aud/Prazos/Perícias não carregada.');return;}
+  var hdrs=Object.keys(d.aud[0]||{});
+  var tbl=_xlsGeneric(d.aud,hdrs,d.title,'Aud / Prazos / Perícias');
+  _xlsDl(new Blob(['\ufeff'+_xlsWrap(tbl)],{type:'application/vnd.ms-excel;charset=utf-8'}),_xlsName(d.title,'Aud_Prazos_Pericias'));
+}
+
+// ════ Classificação de decisão (global, p/ relatório e Excel) ════
+function classifyDecisionGlobal(polo, texto){
+  var polo_l = String(polo||'').trim().toLowerCase();
+  var polAt = polo_l==='ativo'||polo_l==='autor';
+  var polPas= polo_l==='passivo'||polo_l==='réu'||polo_l==='reu';
+  if(!polAt && !polPas) return null;
+  var t = String(texto||'').toLowerCase();
+  if(!t||t==='nan'||t==='null') return null;
+  if(/declaro\s+extint|extingo\s+o\s+processo|extinta\s+a\s+execu|extinção.*processo/.test(t))
+    return 'extinto';
+  if(/parcialmente\s+proced|julgo\s+parcial|procedente\s+em\s+parte|em\s+parte\s+procedente/.test(t)){
+    return polAt ? 'favoravel_parcial' : 'desfavoravel_parcial';
+  }
+  if(/julgo\s+proced[ea]nte(?!\s*ncia)|julgado\s+proced(?!ência)|julgar\s+proced(?!ência)|procedência\s+do|dou\s+provimento|concedo\s+(parcialmente\s+)?a\s+seguran|condeno\s+[ao]\s+r[eéu]|acolho\s+os?\s+pedidos?/.test(t)){
+    return polAt ? 'favoravel' : 'desfavoravel';
+  }
+  if(/julgo\s+improced[ea]nte|julgado\s+improced|julgar\s+improced|improcedência\s+do|improcedentes\s+os\s+pedidos|totalmente\s+improcedentes|pedidos?.*improced|rejeito\s+os?\s+pedidos?|decide.*julgar\s+improced|decide.*improcedente|julgar\s+os\s+pedidos.*improced/.test(t)){
+    return polAt ? 'desfavoravel' : 'favoravel';
+  }
+  return null;
+}
+function decLabel(cls){
+  switch(cls){
+    case 'favoravel': return 'Favorável';
+    case 'favoravel_parcial': return 'Favorável parcial';
+    case 'desfavoravel': return 'Desfavorável';
+    case 'desfavoravel_parcial': return 'Desfavorável parcial';
+    case 'extinto': return 'Extinção';
+    default: return 'Inconclusivo';
+  }
+}
+
+// ════ Decisões ════
+function exportXLS_dec(){
+  var d=window._rpt; if(!d||!d.dec||!d.dec.length){alert('Planilha de Decisões não carregada.');return;}
+  var keys=Object.keys(d.dec[0]||{});
+  var poloFld=keys[3]||'';
+  var textoFld=keys[keys.length-1]||'';
+  // adiciona coluna de conclusão a cada linha
+  var procFld_d=keys[1]||'';
+  var rows=d.dec.map(function(r){
+    var o={}; for(var k in r) o[k]=r[k];
+    // usa a conclusão REVISADA pelo usuário (com parciais unificadas)
+    o['Conclusão da Análise']=finalDecLabel(r[procFld_d], r[poloFld], r[textoFld]);
+    return o;
+  });
+  var hdrs=keys.concat(['Conclusão da Análise']);
+  var tbl=_xlsGeneric(rows,hdrs,d.title,'Decisões');
+  _xlsDl(new Blob(['\ufeff'+_xlsWrap(tbl)],{type:'application/vnd.ms-excel;charset=utf-8'}),_xlsName(d.title,'Decisoes'));
+}
+
+// ════ Aud. e Perícias Futuras ════
+function exportXLS_fut(){
+  var d=window._rpt; if(!d||!d.audfut||!d.audfut.length){alert('Planilha de Aud. e Perícias Futuras não carregada.');return;}
+  var hdrs=Object.keys(d.audfut[0]||{});
+  var tbl=_xlsGeneric(d.audfut,hdrs,d.title,'Aud. e Perícias Futuras');
+  _xlsDl(new Blob(['\ufeff'+_xlsWrap(tbl)],{type:'application/vnd.ms-excel;charset=utf-8'}),_xlsName(d.title,'Aud_Pericias_Futuras'));
+}
+
+// ════ Compartilhar: baixar HTML autocontido para Netlify ════
+// Gera o HTML autocontido do dashboard (reutilizado por Compartilhar e Publicar)
+function _buildShareHTML(){
+  var clone=document.documentElement.cloneNode(true);
+  var cloneCfg=clone.querySelector('#cfg'); if(cloneCfg)cloneCfg.style.display='none';
+  var cloneDval=clone.querySelector('#dval'); if(cloneDval)cloneDval.style.display='none';
+  var cloneDsh=clone.querySelector('#dsh'); if(cloneDsh)cloneDsh.style.display='block';
+  var cloneTbar=clone.querySelector('.tbar'); if(cloneTbar)cloneTbar.style.display='none';
+  // Serializar configuração dos gráficos para reinjetar no HTML estático
+  var chartData={};
+  for(var id in CH){
+    try{var cfg=CH[id].config;chartData[id]={type:cfg.type,data:JSON.parse(JSON.stringify(cfg.data)),options:JSON.parse(JSON.stringify(cfg.options||{}))};}catch(e){}
+  }
+  var reinit=document.createElement('script');
+  reinit.textContent='window.addEventListener("load",function(){try{if(window.ChartDataLabels)Chart.register(ChartDataLabels);}catch(e){}var D='+JSON.stringify(chartData)+';for(var id in D){var el=document.getElementById(id);if(!el)continue;try{new Chart(el.getContext("2d"),{type:D[id].type,data:D[id].data,options:D[id].options});}catch(e){}}});';
+  var cloneBody=clone.querySelector('body'); if(cloneBody)cloneBody.appendChild(reinit);
+  var html='<!DOCTYPE html>'+clone.outerHTML;
+  // SEGURANÇA: remover o token do HTML que vai pro cliente
+  html=html.replace(/const NETLIFY_TOKEN = "[^"]*";/, 'const NETLIFY_TOKEN = "";');
+  return html;
+}
+function _dashName(){
+  return (window._rpt&&window._rpt.title?window._rpt.title:'dashboard').replace(/[^\w\s-]/g,'').trim().substring(0,50)||'dashboard';
+}
+function shareDash(){
+  var html=_buildShareHTML();
+  var blob=new Blob([html],{type:'text/html'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=_dashName()+'.html';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href);},5000);
+}
+// ════ Publicar no Netlify ════
+function _ntfModal(html){
+  var m=document.getElementById('ntf-modal'); if(m) m.remove();
+  m=document.createElement('div');
+  m.id='ntf-modal';
+  m.style.cssText='position:fixed;inset:0;background:rgba(42,20,20,.5);z-index:10000;display:flex;align-items:center;justify-content:center;padding:24px';
+  m.innerHTML='<div style="background:#fff;border-radius:12px;padding:24px;max-width:560px;width:100%" onclick="event.stopPropagation()">'+html+'</div>';
+  m.onclick=function(){ m.remove(); };
+  document.body.appendChild(m);
+  return m;
+}
+function _ntfStatus(msg, ok){
+  var el=document.getElementById('ntf-msg'); if(el) el.innerHTML=msg;
+}
+function publishNetlify(){
+  var token=(typeof NETLIFY_TOKEN!=='undefined'?NETLIFY_TOKEN:'').trim();
+  if(!token){
+    _ntfModal('<h3 style="margin:0 0 12px;color:var(--c8);font-family:Libre Baskerville,serif">Token do Netlify não configurado</h3>'+
+      '<p style="font-size:.82rem;color:var(--tx);line-height:1.5">Para publicar, edite o arquivo <b>index.html</b> num editor de texto e cole seu token na linha:</p>'+
+      '<pre style="background:var(--c0);padding:10px;border-radius:6px;font-size:.72rem;overflow:auto">const NETLIFY_TOKEN = "seu_token_aqui";</pre>'+
+      '<p style="font-size:.78rem;color:var(--mu)">Gere o token em: app.netlify.com → User settings → Applications → Personal access tokens.</p>'+
+      '<button onclick="document.getElementById(\'ntf-modal\').remove()" style="background:var(--c7);color:#fff;border:none;border-radius:6px;padding:8px 18px;cursor:pointer;font-weight:700;margin-top:8px">Fechar</button>');
+    return;
+  }
+  if(typeof JSZip==='undefined'){ alert('Biblioteca de compactação (JSZip) não carregou. Verifique sua conexão.'); return; }
+  var modal=_ntfModal('<h3 style="margin:0 0 14px;color:var(--c8);font-family:Libre Baskerville,serif">🌐 Publicando no Netlify</h3>'+
+    '<div id="ntf-msg" style="font-size:.85rem;color:var(--tx);line-height:1.6">Preparando o arquivo…</div>');
+  var html=_buildShareHTML();
+  var zip=new JSZip();
+  zip.file('index.html', html);
+  // netlify.toml força o tipo de conteúdo correto
+  zip.file('netlify.toml', '[[headers]]\n  for = "/*"\n  [headers.values]\n    Content-Type = "text/html; charset=utf-8"\n');
+  zip.generateAsync({type:'blob'}).then(function(zipBlob){
+    _ntfStatus('Criando site…');
+    // 1) cria um site novo
+    return fetch('https://api.netlify.com/api/v1/sites',{
+      method:'POST', headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}, body:'{}'
+    }).then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status+' ao criar site'); return r.json(); })
+    .then(function(site){
+      _ntfStatus('Enviando o dashboard…');
+      // 2) faz deploy do ZIP
+      return fetch('https://api.netlify.com/api/v1/sites/'+site.id+'/deploys',{
+        method:'POST', headers:{'Authorization':'Bearer '+token,'Content-Type':'application/zip'}, body:zipBlob
+      }).then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status+' no deploy'); return r.json(); })
+      .then(function(deploy){ return {site:site, deploy:deploy}; });
+    });
+  }).then(function(ctx){
+    // 3) polling até o deploy ficar pronto
+    var tries=0;
+    function poll(){
+      tries++;
+      _ntfStatus('Processando publicação… ('+tries+')');
+      fetch('https://api.netlify.com/api/v1/deploys/'+ctx.deploy.id,{headers:{'Authorization':'Bearer '+token}})
+        .then(function(r){return r.json();})
+        .then(function(d){
+          if(d.state==='ready'||d.state==='current'){
+            var url=ctx.site.ssl_url||ctx.site.url||d.ssl_url||d.deploy_ssl_url;
+            _ntfDone(url);
+          } else if(d.state==='error'){
+            _ntfStatus('<span style="color:var(--c8)">Erro no processamento do deploy.</span>');
+          } else if(tries<30){ setTimeout(poll,2000); }
+          else { _ntfStatus('<span style="color:var(--c8)">Tempo esgotado. Verifique no painel do Netlify.</span>'); }
+        }).catch(function(){ if(tries<30) setTimeout(poll,2000); });
+    }
+    poll();
+  }).catch(function(err){
+    var msg=String(err.message||err);
+    var hint='';
+    if(msg.indexOf('401')>=0) hint='<p style="font-size:.76rem;color:var(--mu);margin-top:8px">Token inválido ou expirado. Gere um novo token no Netlify e cole no arquivo.</p>';
+    else if(msg.toLowerCase().indexOf('failed to fetch')>=0) hint='<p style="font-size:.76rem;color:var(--mu);margin-top:8px">Bloqueio de rede. Se abriu o arquivo direto (file://), publique pelo Streamlit ou sirva via servidor.</p>';
+    _ntfStatus('<span style="color:var(--c8);font-weight:700">Erro ao publicar: '+esc(msg)+'</span>'+hint+
+      '<br><button onclick="document.getElementById(\'ntf-modal\').remove()" style="background:var(--c7);color:#fff;border:none;border-radius:6px;padding:8px 18px;cursor:pointer;font-weight:700;margin-top:12px">Fechar</button>');
+  });
+}
+function _ntfDone(url){
+  _ntfStatus('<div style="color:#2A5A2A;font-weight:700;margin-bottom:10px">✅ Dashboard publicado com sucesso!</div>'+
+    '<div style="font-size:.78rem;color:var(--mu);margin-bottom:6px">Link para enviar ao cliente:</div>'+
+    '<div style="display:flex;gap:6px"><input id="ntf-url" value="'+esc(url)+'" readonly style="flex:1;padding:8px 10px;border:1px solid var(--bd);border-radius:6px;font-size:.78rem" onclick="this.select()">'+
+    '<button onclick="_ntfCopy()" style="background:var(--gd);color:#3A2A00;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;font-weight:700">Copiar</button></div>'+
+    '<div style="display:flex;gap:8px;margin-top:14px">'+
+    '<a href="'+esc(url)+'" target="_blank" style="background:var(--c7);color:#fff;text-decoration:none;border-radius:6px;padding:8px 18px;font-weight:700;font-size:.82rem">Abrir</a>'+
+    '<button onclick="document.getElementById(\'ntf-modal\').remove()" style="background:transparent;color:var(--mu);border:1px solid var(--bd);border-radius:6px;padding:8px 18px;cursor:pointer">Fechar</button></div>');
+}
+function _ntfCopy(){
+  var i=document.getElementById('ntf-url'); if(!i) return;
+  i.select();
+  try{ navigator.clipboard.writeText(i.value); }catch(e){ try{document.execCommand('copy');}catch(_){} }
+}
+
+function exportXLS(){
+  var d = window._rpt; if(!d) return;
+  var sorted = d.active.slice().sort(function(a,b){return (a['Natureza']||'').localeCompare(b['Natureza']||'');});
+
+  var H='#7E1F2C', H2='#9E3340', ALT='#FDE8EA', GC='#CDA736', BD='#EDD8DA';
+  var co='style="padding:5px 8px;border:1px solid '+BD+';font-family:Calibri;font-size:9pt;vertical-align:top;background:';
+  var coH='style="padding:7px 8px;background:'+H+';color:#fff;font-weight:700;border:1px solid #6B0010;font-family:Calibri;font-size:9pt;text-align:left"';
+
+  var headers=['Natureza','Ação','Data da Distribuição','Cliente principal','Posição','Contrário principal','Órgão','Cidade','UF','Valor da causa (R$)','Valor envolvido (R$)','Tipo da probabilidade atual','Faixa de probabilidade atual','Classificação do Processo'];
+  var hRow = '<tr>'+headers.map(function(h){return '<th '+coH+'>'+h+'</th>';}).join('')+'</tr>';
+
+  var dRows = sorted.map(function(r,i){
+    var bg = i%2 ? ALT : '#fff';
+    var cols=[
+      '<b style="color:'+H+'">'+esc(r['Natureza'])+'</b>',
+      esc(r['Ação']),
+      fDate(r['Data da distribuição']||r['Data do cadastro']),
+      esc(r['Cliente principal']),
+      esc(uPos(r['Posição'])),
+      esc(r['Contrário principal']||''),
+      esc(r['Órgão']),
+      esc(r['Cidade']),
+      esc(r['UF']),
+      fValBlankAsZero(r['Valor da causa']).replace('R$ ',''),
+      fValBlankAsZero(r['Valor envolvido']).replace('R$ ',''),
+      esc(r['Tipo da probabilidade atual']),
+      esc(r['Faixa de probabilidade atual']),
+      esc(r['Classificação do Processo']||'Comum')
+    ];
+    return '<tr>'+cols.map(function(v){return '<td '+co+bg+'">'+(v||'')+'</td>';}).join('')+'</tr>';
+  }).join('');
+
+  var natRows = d.natSort.map(function(e,i){
+    var bg = i%2?ALT:'#fff';
+    return '<tr><td style="padding:6px 10px;border:1px solid '+BD+';background:'+bg+';font-family:Calibri;font-weight:600">'+esc(e[0])+'</td><td style="padding:6px 10px;border:1px solid '+BD+';background:'+bg+';text-align:center;font-weight:700;color:'+H+'">'+e[1]+'</td><td style="padding:6px 10px;border:1px solid '+BD+';background:'+bg+';text-align:center">'+Math.round(e[1]/d.active.length*100)+'%</td></tr>';
+  }).join('');
+
+  var proc_table =
+    '<table>' +
+    '<tr><td colspan="'+headers.length+'" style="padding:12px;background:'+H+';color:#fff;font-size:14pt;font-weight:700;font-family:Calibri">'+esc(d.title)+' — Processos Ativos</td></tr>' +
+    '<tr><td colspan="'+headers.length+'" style="padding:5px 12px;background:'+H2+';color:#fff;font-size:9pt;font-family:Calibri">Total: '+sorted.length+' processos · Gerado em '+new Date().toLocaleDateString('pt-BR')+'</td></tr>' +
+    hRow + dRows + '</table>';
+
+  var res_table =
+    '<table>' +
+    '<tr><td colspan="3" style="padding:12px;background:'+H+';color:#fff;font-size:14pt;font-weight:700;font-family:Calibri">'+esc(d.title.toUpperCase())+' — RESUMO</td></tr>' +
+    '<tr><td colspan="3" style="padding:6px 12px;background:'+H2+';color:#fff;font-size:10pt;font-family:Calibri">Gerado em: '+new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'})+'</td></tr>' +
+    '<tr><td colspan="3" style="padding:4px"></td></tr>' +
+    '<tr><td style="padding:8px 12px;background:'+GC+';color:#fff;font-weight:700;border:1px solid '+BD+';font-family:Calibri">INDICADOR</td><td style="padding:8px 12px;background:'+GC+';color:#fff;font-weight:700;border:1px solid '+BD+';font-family:Calibri">VALOR</td><td style="background:'+GC+';border:1px solid '+BD+'"></td></tr>' +
+    '<tr><td style="padding:6px 12px;border:1px solid '+BD+';font-family:Calibri">Processos Ativos</td><td style="padding:6px 12px;border:1px solid '+BD+';font-weight:700;color:'+H+';text-align:center;font-family:Calibri">'+d.active.length+'</td><td style="border:1px solid '+BD+'"></td></tr>' +
+    '<tr><td style="padding:6px 12px;border:1px solid '+BD+';background:'+ALT+';font-family:Calibri">Processos Arquivados</td><td style="padding:6px 12px;border:1px solid '+BD+';background:'+ALT+';font-weight:700;color:'+H+';text-align:center;font-family:Calibri">'+d.archived.length+'</td><td style="border:1px solid '+BD+';background:'+ALT+'"></td></tr>' +
+    '<tr><td style="padding:6px 12px;border:1px solid '+BD+';font-family:Calibri">Total Carteira</td><td style="padding:6px 12px;border:1px solid '+BD+';font-weight:700;color:'+H+';text-align:center;font-family:Calibri">'+(d.active.length+d.archived.length)+'</td><td style="border:1px solid '+BD+'"></td></tr>' +
+    '<tr><td colspan="3" style="padding:4px"></td></tr>' +
+    '<tr><td style="padding:8px;background:'+H2+';color:#fff;font-weight:700;border:1px solid '+BD+';font-family:Calibri">NATUREZA</td><td style="padding:8px;background:'+H2+';color:#fff;font-weight:700;border:1px solid '+BD+';font-family:Calibri;text-align:center">QTD.</td><td style="padding:8px;background:'+H2+';color:#fff;font-weight:700;border:1px solid '+BD+';font-family:Calibri;text-align:center">%</td></tr>' +
+    natRows + '</table>';
+
+  var xls = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">\n<head><meta charset="UTF-8">\n<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>\n<x:ExcelWorksheet><x:Name>Processos Ativos</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>\n<x:ExcelWorksheet><x:Name>Resumo</x:Name></x:ExcelWorksheet>\n</x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->\n</head>\n<body>\n<div id="Processos Ativos">'+proc_table+'</div>\n<div id="Resumo">'+res_table+'</div>\n</body>\n</html>';
+
+  var blob = new Blob(['\ufeff'+xls], {type:'application/vnd.ms-excel;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href=url; a.download=(d.title||'Relatorio').replace(/[^a-zA-Z0-9\u00C0-\u024F ]/g,'_')+' - Processos Ativos.xls';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(url);}, 5000);
+}
+
+function goBack(){ document.getElementById('dsh').style.display='none'; document.getElementById('cfg').style.display='flex'; }
+function hideReport(){ document.getElementById('rpt').style.display='none'; document.getElementById('dsh').style.display='block'; }
+function printDash(){ document.body.setAttribute('data-print','dash'); window.print(); setTimeout(function(){document.body.removeAttribute('data-print');},2000); }
+function printReport(){ document.body.setAttribute('data-print','report'); window.print(); setTimeout(function(){document.body.removeAttribute('data-print');},2000); }
+
+window.addEventListener('DOMContentLoaded',function(){
+  var btn=document.querySelector('.bgen');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Carregando dados salvos...'}
+  var KEYS=['proc','serv','aud','audfut','dec'];
+  var LBLS={proc:'sp',serv:'ss',aud:'sa',audfut:'saf',dec:'sd'};
+  var loaded=0;
+  function onAllLoaded(){
+    openIDB(function(db){
+      if(db){
+        try{
+          var txm=db.transaction('meta','readonly');
+          var rL=txm.objectStore('meta').get('logo');
+          rL.onsuccess=function(e){
+            if(e.target.result){ST.logo=e.target.result;
+              var p=document.getElementById('lprev');if(p){p.src=ST.logo;p.style.display='block';}
+              var sl=document.getElementById('sl');if(sl)sl.textContent='✓ Logo salvo';
+              var dzl=document.getElementById('dz-logo');if(dzl)dzl.classList.add('ok');}
+          };
+        }catch(ex){}
+      }else{
+        try{var lo=localStorage.getItem('igsa_logo');
+          if(lo){ST.logo=lo;var p2=document.getElementById('lprev');
+          if(p2){p2.src=lo;p2.style.display='block';}
+          var sl2=document.getElementById('sl');if(sl2)sl2.textContent='✓ Logo salvo';}
+        }catch(ex2){}
+      }
+      try{
+        var ttl=localStorage.getItem('igsa_title');if(ttl){var t=document.getElementById('ttl');if(t)t.value=ttl;}
+        var cli=localStorage.getItem('igsa_cli');if(cli){var c=document.getElementById('cli');if(c)c.value=cli;}
+        var yr=localStorage.getItem('igsa_yr');if(yr){var a=document.getElementById('ayr');if(a)a.value=yr;}
+      }catch(ex3){}
+      updateStoBar();
+      buildClientList();
+      if(btn){btn.disabled=false;btn.textContent='▶ Gerar Dashboard';}
+      try{if(window.ChartDataLabels)Chart.register(ChartDataLabels);}catch(e){}
+    });
+  }
+  KEYS.forEach(function(k){
+    idbLoad(k,function(data,ts){
+      if(data){ if(k==='proc') data=_normalizeProcCols(data); ST[k]=data;
+        var dz=document.getElementById('dz-'+k);if(dz)dz.classList.add('ok');
+        var lbl=document.getElementById(LBLS[k]);
+        if(lbl)lbl.textContent='✓ Dados salvos ('+data.length+' reg'+(ts?' — '+ts:'')+')';}
+      loaded++;
+      if(loaded===KEYS.length)onAllLoaded();
+    });
+  });
+});
+
+window.addEventListener('load',function(){
+  try{if(window.ChartDataLabels)Chart.register(ChartDataLabels);}catch(e){}
+});
+
+</script>
+</body>
+</html>

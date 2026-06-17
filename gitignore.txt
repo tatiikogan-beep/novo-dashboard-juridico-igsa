@@ -1,0 +1,18 @@
+# Renomeie este arquivo para .gitignore antes de subir no GitHub
+
+# NUNCA versionar secrets / tokens
+.streamlit/secrets.toml
+secrets.toml
+secrets_exemplo.toml
+*.token
+
+# Arquivos temporários
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+
+# Planilhas e dashboards gerados (dados sensíveis de clientes)
+*.xlsx
+*.xls
+*.html
