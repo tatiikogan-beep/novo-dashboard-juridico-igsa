@@ -2783,7 +2783,8 @@ function _buildShareHTML(){
   var cloneCfg=clone.querySelector('#cfg'); if(cloneCfg)cloneCfg.style.display='none';
   var cloneDval=clone.querySelector('#dval'); if(cloneDval)cloneDval.style.display='none';
   var cloneDsh=clone.querySelector('#dsh'); if(cloneDsh)cloneDsh.style.display='block';
-  var cloneTbar=clone.querySelector('.tbar'); if(cloneTbar)cloneTbar.style.display='none';
+  // Oculta a barra de ferramentas do dashboard no HTML publicado
+  var cloneDshTbar=clone.querySelector('#dsh .tbar'); if(cloneDshTbar)cloneDshTbar.style.display='none';
   // Serializar configuração dos gráficos para reinjetar no HTML estático
   var chartData={};
   for(var id in CH){
