@@ -77,12 +77,14 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
 .kv{font-family:'Libre Baskerville',serif;font-size:2rem;color:var(--c8);font-weight:700;line-height:1;margin-top:2px}
 .kd{font-size:.64rem;color:var(--mu);margin-top:2px}
 .cg{display:grid;gap:12px;margin-bottom:12px}
+.cg>*{min-width:0}
 .c3{grid-template-columns:1fr 1fr 1fr}
 .c2{grid-template-columns:1fr 1fr}
 .c1{grid-template-columns:1fr}
-.cc{background:var(--wh);border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
+.cc{background:var(--wh);border-radius:var(--r);padding:16px;box-shadow:var(--sh);min-width:0;overflow:hidden}
 .ct{font-size:.67rem;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--c0)}
-.ch{position:relative}
+.ch{position:relative;width:100%;max-width:100%}
+.ch>canvas{max-width:100%!important}
 .sd{height:2px;background:var(--c1);margin:20px 0}
 /* REPORT */
 .rw{max-width:1100px;margin:0 auto;padding:28px 36px;background:#fff;min-height:100vh}
@@ -105,7 +107,7 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
 .pt td{padding:6px 8px;border-bottom:1px solid var(--bd);vertical-align:top}
 .pt tr:nth-child(even) td{background:var(--c0)}
 @media print{
-  #cfg,.tbar,.rbtns{display:none!important}
+  #cfg,#sval,#dval,.tbar,.rbtns{display:none!important}
   body[data-print=dash] #rpt{display:none!important}
   body[data-print=dash] #dsh{display:block!important}
   body[data-print=report] #dsh{display:none!important}
@@ -114,6 +116,9 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
   .cc,.kp,.rk{break-inside:avoid}
   .rw{padding:14px}
   .dw{padding:10px;max-width:none}
+  .ch{break-inside:avoid}
+  canvas{max-width:100%!important}
+  @page{size:A4;margin:12mm}
 }
 @media(max-width:860px){
   .grid2,.up3,.c3,.c2{grid-template-columns:1fr}
@@ -299,11 +304,44 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
   </div>
 </div>
 
+<!-- VALIDAÇÃO DE SERVIÇOS E NATUREZA -->
+<div id="sval" style="display:none">
+  <div class="tbar">
+    <button class="tb tbk" onclick="svalBack()">← Voltar à configuração</button>
+    <span class="thi">Validação de Serviços e Natureza · Conferência antes do painel</span>
+    <div class="tbtns">
+      <button class="tb tpd" onclick="svalConfirm()">✓ Confirmar e continuar</button>
+    </div>
+  </div>
+  <div style="max-width:1200px;margin:0 auto;padding:20px">
+    <div class="cc" id="sval-serv-card" style="margin-bottom:16px">
+      <div class="ct">Tipos de serviço não mapeados</div>
+      <div class="cp" id="sval-serv-info">Defina a categoria (coluna PARA) para os tipos abaixo. Eles não constam na tabela de correspondência.</div>
+      <div style="max-height:40vh;overflow:auto;border:1px solid var(--bd);border-radius:8px;margin-top:8px">
+        <table style="width:100%;border-collapse:collapse;font-size:.72rem">
+          <thead style="position:sticky;top:0;z-index:1"><tr id="sval-serv-head"></tr></thead>
+          <tbody id="sval-serv-body"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="cc" id="sval-nat-card">
+      <div class="ct">Registros sem Natureza ou fora das regras</div>
+      <div class="cp" id="sval-nat-info">Registros cuja Natureza está vazia ou não corresponde às regras. Defina a natureza correta.</div>
+      <div style="max-height:40vh;overflow:auto;border:1px solid var(--bd);border-radius:8px;margin-top:8px">
+        <table style="width:100%;border-collapse:collapse;font-size:.72rem">
+          <thead style="position:sticky;top:0;z-index:1"><tr id="sval-nat-head"></tr></thead>
+          <tbody id="sval-nat-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- DASHBOARD -->
 <div id="dsh">
 <div class="tbar">
   <button class="tb tbk" onclick="goBack()">← Voltar</button>
-  <span class="thi">Imaculada Gordiano Sociedade de Advogados · Dashboard Jurídico</span>
+  <span class="thi">Imaculada Gordiano Sociedade de Advogados</span>
   <div class="tbtns">
     <div class="reldrop" id="reldropBtn">
       <button class="tb trl" onclick="toggleRelDrop()">📊 Relatórios e Exportações ▾</button>
@@ -344,7 +382,7 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
     <div class="cc"><div class="ct">Processos Encerrados por Ano</div><div class="cp" id="cp-arcano"></div><div class="ch" style="height:190px"><canvas id="chay"></canvas></div></div>
   </div>
   <div class="cg c2" id="row-mensal" style="margin-bottom:12px">
-    <div class="cc"><div class="ct" id="ctcmp">—</div><div class="ch" style="height:200px"><canvas id="chcmp2"></canvas></div></div>
+    <div class="cc"><div class="ct" id="ctcmp">—</div><div class="cp" id="cp-mensal"></div><div class="ch" style="height:200px"><canvas id="chcmp2"></canvas></div></div>
     <div class="cc"><div class="ct">Distribuição por Fase Processual</div><div class="cp" id="cp-fase"></div><div class="ch" style="height:200px"><canvas id="chfase"></canvas></div></div>
   </div>
   <div id="passivo-ativo-row" style="margin-bottom:12px">
@@ -442,350 +480,97 @@ const CH={};
 
 
 const TAX = {
-// AUDIÊNCIA
-'Audiência':'Audiência','Audiência - Cível':'Audiência','Audiência / Audiência Cível':'Audiência',
-'Audiência / Conciliação':'Audiência','Audiência / Inaugural':'Audiência',
-'Audiência / Instrução':'Audiência','Audiência / Instrução e Julgamento':'Audiência',
-'Audiência / Julgamento':'Audiência','Audiência / Justificação Prévia':'Audiência',
-'Audiência / Una':'Audiência','Audiência Una':'Audiência',
-'Serviço / Audiência':'Audiência','Pauta de Julgamento':'Audiência',
-'Workflow / Registro de audiência':'Audiência','Workflow / Sinalizar audiência':'Audiência',
-'Serviço / Conciliação Extrajudicial':'Audiência',
-// REUNIÃO
-'Reunião':'Reunião','Reunião / Cliente':'Reunião','Reunião / Coordenadores':'Reunião',
-'Reunião / Prospect':'Reunião','Reunião / Sócios':'Reunião','Reunião / Treinamento':'Reunião',
-'Reunião de Captação':'Reunião','Reunião de Consultoria':'Reunião','Reunião Interna':'Reunião',
-'Reunião / Reunião':'Reunião','Serviço / Reunião':'Reunião',
-'Serviço / Acompanhamento em Reunião':'Acompanhamento em Reunião',
-// CONSULTA
-'Serviço / Consulta':'Consulta','Serviço / Orientação':'Consulta',
-// DESPACHO
-'Despacho com Magistrado':'Despacho com Magistrado',
-// DILIGÊNCIA
-'Diligência externa':'Diligência','Serviço / Diligência':'Diligência',
-'Diversos / Diligência':'Diligência',
-// TREINAMENTO
-'TREINAMENTO':'Treinamento','Elaboração de Plano de Treinamento':'Elaboração de Plano de Treinamento',
-// PALESTRA
-'Serviço / Palestra':'Palestra',
-// PARECER
-'Serviço / Parecer':'Parecer','Serviço / Parecer Complexo':'Parecer',
-// ACOMPANHAMENTO
-'Serviço / Acompanhamento em Depoimento/Oitiva':'Acompanhamento em Depoimento/Oitiva',
-// DEMANDA SEFAZ
-'Serviço / Demanda Sefaz':'Demanda Sefaz',
-// SERVIÇOS ESPECÍFICOS
-'Serviço / Serviços Redesim':'Serviços Redesim','Serviço / Serviços Siscoex':'Serviços Siscoex',
-'Serviços Redesim':'Serviços Redesim','Serviços Siscoex':'Serviços Siscoex',
-// ANÁLISE CONTRATUAL/SOCIETÁRIA
-'Serviço / Análise de Aditivo':'Análise de Aditivo',
-'Serviço / Análise de Contrato':'Análise de Contrato',
-'Serviço / Revisão Contratual':'Análise de Contrato',
-'Serviço / Análise de Distrato':'Análise de Distrato',
-'Serviço / Análise de Inst. Societário':'Análise de Inst. Societário',
-// ALTERAÇÃO
-'Serviço / Alteração AGE':'Alteração AGE','Serviço / Alteração Contratual':'Alteração Contratual',
-'Serviço / Alteração Estatuto':'Alteração Estatuto',
-'Serviço / Alteração Inst. Societário':'Alteração Inst. Societário',
-// ELABORAÇÃO CONTRATUAL/SOCIETÁRIA
-'Serviço / Elaboração de Aditivo':'Elaboração de Aditivo',
-'Serviço / Protocolo de Aditivo':'Elaboração de Aditivo',
-'Aditivo contratual de cláusulas de Proteção de Dados':'Elaboração de Aditivo',
-'Serviço / Elaboração de cláusula':'Elaboração de Cláusula',
-'Elaboração de cláusula contratual':'Elaboração de Contrato',
-'Serviço / Elaboração de Contrato':'Elaboração de Contrato',
-'Serviço / Contratual Comum':'Elaboração de Contrato',
-'Serviço / Contratual Complexo':'Elaboração de Contrato',
-'Serviço / Contratual Extraordinário':'Elaboração de Contrato',
-'Serviço':'Elaboração de Contrato',
-'Serviço / Elaboração de Distrato':'Elaboração de Distrato',
-'Serviço / Elaboração de doc societário':'Elaboração de Inst. Societário',
-'Serviço / Elaboração de Inst. Societário':'Elaboração de Inst. Societário',
-'Serviço / Elaboração de Minuta':'Elaboração de Minuta',
-'Serviço / Elaboração de Notificação.':'Elaboração de Notificação',
-'Serviço / Elaboração de Ofício':'Elaboração de Ofício',
-'Serviço / Elaboração de Requerimento':'Elaboração de Requerimento',
-'Serviço / Elaboração de Termo de Compromisso':'Elaboração de Termo de Compromisso',
-'ELABORAÇÃO DE TERMO DE COMPROMISSO':'Elaboração de Termo de Compromisso',
-'Elaboração de Termo':'Elaboração de Termo',
-// LGPD
-'Análise de Inventario de processos com dados pessoais':'Análise de Inventário de Processos com Dados Pessoais',
-'Análise de Política de Privacidade':'Análise de Política de Privacidade',
-'Análise de Política de Segurança da Informação':'Análise de Política de Segurança da Informação',
-'ANÁLISE DE TERMO DE COMPROMISSO':'Análise de Termo de Compromisso',
-'Atendimento Titular de Dados -DPO':'Atendimento Titular de Dados DPO',
-'Atualização Be Compliance':'Atualização Be Compliance',
-'Elaboração de Aviso de cookies':'Elaboração de Aviso de Cookies',
-'Elaboração de Aviso de Privacidade':'Elaboração de Aviso de Privacidade',
-'Elaboração de Plano de Notificações':'Elaboração de Plano de Notificações',
-'Elaboração de Política':'Elaboração de Política',
-'Elaboração de Política de Privacidade':'Elaboração de Política de Privacidade',
-'Elaboração de Política de Segurança da Informação':'Elaboração de Política de Segurança da Informação',
-'Elaboração de relatório da análise dos riscos':'Elaboração de Relatório da Análise dos Riscos',
-'Elaboração de ROPA':'Elaboração de ROPA',
-'Elaboração de termos de uso':'Elaboração de Termos de Uso',
-// ELABORAÇÃO DE PEÇA PROCESSUAL
-'Prazo':'Elaboração de Peça Processual',
-'Prazo / Ação Rescisória-Razões Finais (art. 973 CPC)':'Elaboração de Peça Processual',
-'Prazo / Acompanhar Julgamento.':'Elaboração de Peça Processual',
-'Prazo / Aditivo do contrato':'Elaboração de Peça Processual',
-'Prazo / Agravo contra decisão que inadmite na origem Resp ou Rext - Contrarrazões (art. 1.042, § 3º, CPC)':'Elaboração de Peça Processual',
-'Prazo / Agravo contra decisão que inadmite na origem Resp ou Rext (art. 1.042 c/c art. 1.003, § 5º CPC)':'Elaboração de Peça Processual',
-'Prazo / Agravo de Instrumento':'Elaboração de Peça Processual',
-'Prazo / Agravo de Instrumento Civel pz em dobro (Art. 525 c/c 191 CPC)':'Elaboração de Peça Processual',
-'Prazo / Agravo de Instrumento Trabalhista':'Elaboração de Peça Processual',
-'Prazo / Agravo de Instrumento Trabalhista (art. 897, b CLT)':'Elaboração de Peça Processual',
-'Prazo / Agravo de Petição (art. 897, § 1º, CLT)':'Elaboração de Peça Processual',
-'Prazo / Agravo de Petição (art. 897, a, CLT)':'Elaboração de Peça Processual',
-'Prazo / Agravo Interno - Contrarrazões (art. 1.021, § 2º, CPC)':'Elaboração de Peça Processual',
-'Prazo / Agravo Interno de decisão TRT':'Elaboração de Peça Processual',
-'Prazo / Agravo Interno/Regimental':'Elaboração de Peça Processual',
-'Prazo / Agravo Retido':'Elaboração de Peça Processual',
-'Prazo / AIRO':'Elaboração de Peça Processual',
-'Prazo / AIRR':'Elaboração de Peça Processual',
-'Prazo / Apelação - Contrarrazões (art. 1.010, § 1º, CPC)':'Elaboração de Peça Processual',
-'Prazo / Apelação Civel':'Elaboração de Peça Processual',
-'Prazo / Apresentação De-Documentos':'Elaboração de Peça Processual',
-'Prazo / Ato processual sem prazo fixado (art. 218, § 3º CPC)':'Elaboração de Peça Processual',
-'Prazo / Contestação':'Elaboração de Peça Processual',
-'Contestação (art. 190 c/c 240, III CPC - Prazo em dobro)':'Elaboração de Peça Processual',
-'Prazo / Contestação (art. 335 CPC)':'Elaboração de Peça Processual',
-'Prazo / Contestação Trabalhista':'Elaboração de Peça Processual',
-'Prazo / Contra Razões em Recurso Trabalhista (4d)':'Elaboração de Peça Processual',
-'Prazo / Contrarrazões':'Elaboração de Peça Processual',
-'Prazo / Contrarrazões Embargos à Execução':'Elaboração de Peça Processual',
-'Prazo / Contrarrazões RO/RR':'Elaboração de Peça Processual',
-'Prazo / Cumprimento de Sentença':'Elaboração de Peça Processual',
-'Prazo / Defesa Administrativa':'Elaboração de Peça Processual',
-'Prazo / Defesa Administrativa - SEMACE':'Elaboração de Peça Processual',
-'Prazo / Defesa Penal':'Elaboração de Peça Processual',
-'Prazo / Defesa Penal - Arts. 396 e 396 A do CPP':'Elaboração de Peça Processual',
-'Prazo / Elaborar e protocolar Agravo para CARF':'Elaboração de Peça Processual',
-'Prazo / Elaborar e Protocolar ED para CARF':'Elaboração de Peça Processual',
-'Prazo / Embargos à Execução':'Elaboração de Peça Processual',
-'Prazo / Embargos à Execução Fiscal':'Elaboração de Peça Processual',
-'Prazo / Embargos à Execução Trabalhista':'Elaboração de Peça Processual',
-'Prazo / Embargos a Execução Trabalhista (art. 884 CLT)':'Elaboração de Peça Processual',
-'Prazo / Embargos de Declaração':'Elaboração de Peça Processual',
-'Prazo / Embargos de Declaração (art. 1.023/1.024 CPC)':'Elaboração de Peça Processual',
-'Prazo / Embargos de Divergência (art. 1.003 CPC)':'Elaboração de Peça Processual',
-'Prazo / Embargos de Terceiro':'Elaboração de Peça Processual',
-'Prazo / Embargos Monitórios':'Elaboração de Peça Processual',
-'Prazo / Emenda da petição inicial na tutela antecipada em caráter antecedente denegada (art. 303, § 6º, CPC)':'Elaboração de Peça Processual',
-'Prazo / Emendar Inicial':'Elaboração de Peça Processual',
-'Prazo / Especificar provas e temas sobre provas':'Elaboração de Peça Processual',
-'Prazo / Exceção de Pré-Executividade':'Elaboração de Peça Processual',
-'Prazo / Exceção Pré Executividade Trabalhista':'Elaboração de Peça Processual',
-'Prazo / Habilitação - Manifestação dos Requeridos (art. 690, CPC)':'Elaboração de Peça Processual',
-'Prazo / Impugnação aos Embargos Monitórios':'Elaboração de Peça Processual',
-'Prazo / Impugnação Auto de Infração SRFB':'Elaboração de Peça Processual',
-'Prazo / Impugnação de Cálculos Trabalhista 8d':'Elaboração de Peça Processual',
-'Prazo / Indicação de bens À-Penhora':'Elaboração de Peça Processual',
-'Prazo / Indicação de testemunhas (CPC art. 357) ou assistente técnico e apresentação de quesitos à perícia (art. 465, CPC)':'Elaboração de Peça Processual',
-'Prazo / Juntar Documentos':'Elaboração de Peça Processual',
-'Prazo / Liminar':'Elaboração de Peça Processual',
-'Prazo / Mandado de Segurança':'Elaboração de Peça Processual',
-'Prazo / Manfestação Diversa (20d)':'Elaboração de Peça Processual',
-'Prazo / Manif Trab 48h':'Elaboração de Peça Processual',
-'Prazo / Manifestação diversa':'Elaboração de Peça Processual',
-'Prazo / Manifestação Diversa (30d)':'Elaboração de Peça Processual',
-'Prazo / Manifestação Diversa 10d':'Elaboração de Peça Processual',
-'Prazo / Manifestação Diversa 15d':'Elaboração de Peça Processual',
-'Prazo / Manifestação Diversa 5d':'Elaboração de Peça Processual',
-'Prazo / Manifestação Diversa 8d':'Elaboração de Peça Processual',
-'Prazo / Manifestação do sócio ou da pessoa jurídica no pedido de desconsideração da personalidade jurídica (art. 135, CPC)':'Elaboração de Peça Processual',
-'Prazo / Manifestação Prévia - Improbidade Administrativa':'Elaboração de Peça Processual',
-'Prazo / Manifestação sobre documentos (art. 437, § 1º CPC)':'Elaboração de Peça Processual',
-'Prazo / Manifestação Sobre Laudo Pericial CONAT - CE':'Elaboração de Peça Processual',
-'Prazo / Nomeação de bens ou depósito em Execução Trabalhista':'Elaboração de Peça Processual',
-'Prazo / Pagamento de acordo':'Elaboração de Peça Processual',
-'Prazo / Pagamento de custas sob pena de cancelamento da distribuição (art. 290, CPC)':'Elaboração de Peça Processual',
-'Prazo / Pagamento em execução trabalhista -15d':'Elaboração de Peça Processual',
-'Prazo / Pagamento em execução trabalhista -48h':'Elaboração de Peça Processual',
-'Prazo / Pedido de esclarecimentos ou correções da decisão de saneamento e organização do processo (art. 357, § 1º, CPC)':'Elaboração de Peça Processual',
-'Prazo / Pedido Inicial- Emendar ou Completar (art. 321 e 801 CPC)':'Elaboração de Peça Processual',
-'Prazo para apresentação de rol de testemunhas (prazo máximo - art. 357, § 4º, CPC)':'Elaboração de Peça Processual',
-'Prazo / Protocolar apelação':'Elaboração de Peça Processual',
-'Prazo / Protocolar prova depósito 30% em Execução':'Elaboração de Peça Processual',
-'Prazo / PROTOCOLAR prova depósito parcelamento em Execução 1':'Elaboração de Peça Processual',
-'Prazo / PROTOCOLAR prova depósito parcelamento em Execução 2':'Elaboração de Peça Processual',
-'Prazo / PROTOCOLAR prova depósito parcelamento em Execução 3':'Elaboração de Peça Processual',
-'Prazo / PROTOCOLAR prova depósito parcelamento em Execução 4':'Elaboração de Peça Processual',
-'Prazo / PROTOCOLAR prova depósito parcelamento em Execução 5':'Elaboração de Peça Processual',
-'Prazo / PROTOCOLAR prova depósito parcelamento em Execução 6':'Elaboração de Peça Processual',
-'Prazo / Protocolar Recurso decisao TJ TRF':'Elaboração de Peça Processual',
-'Prazo / Protocolar Recurso Hierárquico DRF':'Elaboração de Peça Processual',
-'Prazo / Protocolar Recurso sobre decisão de Relator e Colegiados TJ TRF':'Elaboração de Peça Processual',
-'Prazo / Protocolar Recurso sobre Decisão STJ STF':'Elaboração de Peça Processual',
-'Prazo / Protocolar recurso sobre Decisão TJ TRF de inadmissibilidade de REsp / RE':'Elaboração de Peça Processual',
-'Prazo / Protocolar recurso sobre decisão TST (4d)':'Elaboração de Peça Processual',
-'Prazo / Protocolar recurso sobre sentença':'Elaboração de Peça Processual',
-'Prazo / Protocolar Recurso voluntário para CARF':'Elaboração de Peça Processual',
-'Prazo / Protocolar Recurso Voluntario Sefaz':'Elaboração de Peça Processual',
-'Prazo / Protocolar REsp para CARF':'Elaboração de Peça Processual',
-'Prazo / Protocolo Penal 2d corridos D-0':'Elaboração de Peça Processual',
-'Prazo / Razões Finais Trabalhista (10 dias)':'Elaboração de Peça Processual',
-'Prazo / Razões Finais Trabalhista (5 dias)':'Elaboração de Peça Processual',
-'Prazo / Recurso Adesivo':'Elaboração de Peça Processual',
-'Prazo / Recurso Administrativo':'Elaboração de Peça Processual',
-'Prazo / Recurso de Revista':'Elaboração de Peça Processual',
-'Prazo / Recurso Especial':'Elaboração de Peça Processual',
-'Prazo / Recurso Especial - CARF':'Elaboração de Peça Processual',
-'Prazo / Recurso Especial ou Extraordinário - Contrarrazões (art. 1.030, caput, CPC)':'Elaboração de Peça Processual',
-'Prazo / Recurso Extraordinário':'Elaboração de Peça Processual',
-'Prazo / Recurso Extraordinário PAF SEFAZ':'Elaboração de Peça Processual',
-'Prazo / Recurso Inominado':'Elaboração de Peça Processual',
-'Prazo / Recurso Ordinário':'Elaboração de Peça Processual',
-'Prazo / Recurso Ordinário (JECF)':'Elaboração de Peça Processual',
-'Prazo / Recurso Ordinário em Habeas Corpus':'Elaboração de Peça Processual',
-'Prazo / Recurso Ordinário-Trabalhista (art. 895 CLT)':'Elaboração de Peça Processual',
-'Prazo / Recurso Voluntário':'Elaboração de Peça Processual',
-'Prazo / Recurso Voluntário - SEFIN - FOR':'Elaboração de Peça Processual',
-'Prazo / Réplica':'Elaboração de Peça Processual',
-'Prazo / Réplica a contestação - (art 350 e 351 CPC)':'Elaboração de Peça Processual',
-'Prazo / Requerer o que entender De-Direito':'Elaboração de Peça Processual',
-'Prazo / Vista aos Autos (art. 107, II CPC)':'Elaboração de Peça Processual',
-'Razões finais escritas - Prazos sucessivos autor réu Ministério Público (art. 364 § 2º CPC)':'Elaboração de Peça Processual',
-'Protocolo':'Elaboração de Peça Processual',
-'Protocolo / Protocolar REsp Sefaz':'Elaboração de Peça Processual',
-'Serviços/COOP':'Elaboração de Peça Processual',
-'Serviço / Notificação Extrajudicial':'Elaboração de Peça Processual',
-'Serviço / Requerimento':'Elaboração de Peça Processual',
-'Serviço / Requerimento Administrativo':'Elaboração de Peça Processual',
-'Serviço / Requerimento Complexo':'Elaboração de Peça Processual',
-'Elaboração de Manifestação':'Elaboração de Peça Processual',
-'Diversos / Elaborar apelação':'Elaboração de Peça Processual',
-'Diversos / Manifestação Diversa (1d)':'Elaboração de Peça Processual',
-'Diversos / Manifestação diversa (2d)':'Elaboração de Peça Processual',
-'Diversos / Manifestação diversa (5d)':'Elaboração de Peça Processual',
-'Workflow / Elaborar Agravo':'Elaboração de Peça Processual',
-'Workflow / Elaborar agravo de petição':'Elaboração de Peça Processual',
-'Workflow / Elaborar Agravo Interno - negativa de segmento a RE e REsp (duas peças)':'Elaboração de Peça Processual',
-'Workflow / Elaborar Agravo Interno - negativa de segmento a RE ou REsp':'Elaboração de Peça Processual',
-'Workflow / Elaborar Agravo Interno TST':'Elaboração de Peça Processual',
-'Workflow / Elaborar apelação':'Elaboração de Peça Processual',
-'Workflow / Elaborar Apelação Penal':'Elaboração de Peça Processual',
-'Workflow / Elaborar ARE e AREsp (duas peças)':'Elaboração de Peça Processual',
-'Workflow / Elaborar ARE ou AREsp':'Elaboração de Peça Processual',
-'Workflow / Elaborar ED':'Elaboração de Peça Processual',
-'Workflow / Elaborar ED Penal':'Elaboração de Peça Processual',
-'Workflow / Elaborar Embargos à Execução':'Elaboração de Peça Processual',
-'Workflow / Elaborar Embargos de Divergência':'Elaboração de Peça Processual',
-'Workflow / Elaborar Emenda a inicial':'Elaboração de Peça Processual',
-'Workflow / Elaborar Mandado de Segurança':'Elaboração de Peça Processual',
-'Workflow / Elaborar Manifestação Diversa 10d':'Elaboração de Peça Processual',
-'Workflow / Elaborar Manifestação Diversa 15d':'Elaboração de Peça Processual',
-'Workflow / Elaborar Manifestação Diversa 20d':'Elaboração de Peça Processual',
-'Workflow / Elaborar Manifestação Diversa 30d':'Elaboração de Peça Processual',
-'Workflow / Elaborar Manifestação Diversa 5d':'Elaboração de Peça Processual',
-'Workflow / Elaborar Manifestação Diversa 8 d':'Elaboração de Peça Processual',
-'Workflow / Elaborar Pet Custas complementares':'Elaboração de Peça Processual',
-'Workflow / Elaborar Razões Finais':'Elaboração de Peça Processual',
-'Workflow / Elaborar RE':'Elaboração de Peça Processual',
-'Workflow / Elaborar RE e REsp':'Elaboração de Peça Processual',
-'Workflow / Elaborar Recurso de Sentença Penal em Juizado':'Elaboração de Peça Processual',
-'Workflow / Elaborar Recurso Hierárquico Lei 9.874/99':'Elaboração de Peça Processual',
-'Workflow / Elaborar Recurso para Juizado':'Elaboração de Peça Processual',
-'Workflow / Elaborar Recurso Sefin':'Elaboração de Peça Processual',
-'Workflow / Elaborar Recurso voluntário para CARF':'Elaboração de Peça Processual',
-'Workflow / Elaborar Recurso Voluntário Sefaz':'Elaboração de Peça Processual',
-'Workflow / Elaborar Replica à contestação':'Elaboração de Peça Processual',
-'Workflow / Elaborar REsp':'Elaboração de Peça Processual',
-'Workflow / Elaborar REsp para CARF':'Elaboração de Peça Processual',
-'Workflow / Elaborar RO':'Elaboração de Peça Processual',
-'Workflow / Elaborar: Especificar provas e temas sobre provas':'Elaboração de Peça Processual',
-// CONTRATOS ESPECIAIS
-'Diversos / Reajuste contratual':'Reajuste contratual',
-'Diversos / Renovação contratual':'Renovação contratual',
-// ATIVIDADE INTERNA
-'Alvara':'Atividade Interna','ANÁLISE DE DOCUMENTAÇÃO':'Atividade Interna',
-'ANÁLISE DE PROPOSTA':'Atividade Interna','Andamento':'Atividade Interna',
-'Atendimento/Ligação':'Atividade Interna','Canal de Denúncia':'Atividade Interna',
-'Criação de conteúdo':'Atividade Interna','Diversos':'Atividade Interna',
-'Diversos / Contato Telefônico':'Atividade Interna',
-'Diversos / Informar sentença ao cliente':'Atividade Interna',
-'Diversos / Resposta de E-mail':'Atividade Interna',
-'Edital':'Atividade Interna','Elaboração de certificados':'Atividade Interna',
-'Elaboração de material treinamento':'Atividade Interna',
-'Estudo de Caso':'Atividade Interna','Intimação':'Atividade Interna',
-'Intimação Eletrônica':'Atividade Interna','Intimação Eletrônica / Verificação':'Atividade Interna',
-'Intimações Iprazos':'Atividade Interna','Pesquisas/Estudos':'Atividade Interna',
-'Pesquisas/Estudos / Elaboração de Nova Tese':'Atividade Interna',
-'Pesquisas/Estudos / Elaboração de Relatório':'Atividade Interna',
-'Publicação':'Atividade Interna','Publicação / Intimação':'Atividade Interna',
-'Publicação / Verificação':'Atividade Interna','Publicações Iprazos':'Atividade Interna',
-'Relatório de Processos':'Atividade Interna','Resposta de E-mail':'Atividade Interna',
-'Revisão':'Atividade Interna','Revisão / Agravo contra decisão que inadmite na origem Resp ou Rext (art. 1.042 c/c art. 1.003, § 5º CPC)':'Atividade Interna',
-'Saneamento de relatório':'Atividade Interna','Tratativa de Acordo':'Atividade Interna',
-'Venda':'Atividade Interna','Verificar protocolo':'Atividade Interna',
-'Verificar protocolo / Apelação':'Atividade Interna',
-'VISTO JURÍDICO':'Atividade Interna',
-'Workflow / Informar acórdão ao cliente':'Atividade Interna',
-'Workflow / Enviar ao cliente petição inicial RT e documentos':'Atividade Interna',
-'Workflow / Enviar sentença ao cliente (2d)':'Atividade Interna',
-'Workflow / Enviar sentença ao cliente (3d)':'Atividade Interna',
-'Workflow / Informar sentença ao cliente (4d)':'Atividade Interna',
-'Workflow / Analisar se há honorários contratuais':'Atividade Interna',
-'Workflow / Análise de execução de honorários (20d)':'Atividade Interna',
-'Workflow / Atos de Impulso (15d)':'Atividade Interna','Workflow / Atos de Impulso (5d)':'Atividade Interna',
-'Workflow / Conferência (4d)':'Atividade Interna','Workflow / Conferencia (7d)':'Atividade Interna',
-'Workflow / Decidir providências PAT':'Atividade Interna',
-'Workflow / Habilitar Dra. Imaculada no Processo':'Atividade Interna',
-'Workflow / Interlocutória CPC':'Atividade Interna','Workflow / Interlocutória trabalhista':'Atividade Interna',
-'Workflow / Interlocutória Trabalhista em Audiência':'Atividade Interna',
-'Workflow / Memoriais (25d)':'Atividade Interna',
-'Workflow / Pagamento de parcelamento execução CPC Art. 916':'Atividade Interna',
-'Workflow / Parcelamento CPC Art. 916 em execução parcela 1':'Atividade Interna',
-'Workflow / Parcelamento CPC Art. 916 em execução parcela 2':'Atividade Interna',
-'Workflow / Parcelamento CPC Art. 916 em execução parcela 3':'Atividade Interna',
-'Workflow / Parcelamento CPC Art. 916 em execução parcela 4':'Atividade Interna',
-'Workflow / Parcelamento CPC Art. 916 em execução parcela 5':'Atividade Interna',
-'Workflow / Parcelamento CPC Art. 916 em execução parcela 6':'Atividade Interna',
-'Workflow / Protocolo (14d)':'Atividade Interna','Workflow / Protocolo (2d)':'Atividade Interna',
-'Workflow / Protocolo (4d)':'Atividade Interna','Workflow / Protocolo (7d)':'Atividade Interna',
-'Workflow / Protocolo (9d)':'Atividade Interna',
-'Workflow / Providenciar REsp Sefaz':'Atividade Interna',
-'Workflow / Providências (1d)':'Atividade Interna','Workflow / Providências (2d)':'Atividade Interna',
-'Workflow / Providencias em Execução Trabalhista':'Atividade Interna',
-'Workflow / Saneamento de dados (10d)':'Atividade Interna','Workflow / Saneamento de dados (1d)':'Atividade Interna',
-'Workflow / Saneamento de dados (20d)':'Atividade Interna','Workflow / Saneamento de dados (35d)':'Atividade Interna',
-'Workflow / Sinalizar':'Atividade Interna','Workflow / Sinalizar Perícia':'Atividade Interna',
-'Workflow / Acordão TJ TRF':'Atividade Interna','Workflow / Acórdão TRT':'Atividade Interna',
-'Workflow / Contrarrazões Trabalhista':'Atividade Interna',
-'Workflow / Decidir providências PAT':'Atividade Interna',
-'Workflow / Decisão complexa':'Atividade Interna','Workflow / Decisão Presidencia TRT':'Atividade Interna',
-'Workflow / Decisão STJ/STF':'Atividade Interna','Workflow / Decisão TJ TRF sobre REsp e RE':'Atividade Interna',
-'Workflow / Decisão TST':'Atividade Interna',
-'Workflow / Elaborar Pet Custas complementares':'Elaboração de Peça Processual',
-'Workflow / Gerar taxa recurso Sefaz':'Atividade Interna',
-'Workflow / Providenciar REsp Sefaz':'Atividade Interna',
-'Workflow / Registro de audiência':'Audiência',
-'Memoriais':'Atividade Interna',
-'Elaboração de Política de Segurança da Informação':'Elaboração de Política de Segurança da Informação',
-'Serviço / Análise de Procuração':'Atividade Interna',
-'Serviço / Elaboração de Procuração':'Atividade Interna',
-'Serviço / Elaboração de Proposta':'Atividade Interna',
-'Serviço / Elaboração de Recibo':'Atividade Interna',
-'Pagamento Solidário/Subsidiário':'Atividade Interna',
-'Honorários - Verificar / Monitorar':'Atividade Interna',
-'Cobrança de honorarios':'Atividade Interna',
-'Diversos / Reajuste contratual':'Reajuste contratual',
-'Diversos / Renovação contratual':'Renovação contratual',
-'Diversos / Ida à Delegacia':'Atividade Interna','Diversos / Ida à Secretaria':'Atividade Interna',
-'Diversos / CJ Atualizar Sistema de Cliente':'Atividade Interna',
-'Diversos / CJ Solicitações equipe técnica':'Atividade Interna',
-'Diversos / CJ Verificar Trânsito em Julgado/ Cadastrar eSocial':'Atividade Interna',
-'Diversos / ET Solicitações CJ':'Atividade Interna',
-'Diversos / Encaminhar inicial e solicitar documentos / habilitar no processo':'Atividade Interna',
-'Diversos / Verificar Processo Especial':'Atividade Interna',
-'Diversos / Verificar se contrato é por ato e fazer a cobrança':'Atividade Interna',
-'Reunião / Prospect':'Reunião',
-  'Audiência / Audiência - Cível':'Audiência',
-  'Serviço /':'Elaboração de Contrato',
-  'Audiência /':'Audiência',
-  'Reunião /':'Reunião',
-  'Reunião / Reunião':'Reunião',
+  'Aditivo contratual de cláusulas de Proteção de Dados':'Elaboração de Aditivo',
+  'Alvara':'Alvara',
+  'ANÁLISE DE DOCUMENTAÇÃO':'Análise De Documentação',
+  'Análise de Inventario de processos com dados pessoais':'Análise De Inventario De Processos Com Dados Pessoais',
+  'Análise de Política de Privacidade':'Análise De Política De Privacidade',
+  'ANÁLISE DE PROPOSTA':'Análise De Proposta',
+  'ANÁLISE DE TERMO DE COMPROMISSO':'Análise De Termo De Compromisso',
+  'Atendimento Titular de Dados -DPO':'Atendimento Titular de Dados -DPO',
+  'Atualização Be Compliance':'Atualização Be Compliance',
+  'Audiência':'Audiência',
+  'Audiência - Audiência - Cível':'Audiência',
+  'Audiência - Una':'Audiência',
+  'Canal de Denúncia':'Canal de Denúncia',
+  'Criação de conteúdo':'Criação de conteúdo',
+  'Despacho com Magistrado':'Despacho com Magistrado',
+  'Diligência externa':'Diligência externa',
+  'Edital':'Edital',
+  'Elaboração de Aviso de cookies':'Elaboração de Aviso de cookies',
+  'Elaboração de Aviso de Privacidade':'Elaboração de Aviso de Privacidade',
+  'Elaboração de certificados':'Elaboração de certificados',
+  'Elaboração de cláusula contratual':'Elaboração de cláusula contratual',
+  'Elaboração de Manifestação':'Elaboração de Manifestação',
+  'Elaboração de material treinamento':'Elaboração de material treinamento',
+  'Elaboração de Plano de Notificações':'Elaboração de Plano de Notificações',
+  'Elaboração de Plano de Treinamento':'Elaboração de Plano de Treinamento',
+  'Elaboração de Política':'Elaboração de Política',
+  'Elaboração de Política de Privacidade':'Elaboração de Política de Privacidade',
+  'Elaboração de Política de Segurança da Informação':'Elaboração de Política de Segurança da Informação',
+  'Elaboração de relatório da análise dos riscos':'Elaboração de relatório da análise dos riscos',
+  'Elaboração de ROPA':'Elaboração de ROPA',
+  'Elaboração de Termo':'Elaboração de Termo',
+  'ELABORAÇÃO DE TERMO DE COMPROMISSO':'Elaboração de Termo de Compromisso',
+  'Elaboração de termos de uso':'Elaboração de termos de uso',
+  'Estudo de Caso':'Estudo de Caso',
+  'Resposta de E-mail':'Consulta',
+  'Reunião':'Reunião',
+  'Reunião - Cliente':'Reunião',
+  'Reunião - Coordenadores':'Reunião',
+  'Reunião - Reunião':'Reunião',
+  'Reunião - Treinamento':'Reunião',
+  'Reunião de Captação':'Reunião',
+  'Reunião Interna':'Reunião',
+  'Serviço - Acompanhamento em Depoimento/Oitiva':'Acompanhamento Em Depoimento/Oitiva',
+  'Serviço - Acompanhamento em Reunião':'Acompanhamento Em Reunião',
+  'Serviço - Alteração AGE':'Alteração Age',
+  'Serviço - Alteração Contratual':'Alteração Contratual',
+  'Serviço - Alteração Estatuto':'Alteração Estatuto',
+  'Serviço - Alteração Inst. Societário':'Alteração Inst. Societário',
+  'Serviço - Análise de Aditivo':'Análise de Aditivo',
+  'Serviço - Análise de Contrato':'Análise De Contrato',
+  'Serviço - Análise de Distrato':'Análise De Distrato',
+  'Serviço - Análise de Inst. Societário':'Análise De Inst. Societário',
+  'Serviço - Análise de Procuração':'Análise De Procuração',
+  'Serviço - Audiência':'Audiência',
+  'Serviço - Consulta':'Consulta',
+  'Serviço - Contratual Comum':'Elaboração de Contrato',
+  'Serviço - Demanda Sefaz':'Demanda Sefaz',
+  'Serviço - Diligência':'Diligência',
+  'Serviço - Elaboração de Aditivo':'Elaboração de Aditivo',
+  'Serviço - Elaboração de cláusula':'Elaboração de cláusula',
+  'Serviço - Elaboração de Contrato':'Elaboração de Contrato',
+  'Serviço - Elaboração de Distrato':'Elaboração de Distrato',
+  'Serviço - Elaboração de doc societário':'Elaboração de doc societário',
+  'Serviço - Elaboração de Inst. Societário':'Elaboração de Inst. Societário',
+  'Serviço - Elaboração de Minuta':'Elaboração de Minuta',
+  'Serviço - Elaboração de Notificação.':'Elaboração de Notificação.',
+  'Serviço - Elaboração de Ofício':'Elaboração de Ofício',
+  'Serviço - Elaboração de Procuração':'Elaboração de Procuração',
+  'Serviço - Elaboração de Proposta':'Elaboração de Proposta',
+  'Serviço - Elaboração de Recibo':'Elaboração de Recibo',
+  'Serviço - Elaboração de Requerimento':'Elaboração de Requerimento',
+  'Serviço - Elaboração de Termo de Compromisso':'Elaboração de Termo de Compromisso',
+  'Serviço - Notificação Extrajudicial':'Notificação Extrajudicial',
+  'Serviço - Orientação':'Consulta',
+  'Serviço - Palestra':'Palestra',
+  'Serviço - Parecer':'Parecer',
+  'Serviço - Parecer Complexo':'Parecer',
+  'Serviço - Protocolo de Aditivo':'Protocolo de Aditivo',
+  'Serviço - Requerimento':'Requerimento',
+  'Serviço - Requerimento Administrativo':'Requerimento',
+  'Serviço - Requerimento Complexo':'Requerimento',
+  'Serviço - Reunião':'Reunião',
+  'Serviço - Revisão Contratual':'Revisão Contratual',
+  'Serviço - Serviços Redesim':'Serviços Redesim',
+  'Serviço - Serviços Siscoex':'Serviços Siscoex',
+  'Tratativa de Acordo':'Tratativa de Acordo',
+  'TREINAMENTO':'Treinamento',
+  'Venda':'Venda',
+  'VISTO JURÍDICO':'Visto Jurídico'
 };
+;
 
 // Natureza simplification map (from services spreadsheet full name → short name)
 const NAT_MAP = {
@@ -868,16 +653,34 @@ function parseYear(d){
   return NaN;
 }
 
+// Normaliza um tipo de serviço para busca robusta (sem acento, caixa, espaços, traço final)
+function _normServ(s){
+  return String(s||'').trim()
+    .replace(/\s*-\s*$/,'')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/\s+/g,' ');
+}
+// Índice normalizado do TAX (montado uma vez)
+var _TAXNORM=null;
+function _taxNorm(){
+  if(_TAXNORM) return _TAXNORM;
+  _TAXNORM={};
+  for(var k in TAX){ _TAXNORM[_normServ(k)]=TAX[k]; }
+  return _TAXNORM;
+}
+// Aplica a tabela DE→PARA. Retorna a categoria PARA, ou null se NÃO mapeado.
 function uT(t){
-  if(!t || String(t).trim()==='' || t==='nan') return 'Consulta';
-  var raw = String(t).trim();
+  if(t==null || String(t).trim()==='' || String(t).toLowerCase()==='nan') return null;
+  var raw=String(t).trim();
   if(TAX[raw]) return TAX[raw];
-  // Normalize new export format: 'Tipo - Subtipo' or 'Tipo - ' (trailing dash)
-  var s = raw.replace(/\s*-\s*$/, '').trim();   // strip trailing ' - ' or ' -'
-  if(TAX[s]) return TAX[s];
-  s = s.replace(/ - /, ' / ');                    // replace first ' - ' with ' / '
-  if(TAX[s]) return TAX[s];
-  return raw;
+  // overrides manuais do usuário (tela de revisão)
+  var ov=_servOverrides[_normServ(raw)];
+  if(ov) return ov;
+  var idx=_taxNorm();
+  var n=_normServ(raw);
+  if(idx[n]) return idx[n];
+  return null;  // não mapeado
 }
 var POS_MAP={
   'Ativo':'Ativo','Autor':'Ativo',
@@ -899,23 +702,30 @@ function uPos(p){
   for(var k in POS_MAP){ if(k.toLowerCase()===low) return POS_MAP[k]; }
   return raw;
 }
+// Extrai natureza do campo Assunto (padrão 'CONSULTIVO [NATUREZA]') quando a coluna Natureza está vazia
+var NAT_ASSUNTO_KW = [
+  ['tributario','Tributário'],['trabalhista','Trabalhista'],['ambiental','Ambiental'],
+  ['hospitalar','Hospitalar'],['civel','Cível'],['contrato','Contratual'],
+  ['contratos','Contratual'],['contratual','Contratual'],['digital','Digital'],
+  ['lgpd','LGPD'],['empresarial','Empresarial'],['governanca','Empresarial'],
+  ['societ','Societária'],['penal','Penal'],['regulat','Regulatório'],
+  ['consumidor','Consumidor'],['operacoes','Operações e Negócios'],
+  ['negocios','Operações e Negócios'],['administrativo','Direito Administrativo']
+];
+function natFromAssunto(assunto){
+  var a=_normServ(assunto);
+  if(!a) return null;
+  for(var i=0;i<NAT_ASSUNTO_KW.length;i++){
+    if(a.indexOf(NAT_ASSUNTO_KW[i][0])>=0) return NAT_ASSUNTO_KW[i][1];
+  }
+  return null;
+}
 function uNat(n){
   if(!n || String(n).trim()==='') return 'Não informado';
   return NAT_MAP[String(n).trim()] || String(n).trim();
 }
 
 
-function uT(t){
-  if(!t || String(t).trim()==='' || t==='nan') return 'Consulta';
-  var raw = String(t).trim();
-  if(TAX[raw]) return TAX[raw];
-  // Normalize new export format: 'Tipo - Subtipo' or 'Tipo - ' (trailing dash)
-  var s = raw.replace(/\s*-\s*$/, '').trim();   // strip trailing ' - ' or ' -'
-  if(TAX[s]) return TAX[s];
-  s = s.replace(/ - /, ' / ');                    // replace first ' - ' with ' / '
-  if(TAX[s]) return TAX[s];
-  return raw;
-}
 
 
 
@@ -926,7 +736,7 @@ var _IDB=null;
 function openIDB(cb){
   if(_IDB){cb(_IDB);return;}
   try{
-    var req=indexedDB.open('igsa_dash_v1',1);
+    var req=indexedDB.open('igsa_dash_v1',2);
     req.onupgradeneeded=function(e){
       var db=e.target.result;
       ['proc','serv','aud','audfut','dec','meta'].forEach(function(s){
@@ -970,6 +780,7 @@ function idbLoad(key,cb){
 }
 
 function clearStorage(){
+  _svalDone=false; _dvalDone=false;
   openIDB(function(db){
     if(db){
       ['proc','serv','aud','audfut','dec','meta'].forEach(function(s){
@@ -999,6 +810,10 @@ function clearStorage(){
   _dvalOverrides={};
   try{localStorage.removeItem('igsa_dec_ov');}catch(e){}
   openIDB(function(db){ if(db){ try{var tx=db.transaction('meta','readwrite');tx.objectStore('meta').delete('dec_overrides');}catch(e){} } });
+  // Limpar ajustes de serviços e natureza (recomeço limpo)
+  _servOverrides={}; _natOverrides={};
+  try{localStorage.removeItem('igsa_serv_ov');localStorage.removeItem('igsa_nat_ov');}catch(e){}
+  openIDB(function(db){ if(db){ try{var tx=db.transaction('meta','readwrite');tx.objectStore('meta').delete('serv_overrides');tx.objectStore('meta').delete('nat_overrides');}catch(e){} } });
 }
 
 function _showStoWarn(){
@@ -1069,18 +884,97 @@ function loadF(inp, key){
   reader.onload = function(e){
     try{
       var wb = XLSX.read(new Uint8Array(e.target.result), {type:'array', cellDates:true});
-      var ws = wb.Sheets[wb.SheetNames[0]];
+      // Escolhe a MELHOR aba: alguns exports trazem uma aba de tabela dinâmica ('Planilha1' com '(Tudo)')
+      // antes da aba de dados. Selecionamos a aba com mais linhas de conteúdo real.
+      var ws;
+      (function(){
+        // Cabeçalhos esperados por tipo de planilha — usados para identificar a aba de DADOS
+        var EXPECT={
+          proc:['status','número do processo','numero do processo','natureza','valor da causa','fase'],
+          serv:['pasta','tipo','data do cadastro','assunto','cliente principal'],
+          aud:['data de início','data de inicio','tipo','vara','órgão'],
+          audfut:['data de início','data de inicio','tipo','vara','órgão'],
+          dec:['número de cnj','numero de cnj','descrição da decisão','descricao da decisao','status']
+        };
+        var want=EXPECT[key]||[];
+        var best=null, bestScore=-1;
+        wb.SheetNames.forEach(function(sn){
+          var s=wb.Sheets[sn]; if(!s||!s['!ref']) return;
+          var range=XLSX.utils.decode_range(s['!ref']);
+          var nRows=range.e.r-range.s.r+1, nCols=range.e.c-range.s.c+1;
+          // Lê as primeiras ~6 linhas dessa aba para procurar os cabeçalhos esperados
+          var head=XLSX.utils.sheet_to_json(s,{header:1,defval:null,raw:true,range:0});
+          var matchHdr=0;
+          for(var ri=0; ri<Math.min(head.length,6); ri++){
+            var cells=(head[ri]||[]).map(function(x){return String(x==null?'':x).trim().toLowerCase();});
+            var m=0; want.forEach(function(w){ if(cells.indexOf(w)>=0) m++; });
+            if(m>matchHdr) matchHdr=m;
+          }
+          // Pontuação: abas que CONTÊM os cabeçalhos esperados ganham um bônus enorme.
+          // Assim a aba de dados vence a aba de tabela dinâmica mesmo que esta tenha volume.
+          var score=(matchHdr*1000000)+nRows*Math.min(nCols,40);
+          if(score>bestScore){ bestScore=score; best=sn; }
+        });
+        ws = wb.Sheets[best||wb.SheetNames[0]];
+      })();
       var rows = XLSX.utils.sheet_to_json(ws, {defval:null, raw:true, cellDates:true});
-      if(key==='serv' && rows.length>0){
-        var firstVals = Object.values(rows[0]);
-        if(firstVals.indexOf('Pasta')>=0 || firstVals.indexOf('Natureza')>=0){
-          var oldKeys = Object.keys(rows[0]);
-          var newKeys = oldKeys.map(function(k){ return rows[0][k]; });
-          rows = rows.slice(1).map(function(r){
-            var o={};
-            oldKeys.forEach(function(ok,i){ if(newKeys[i]) o[newKeys[i]]=r[ok]; });
-            return o;
-          });
+      if(key==='serv'){
+        // Planilha de Serviços tem cabeçalho REAL na linha 2 (linha 1 = 'usuario - data').
+        // Releitura robusta em modo matriz (header:1) para localizar a linha de cabeçalho real.
+        var aoa = XLSX.utils.sheet_to_json(ws, {header:1, defval:null, raw:true, cellDates:true});
+        if(aoa && aoa.length){
+          // acha a 1ª linha cujos valores contêm 'Pasta' E 'Natureza' (cabeçalho real)
+          var hdrIdx=-1;
+          for(var ri=0; ri<Math.min(aoa.length,5); ri++){
+            var vals=(aoa[ri]||[]).map(function(x){return String(x==null?'':x).trim();});
+            if(vals.indexOf('Pasta')>=0 && vals.indexOf('Natureza')>=0){ hdrIdx=ri; break; }
+          }
+          // fallback: se não achou pelo nome mas a linha 1 parece 'usuario - data', usa linha 2
+          if(hdrIdx<0){
+            var r0=(aoa[0]||[]).filter(function(x){return x!=null && String(x).trim()!=='';});
+            if(r0.length===1 && aoa.length>1) hdrIdx=1;
+          }
+          if(hdrIdx>=0){
+            var hdr=(aoa[hdrIdx]||[]).map(function(x){return String(x==null?'':x).trim();});
+            rows = aoa.slice(hdrIdx+1).filter(function(arr){
+              return arr && arr.some(function(x){return x!=null && String(x).trim()!=='';});
+            }).map(function(arr){
+              var o={};
+              hdr.forEach(function(name,i){ if(name) o[name]=arr[i]!==undefined?arr[i]:null; });
+              return o;
+            });
+          }
+        }
+      }
+      // Detecção robusta de cabeçalho deslocado em PROCESSOS
+      // (alguns exports trazem linha(s) de filtro/título antes do cabeçalho real)
+      if(key==='proc'){
+        var procHasStatus = rows.length>0 && ('Status' in rows[0]);
+        var procHasLongCli = rows.length>0 && (('Cliente principal' in rows[0]) || ('Cliente principal / Contato / Nome/razão social' in rows[0]) || ('Natureza' in rows[0]));
+        // Se NÃO tem as colunas esperadas, o cabeçalho real está numa linha abaixo: relê em modo matriz
+        if(!procHasStatus && !procHasLongCli){
+          var paoa = XLSX.utils.sheet_to_json(ws, {header:1, defval:null, raw:true, cellDates:true});
+          if(paoa && paoa.length){
+            // procura a 1ª linha que parece o cabeçalho real (contém 'Natureza' e ('Status' ou 'Número do Processo'))
+            var phdr=-1;
+            for(var pri=0; pri<Math.min(paoa.length,8); pri++){
+              var pv=(paoa[pri]||[]).map(function(x){return String(x==null?'':x).trim();});
+              var hasNat=pv.indexOf('Natureza')>=0;
+              var hasStatus=pv.indexOf('Status')>=0;
+              var hasNum=pv.some(function(x){return x.toLowerCase().indexOf('número do processo')>=0 || x.toLowerCase().indexOf('numero do processo')>=0;});
+              if(hasNat && (hasStatus || hasNum)){ phdr=pri; break; }
+            }
+            if(phdr>=0){
+              var phead=(paoa[phdr]||[]).map(function(x){return String(x==null?'':x).trim();});
+              rows = paoa.slice(phdr+1).filter(function(arr){
+                return arr && arr.some(function(x){return x!=null && String(x).trim()!=='';});
+              }).map(function(arr){
+                var o={};
+                phead.forEach(function(name,i){ if(name) o[name]=arr[i]!==undefined?arr[i]:null; });
+                return o;
+              });
+            }
+          }
         }
       }
       // Normalizar nomes de colunas de Processos (aceita formato novo com nomes longos)
@@ -1239,8 +1133,31 @@ function filterClients(rows, field, clients){
 }
 
 // ════ Validação de Decisões ════
+// Detecta campos da planilha de Decisões por NOME (à prova de mudança de ordem)
+function _decFields(rows){
+  if(!rows||!rows.length) return {};
+  var keys=Object.keys(rows[0]);
+  function find(cands, fallbackIdx){
+    for(var i=0;i<cands.length;i++){ if(keys.indexOf(cands[i])>=0) return cands[i]; }
+    return (fallbackIdx!=null && keys[fallbackIdx]!=null) ? keys[fallbackIdx] : null;
+  }
+  return {
+    keys: keys,
+    nat:    find(['Natureza'], 0),
+    proc:   find(['Número de CNJ','Numero de CNJ','Número do Processo','Ação','Processo'], 1),
+    cnj:    find(['Número de CNJ','Numero de CNJ'], null),
+    acao:   find(['Ação','Acao'], null),
+    cliente:find(['Cliente principal','Cliente Processo','Cliente'], 2),
+    polo:   find(['Posição','Posicao','Polo'], 3),
+    contrario: find(['Contrário principal','Contrario principal','Parte contrária'], null),
+    status: find(['Status'], null),
+    data:   find(['Data da Decisão','Data da decisão','Data da Publicação','Data de publicação','Data'], 21),
+    texto:  find(['Descrição da Decisão','Descrição da decisão','Descrição','Texto'], keys.length-1)
+  };
+}
 var _dvalRows = [];          // decisões preparadas p/ validação
 var _dvalOverrides = {};     // {decKey: 'Favorável'|...} ajustes manuais
+var _servOverrides = {};     // {tipoNormalizado: 'Categoria PARA'} ajustes manuais de serviço
 var _dvalOpts = ['Favorável','Desfavorável','Extinção','Inconclusivo'];
 function _decKey(proc, polo, texto){
   var s=String(proc||'')+'|'+String(polo||'')+'|'+String(texto||'').substring(0,60);
@@ -1256,14 +1173,18 @@ function autoDecLabel(polo, texto){
   return 'Inconclusivo';
 }
 function loadDvalOverrides(cb){
+  function fromLS(){ try{var s=localStorage.getItem('igsa_dec_ov'); _dvalOverrides=s?JSON.parse(s):{};}catch(e){_dvalOverrides={};} }
   openIDB(function(db){
-    if(!db){ try{var s=localStorage.getItem('igsa_dec_ov'); _dvalOverrides=s?JSON.parse(s):{};}catch(e){_dvalOverrides={};} cb&&cb(); return; }
+    if(!db || !db.objectStoreNames || !db.objectStoreNames.contains('meta')){ fromLS(); cb&&cb(); return; }
     try{
+      var done=false; var finish=function(){ if(done)return; done=true; cb&&cb(); };
       var tx=db.transaction('meta','readonly');
       var rq=tx.objectStore('meta').get('dec_overrides');
-      rq.onsuccess=function(e){ try{_dvalOverrides=e.target.result?JSON.parse(e.target.result):{};}catch(_){_dvalOverrides={};} cb&&cb(); };
-      rq.onerror=function(){ _dvalOverrides={}; cb&&cb(); };
-    }catch(ex){ _dvalOverrides={}; cb&&cb(); }
+      rq.onsuccess=function(e){ try{_dvalOverrides=e.target.result?JSON.parse(e.target.result):{};}catch(_){_dvalOverrides={};} finish(); };
+      rq.onerror=function(){ fromLS(); finish(); };
+      tx.onerror=function(){ fromLS(); finish(); };
+      setTimeout(finish,1500);
+    }catch(ex){ fromLS(); cb&&cb(); }
   });
 }
 function saveDvalOverrides(){
@@ -1278,18 +1199,25 @@ function saveDvalOverrides(){
 function prepareDvalRows(clients){
   var rows=[];
   if(!ST.dec || !ST.dec.length) return rows;
-  var keys=Object.keys(ST.dec[0]);
-  var natFld=keys[0]||'', procFld=keys[1]||'', clientFld=keys[2]||'',
-      poloFld=keys[3]||'', dataPubFld=keys[21]||'', textoFld=keys[keys.length-1]||'';
+  var F=_decFields(ST.dec);
   var _cset = clients ? _normSet(clients) : null;
-  var src = _cset ? ST.dec.filter(function(r){ if(r[clientFld]==null) return false; var ns=splitClients(r[clientFld]); for(var i=0;i<ns.length;i++){if(_cset[_normCli(ns[i])])return true;} return false; }) : ST.dec;
+  var src = _cset ? ST.dec.filter(function(r){ if(!F.cliente||r[F.cliente]==null) return false; var ns=splitClients(r[F.cliente]); for(var i=0;i<ns.length;i++){if(_cset[_normCli(ns[i])])return true;} return false; }) : ST.dec;
   src.forEach(function(r){
-    var proc=r[procFld]||'', polo=r[poloFld]||'', texto=r[textoFld]||'';
+    var proc=(F.proc?r[F.proc]:'')||'', polo=(F.polo?r[F.polo]:'')||'', texto=(F.texto?r[F.texto]:'')||'';
     var key=_decKey(proc,polo,texto);
     var auto=autoDecLabel(polo,texto);
     var fin=_dvalOverrides[key]||auto;
-    rows.push({key:key, nat:r[natFld]||'', proc:proc, cliente:r[clientFld]||'', polo:polo,
-      data:r[dataPubFld]||'', texto:String(texto), auto:auto, final:fin});
+    rows.push({key:key,
+      nat:(F.nat?r[F.nat]:'')||'',
+      proc:proc,
+      cnj:(F.cnj?r[F.cnj]:'')||'',
+      acao:(F.acao?r[F.acao]:'')||'',
+      cliente:(F.cliente?r[F.cliente]:'')||'',
+      polo:polo,
+      contrario:(F.contrario?r[F.contrario]:'')||'',
+      status:(F.status?r[F.status]:'')||'',
+      data:(F.data?r[F.data]:'')||'',
+      texto:String(texto), auto:auto, final:fin});
   });
   return rows;
 }
@@ -1297,7 +1225,7 @@ function dvalRender(){
   var head=document.getElementById('dval-head');
   var body=document.getElementById('dval-body');
   if(!head||!body) return;
-  head.innerHTML=['Natureza','Processo','Cliente','Polo','Data','Classificação automática','Conclusão (ajustável)','Trecho da decisão']
+  head.innerHTML=['Natureza','Ação','Nº CNJ','Cliente','Polo','Contrário','Status','Data','Classificação automática','Conclusão (ajustável)','Descrição da decisão']
     .map(function(hh){return '<th style="text-align:left;padding:7px 9px;background:var(--c8);color:#fff;font-size:.62rem;white-space:nowrap">'+hh+'</th>';}).join('');
   var fSearch=(document.getElementById('dval-search').value||'').toLowerCase();
   var fSel=document.getElementById('dval-filter').value;
@@ -1306,7 +1234,7 @@ function dvalRender(){
   _dvalRows.forEach(function(d,i){
     var isAdj=!!_dvalOverrides[d.key];
     if(isAdj) adj++;
-    if(fSearch){ var hay=(d.cliente+' '+d.proc+' '+d.nat).toLowerCase(); if(hay.indexOf(fSearch)<0) return; }
+    if(fSearch){ var hay=(d.cliente+' '+d.proc+' '+d.nat+' '+(d.cnj||'')+' '+(d.contrario||'')).toLowerCase(); if(hay.indexOf(fSearch)<0) return; }
     if(fSel){ if(fSel==='_ajustadas'){ if(!isAdj) return; } else if(d.final!==fSel) return; }
     shown++;
     var bg=i%2?'var(--c0)':'#fff';
@@ -1315,16 +1243,19 @@ function dvalRender(){
     selHtml+='</select>'+(isAdj?' <span title="ajustado manualmente" style="color:var(--gd)">●</span>':'');
     html+='<tr style="background:'+bg+'">';
     html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(d.nat)+'</td>';
-    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd);font-family:monospace;font-size:.6rem">'+esc(d.proc)+'</td>';
-    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(String(d.cliente).substring(0,28))+'</td>';
+    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(String(d.acao||'').substring(0,30))+'</td>';
+    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd);font-family:monospace;font-size:.58rem;white-space:nowrap">'+esc(d.cnj||d.proc)+'</td>';
+    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(String(d.cliente).substring(0,26))+'</td>';
     html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(d.polo)+'</td>';
+    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(String(d.contrario||'').substring(0,26))+'</td>';
+    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(d.status||'')+'</td>';
     html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd);white-space:nowrap">'+esc(fDate(d.data))+'</td>';
     html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd);color:var(--mu)">'+esc(d.auto)+'</td>';
     html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+selHtml+'</td>';
     html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd);color:var(--mu)">'+esc(d.texto.substring(0,160))+'…</td>';
     html+='</tr>';
   });
-  body.innerHTML=html||'<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--mu)">Nenhuma decisão para os filtros aplicados.</td></tr>';
+  body.innerHTML=html||'<tr><td colspan="11" style="padding:20px;text-align:center;color:var(--mu)">Nenhuma decisão para os filtros aplicados.</td></tr>';
   document.getElementById('dval-count').textContent=shown+' de '+_dvalRows.length+' decisões · '+adj+' ajustadas';
 }
 function dvalSet(key,val){
@@ -1337,6 +1268,7 @@ function dvalSet(key,val){
 }
 var _pendingGenerate=null;
 var _dvalDone=false;
+var _svalDone=false;
 function showDval(clients){
   loadDvalOverrides(function(){
     _dvalRows=prepareDvalRows(clients);
@@ -1363,6 +1295,176 @@ function dvalConfirm(){
 function finalDecLabel(proc, polo, texto){
   var key=_decKey(proc,polo,texto);
   return _dvalOverrides[key] || autoDecLabel(polo,texto);
+}
+
+// ════ Validação de Serviços e Natureza ════
+var SERV_PARA_OPTS = ['Acompanhamento Em Depoimento/Oitiva','Acompanhamento Em Reunião','Alteração Age','Alteração Contratual','Alteração Estatuto','Alteração Inst. Societário','Alvara','Análise De Contrato','Análise De Distrato','Análise De Documentação','Análise De Inst. Societário','Análise De Inventario De Processos Com Dados Pessoais','Análise De Política De Privacidade','Análise De Procuração','Análise De Proposta','Análise De Termo De Compromisso','Análise de Aditivo','Atendimento Titular de Dados -DPO','Atualização Be Compliance','Audiência','Canal de Denúncia','Consulta','Criação de conteúdo','Demanda Sefaz','Despacho com Magistrado','Diligência','Diligência externa','Edital','Elaboração de Aditivo','Elaboração de Aviso de Privacidade','Elaboração de Aviso de cookies','Elaboração de Contrato','Elaboração de Distrato','Elaboração de Inst. Societário','Elaboração de Manifestação','Elaboração de Minuta','Elaboração de Notificação.','Elaboração de Ofício','Elaboração de Plano de Notificações','Elaboração de Plano de Treinamento','Elaboração de Política','Elaboração de Política de Privacidade','Elaboração de Política de Segurança da Informação','Elaboração de Procuração','Elaboração de Proposta','Elaboração de ROPA','Elaboração de Recibo','Elaboração de Requerimento','Elaboração de Termo','Elaboração de Termo de Compromisso','Elaboração de certificados','Elaboração de cláusula','Elaboração de cláusula contratual','Elaboração de doc societário','Elaboração de material treinamento','Elaboração de relatório da análise dos riscos','Elaboração de termos de uso','Estudo de Caso','Notificação Extrajudicial','Palestra','Parecer','Protocolo de Aditivo','Requerimento','Reunião','Revisão Contratual','Serviços Redesim','Serviços Siscoex','Tratativa de Acordo','Treinamento','Venda','Visto Jurídico'];
+var NAT_OPTS = ['Ambiental','Consultas','Consumidor','Contratual','Cível','Direito Administrativo','Hospitalar','LGPD','Operações e Negócios','Penal','Regulatório','Societária','Trabalhista','Tributário'];
+var _natOverrides = {};      // {naturezaOriginalNorm: 'NaturezaCorreta'}
+var _svalUnmappedServ = [];  // tipos de serviço não mapeados [{tipo, count}]
+var _svalBadNat = [];        // registros com natureza inválida [{nat, count}]
+// Verbos/categorias de natureza válidas (alvos do NAT_MAP)
+function _natIsValid(n){
+  var v=String(n||'').trim();
+  if(!v) return false;  // vazio = inválido (precisa revisão)
+  // válido se está no NAT_MAP (nome longo) OU já é um alvo curto válido OU tem override
+  if(NAT_MAP[v]) return true;
+  if(NAT_OPTS.indexOf(v)>=0) return true;        // já é a forma curta (ex: 'Trabalhista')
+  if(_natOverrides[_normServ(v)]) return true;
+  return false;
+}
+// Coleta tipos de serviço não mapeados e naturezas inválidas (na planilha de serviços)
+function _svalScan(){
+  _svalUnmappedServ=[]; _svalBadNat=[];
+  if(!ST.serv || !ST.serv.length) return;
+  // Respeita o filtro de cliente selecionado (igual ao dashboard)
+  var _cliRaw=(document.getElementById('cli')||{}).value||'';
+  var _cli=_cliRaw.trim()?_cliRaw.split(';').map(function(s){return s.trim();}).filter(Boolean):null;
+  var _servFld=getField(ST.serv,['Cliente principal','cliente principal']);
+  var scanRows=(_cli && _servFld)?filterClients(ST.serv,_servFld,_cli):ST.serv;
+  var unmapped={}, badnat={};
+  scanRows.forEach(function(r){
+    var tipo=r['Tipo'];
+    // só conta como não-mapeado se tiver algum valor e uT retornar null
+    if(tipo!=null && String(tipo).trim()!=='' && String(tipo).toLowerCase()!=='nan'){
+      if(uT(tipo)==null){ var k=String(tipo).trim(); unmapped[k]=(unmapped[k]||0)+1; }
+    }
+    // natureza inválida só se não houver natureza na coluna B NEM extração do Assunto
+    var nat=r['Natureza'];
+    // chave usada para override quando a natureza está vazia (pelo Assunto)
+    var _nk=(r['Assunto']!=null&&String(r['Assunto']).trim()!=='')?String(r['Assunto']).trim():'(sem natureza e sem assunto)';
+    // resolvido se: natureza válida OU extraível do Assunto OU já tem override (inclui descarte)
+    var natOk = _natIsValid(nat) || (natFromAssunto(r['Assunto'])!=null) || !!_natOverrides[_normServ(_nk)];
+    if(!natOk){
+      badnat[_nk]=(badnat[_nk]||0)+1;
+    }
+  });
+  _svalUnmappedServ=Object.keys(unmapped).map(function(k){return {tipo:k,count:unmapped[k]};}).sort(function(a,b){return b.count-a.count;});
+  _svalBadNat=Object.keys(badnat).map(function(k){return {nat:k,count:badnat[k]};}).sort(function(a,b){return b.count-a.count;});
+}
+function _svalNeeded(){ _svalScan(); return _svalUnmappedServ.length>0 || _svalBadNat.length>0; }
+function loadServOverrides(cb){
+  // fallback do localStorage primeiro (sempre funciona)
+  function fromLS(){ try{var s=localStorage.getItem('igsa_serv_ov');_servOverrides=s?JSON.parse(s):{};var s2=localStorage.getItem('igsa_nat_ov');_natOverrides=s2?JSON.parse(s2):{};}catch(e){_servOverrides=_servOverrides||{};_natOverrides=_natOverrides||{};} }
+  openIDB(function(db){
+    // se não há banco OU a store 'meta' não existe, usa localStorage e segue
+    if(!db || !db.objectStoreNames || !db.objectStoreNames.contains('meta')){ fromLS(); cb&&cb(); return; }
+    try{
+      var tx=db.transaction('meta','readonly'), st=tx.objectStore('meta');
+      var done=false; var finish=function(){ if(done) return; done=true; cb&&cb(); };
+      var r1=st.get('serv_overrides');
+      r1.onsuccess=function(e){ try{_servOverrides=e.target.result?JSON.parse(e.target.result):{};}catch(_){_servOverrides={};}
+        var r2=st.get('nat_overrides'); r2.onsuccess=function(e2){ try{_natOverrides=e2.target.result?JSON.parse(e2.target.result):{};}catch(_){_natOverrides={};} finish(); }; r2.onerror=finish; };
+      r1.onerror=function(){ fromLS(); finish(); };
+      tx.onerror=function(){ fromLS(); finish(); };
+      // rede de segurança: se nada disparar em 1.5s, segue mesmo assim
+      setTimeout(finish,1500);
+    }catch(ex){ fromLS(); cb&&cb(); }
+  });
+}
+function saveServOverrides(){
+  var j1=JSON.stringify(_servOverrides), j2=JSON.stringify(_natOverrides);
+  try{localStorage.setItem('igsa_serv_ov',j1);localStorage.setItem('igsa_nat_ov',j2);}catch(e){}
+  openIDB(function(db){ if(!db)return; try{var tx=db.transaction('meta','readwrite');tx.objectStore('meta').put(j1,'serv_overrides');tx.objectStore('meta').put(j2,'nat_overrides');}catch(ex){} });
+}
+function svalSetServ(tipoNorm,val){ if(val) _servOverrides[tipoNorm]=val; else delete _servOverrides[tipoNorm]; _TAXNORM=null; saveServOverrides(); }
+function svalSetNat(natNorm,val){ if(val) _natOverrides[natNorm]=val; else delete _natOverrides[natNorm]; saveServOverrides(); }
+function svalDiscardServ(tipoNorm){
+  delete _servOverrides[tipoNorm];
+  _TAXNORM=null;
+  saveServOverrides();
+  svalRender();
+}
+function svalDiscardNat(natNorm){
+  delete _natOverrides[natNorm];
+  saveServOverrides();
+  svalRender();
+}
+function svalRender(){
+  // Serviços não mapeados
+  var sh=document.getElementById('sval-serv-head'), sb=document.getElementById('sval-serv-body');
+  var servCard=document.getElementById('sval-serv-card');
+  if(_svalUnmappedServ.length===0){ servCard.style.display='none'; }
+  else {
+    servCard.style.display='';
+    sh.innerHTML=['Tipo de serviço (não mapeado)','Registros','Categoria (PARA)','Ação'].map(function(x){return '<th style="text-align:left;padding:7px 9px;background:var(--c8);color:#fff;font-size:.62rem">'+x+'</th>';}).join('');
+    var html='';
+    _svalUnmappedServ.forEach(function(u,i){
+      var norm=_normServ(u.tipo); var cur=_servOverrides[norm]||'';
+      var opts='<option value="">— escolher —</option>'+
+        '<option value="__DESCARTAR__" '+(cur==='__DESCARTAR__'?'selected':'')+'>🚫 Não usar no dashboard</option>'+
+        SERV_PARA_OPTS.map(function(o){return '<option value="'+esc(o)+'" '+(cur===o?'selected':'')+'>'+esc(o)+'</option>';}).join('');
+      html+='<tr style="background:'+(i%2?'var(--c0)':'#fff')+'"><td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(u.tipo)+'</td>'+
+        '<td style="padding:5px 9px;border-bottom:1px solid var(--bd);text-align:right">'+u.count+'</td>'+
+        '<td style="padding:5px 9px;border-bottom:1px solid var(--bd)"><select onchange="svalSetServ(\''+esc(norm)+'\',this.value)" style="padding:4px 6px;border:1px solid '+(cur?'var(--gd)':'var(--bd)')+';border-radius:5px;font-size:.68rem;font-family:inherit">'+opts+'</select></td>'+
+        '<td style="padding:5px 9px;border-bottom:1px solid var(--bd);text-align:center">'+(cur?'<button title="Descartar este ajuste" onclick="svalDiscardServ(\''+esc(norm)+'\')" style="background:transparent;border:1px solid var(--bd);border-radius:5px;color:var(--c8);cursor:pointer;padding:2px 8px;font-size:.72rem">✕</button>':'<span style="color:var(--bd)">—</span>')+'</td></tr>';
+    });
+    sb.innerHTML=html;
+  }
+  // Naturezas inválidas
+  var nh=document.getElementById('sval-nat-head'), nb=document.getElementById('sval-nat-body');
+  var natCard=document.getElementById('sval-nat-card');
+  if(_svalBadNat.length===0){ natCard.style.display='none'; }
+  else {
+    natCard.style.display='';
+    nh.innerHTML=['Natureza original','Registros','Natureza correta','Ação'].map(function(x){return '<th style="text-align:left;padding:7px 9px;background:var(--c8);color:#fff;font-size:.62rem">'+x+'</th>';}).join('');
+    var html2='';
+    _svalBadNat.forEach(function(u,i){
+      var norm=_normServ(u.nat); var cur=_natOverrides[norm]||'';
+      var opts='<option value="">— escolher —</option>'+
+        '<option value="__DESCARTAR__" '+(cur==='__DESCARTAR__'?'selected':'')+'>🚫 Não usar no dashboard</option>'+
+        NAT_OPTS.map(function(o){return '<option value="'+esc(o)+'" '+(cur===o?'selected':'')+'>'+esc(o)+'</option>';}).join('');
+      html2+='<tr style="background:'+(i%2?'var(--c0)':'#fff')+'"><td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(u.nat)+'</td>'+
+        '<td style="padding:5px 9px;border-bottom:1px solid var(--bd);text-align:right">'+u.count+'</td>'+
+        '<td style="padding:5px 9px;border-bottom:1px solid var(--bd)"><select onchange="svalSetNat(\''+esc(norm)+'\',this.value)" style="padding:4px 6px;border:1px solid '+(cur?'var(--gd)':'var(--bd)')+';border-radius:5px;font-size:.68rem;font-family:inherit">'+opts+'</select></td>'+
+        '<td style="padding:5px 9px;border-bottom:1px solid var(--bd);text-align:center">'+(cur?'<button title="Descartar este ajuste" onclick="svalDiscardNat(\''+esc(norm)+'\')" style="background:transparent;border:1px solid var(--bd);border-radius:5px;color:var(--c8);cursor:pointer;padding:2px 8px;font-size:.72rem">✕</button>':'<span style="color:var(--bd)">—</span>')+'</td></tr>';
+    });
+    nb.innerHTML=html2;
+  }
+}
+var _pendingAfterSval=null;
+function showSval(after){
+  loadServOverrides(function(){
+    _svalScan();
+    document.getElementById('cfg').style.display='none';
+    document.getElementById('dsh').style.display='none';
+    document.getElementById('sval').style.display='block';
+    svalRender();
+    _pendingAfterSval=after;
+    window.scrollTo(0,0);
+  });
+}
+function svalBack(){
+  _svalDone=false;  // permite revalidar ao gerar de novo
+  document.getElementById('sval').style.display='none';
+  document.getElementById('cfg').style.display='block';
+  window.scrollTo(0,0);
+}
+function svalConfirm(){
+  document.getElementById('sval').style.display='none';
+  if(_pendingAfterSval){ var fn=_pendingAfterSval; _pendingAfterSval=null; fn(); }
+}
+// Natureza FINAL: coluna B → se vazia, extrai do Assunto → override → 'Não informado'
+// Aceita o registro inteiro (r) para poder ler o Assunto quando a Natureza está vazia.
+function uNatFinal(r){
+  // compatibilidade: se vier string (uso antigo), trata como natureza only
+  var nat, assunto;
+  if(r && typeof r==='object'){ nat=r['Natureza']; assunto=r['Assunto']; }
+  else { nat=r; assunto=null; }
+  var v=String(nat||'').trim();
+  // 1) natureza preenchida e mapeável → usa a regra existente (NAT_MAP)
+  if(v){
+    var ov=_natOverrides[_normServ(v)];
+    if(ov) return ov;
+    return uNat(v);
+  }
+  // 2) natureza vazia → tenta extrair do Assunto
+  var fromA=natFromAssunto(assunto);
+  if(fromA) return fromA;
+  // 3) override pelo assunto normalizado (revisão manual)
+  var ova=_natOverrides[_normServ(assunto)];
+  if(ova) return ova;
+  return 'Não informado';
 }
 
 // ════ Filtro de clientes (multiselect com busca) ════
@@ -1552,7 +1654,13 @@ function generate(){
   if(!ST.proc && !ST.serv && !ST.aud && !ST.audfut && !ST.dec){
     showErr('Carregue ao menos uma planilha para gerar o painel.'); return;
   }
-  // Se houver planilha de Decisões, passar pela etapa de validação primeiro
+  // Etapa 1: validação de Serviços/Natureza (se houver não mapeados ou natureza inválida)
+  if(ST.serv && ST.serv.length && !_svalDone && _svalNeeded()){
+    _svalDone=true;
+    showSval(function(){ generate(); });
+    return;
+  }
+  // Etapa 2: validação de Decisões
   if(ST.dec && ST.dec.length && !_dvalDone){
     var _cliRaw=document.getElementById('cli').value.trim();
     var _cli=_cliRaw?_cliRaw.split(';').map(function(s){return s.trim();}).filter(Boolean):null;
@@ -1561,7 +1669,7 @@ function generate(){
     return;
   }
 
-  var title = document.getElementById('ttl').value.trim() || 'Dashboard Jurídico';
+  var title = document.getElementById('ttl').value.trim() || 'Dashboard de Governança Jurídica';
   try{localStorage.setItem('igsa_title',document.getElementById('ttl').value.trim());localStorage.setItem('igsa_cli',document.getElementById('cli').value.trim());localStorage.setItem('igsa_yr',document.getElementById('ayr').value.trim());}catch(e){}
   var cliRaw = document.getElementById('cli').value.trim();
   var yrRaw = document.getElementById('ayr').value.trim();
@@ -1589,7 +1697,7 @@ function generate(){
   }
 
   // Processes — Ativo+Suspenso = Ativo; ignore Inativo
-  var active   = proc.filter(function(r){ return r['Status']==='Ativo'||r['Status']==='Suspenso'; });
+        var active   = proc.filter(function(r){ return r['Status']==='Ativo'||r['Status']==='Suspenso'; });
   var archived = proc.filter(function(r){ return r['Status']==='Arquivado'; });
 
   var natC={};
@@ -1655,7 +1763,7 @@ function generate(){
   // Nota de diagnóstico no gráfico
   var _archTotal=Object.values(archY).reduce(function(a,b){return a+b;},0);
   if(_archFldName&&_archTotal>0){
-    _setCp('cp-arcano','Campo: "'+_archFldName+'" · '+_archTotal+' com data preenchida');
+    _setFilterSummary('cp-arcano',[['Status do processo','Arquivados'],['Agrupamento','Ano da data do encerramento'],['Naturezas','Todas']]);
   } else {
     var _diagMsg=_archFldName
       ? 'Campo "'+_archFldName+'" encontrado mas sem datas válidas ('+_archTotal+' de '+archived.length+' registros). Colunas: '+_archDiagFields.slice(0,25).join(', ')
@@ -1679,28 +1787,21 @@ function generate(){
   // Audiências — separar realizadas (passado) / agendadas (futuro)
   var today=new Date(); today.setHours(0,0,0,0);
   var nAud=0, nPrz=0, nPer=0;
-  var nAudFut=0, nPerFut=0, nextAudDate=null, nextPerDate=null;
   if(aud.length===0 && ST.aud && clients) warns.push('Nenhum registro de Aud/Prazos/Perícias encontrado para os clientes. Verifique os nomes no campo "Cliente Processo".');
+  // Ano vigente (atual) para os 3 cards de Realizadas
+  var anoVigente = new Date().getFullYear();
+  // Esta planilha (Aud/Prazos/Perícias) contém TUDO que já foi cumprido/realizado.
+  // Logo: 'Realizada' = estar nesta planilha no ano vigente (sem checar data passada).
   aud.forEach(function(r){
     var d=r['Data de início']; if(!d) return;
     var dt=d instanceof Date?new Date(d.getTime()):new Date(String(d).trim());
     if(isNaN(dt.getTime())) return;
-    var dtz=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate());
     var t=String(r['Tipo']||'');
     var yr=parseYear(d);
-    if(dtz<today && yr===refY){
+    if(yr===anoVigente){
       if(t==='Audiência') nAud++;
       else if(t==='Prazo') nPrz++;
       else if(t==='Perícia'||t==='Pauta de Julgamento') nPer++;
-    }
-    if(dtz>=today){
-      if(t==='Audiência'){
-        nAudFut++;
-        if(!nextAudDate||dtz<nextAudDate) nextAudDate=new Date(dtz);
-      } else if(t==='Perícia'||t==='Pauta de Julgamento'){
-        nPerFut++;
-        if(!nextPerDate||dtz<nextPerDate) nextPerDate=new Date(dtz);
-      }
     }
   });
 
@@ -1739,6 +1840,10 @@ function generate(){
     'Remota':{causa:0,envol:0,qtd:0}
   };
   active.forEach(function(r){
+    // FILTRO: Tipo da probabilidade atual = Perda (inclui SOMENTE 'Perda'; exclui Êxito e vazios)
+    var tipoProb=String(r['Tipo da probabilidade atual']||r['Tipo da Probabilidade Atual']||'').trim().toLowerCase();
+    var tipoN=tipoProb.normalize?tipoProb.normalize('NFD').replace(/[\u0300-\u036f]/g,''):tipoProb;
+    if(tipoN.indexOf('perda')<0) return;  // mantém apenas 'Perda' (exclui Êxito e vazios)
     // Faixa de probabilidade atual (coluna O): Provável / Possível / Remota
     var prob=String(
       r['Faixa de probabilidade atual']||
@@ -1758,6 +1863,30 @@ function generate(){
   var expTotalCausa=expProb['Provável'].causa+expProb['Possível'].causa+expProb['Remota'].causa;
   var expTotalEnvol=expProb['Provável'].envol+expProb['Possível'].envol+expProb['Remota'].envol;
   var expTotalSaldo=expTotalCausa-expTotalEnvol;
+
+  // ── Item 4a-bis: Exposição por Probabilidade SEGMENTADA por Natureza ──
+  // Mesmos filtros: Ativos+Suspensos, Tipo=Perda, agrupado por Faixa (Provável/Possível/Remota)
+  var expNat={};  // { natureza: { 'Provável':{causa,envol}, 'Possível':{...}, 'Remota':{...} } }
+  active.forEach(function(r){
+    var tipoProb=String(r['Tipo da probabilidade atual']||r['Tipo da Probabilidade Atual']||'').trim().toLowerCase();
+    var tipoN=tipoProb.normalize?tipoProb.normalize('NFD').replace(/[\u0300-\u036f]/g,''):tipoProb;
+    if(tipoN.indexOf('perda')<0) return;  // só Perda
+    var prob=String(r['Faixa de probabilidade atual']||r['Faixa de Probabilidade Atual']||'').trim();
+    var probN=(prob.normalize?prob.normalize('NFD').replace(/[\u0300-\u036f]/g,''):prob).toLowerCase();
+    var cat; if(probN.indexOf('prov')>=0) cat='Provável'; else if(probN.indexOf('remot')>=0) cat='Remota'; else cat='Possível';
+    var nat=String(r['Natureza']||'').trim() || 'Não informado';
+    if(!expNat[nat]) expNat[nat]={'Provável':{causa:0,envol:0,qtd:0},'Possível':{causa:0,envol:0,qtd:0},'Remota':{causa:0,envol:0,qtd:0}};
+    expNat[nat][cat].causa+=numBR(r['Valor da causa']);
+    expNat[nat][cat].envol+=numBR(r['Valor envolvido']);
+    expNat[nat][cat].qtd++;
+  });
+  // ordena naturezas por exposição total (maior primeiro), sem omitir nenhuma
+  var expNatKeys=Object.keys(expNat).sort(function(a,b){
+    var ta=expNat[a]['Provável'].causa+expNat[a]['Possível'].causa+expNat[a]['Remota'].causa;
+    var tb=expNat[b]['Provável'].causa+expNat[b]['Possível'].causa+expNat[b]['Remota'].causa;
+    return tb-ta;
+  });
+
   var expPctReducao=expTotalCausa>0?Math.round(expTotalSaldo/expTotalCausa*100):0;
 
   // ── Item 4b: Redução do passivo — ARQUIVADOS com valores ──
@@ -1772,25 +1901,6 @@ function generate(){
     }
   });
   var provReducao=provTotalCausa-provTotalEnvolvido;
-
-  // Se audfut disponível, usar como fonte de eventos futuros
-  if(ST.audfut && audfut.length>=0){
-    nAudFut=0; nPerFut=0; nextAudDate=null; nextPerDate=null;
-    audfut.forEach(function(r){
-      var d=r['Data de início']; if(!d) return;
-      var dt=d instanceof Date?new Date(d.getTime()):new Date(String(d).trim());
-      if(isNaN(dt.getTime())) return;
-      var dtz=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate());
-      var t=String(r['Tipo']||'');
-      if(t==='Audiência'){
-        nAudFut++;
-        if(!nextAudDate||dtz<nextAudDate) nextAudDate=new Date(dtz);
-      } else if(t==='Perícia'||t==='Pauta de Julgamento'){
-        nPerFut++;
-        if(!nextPerDate||dtz<nextPerDate) nextPerDate=new Date(dtz);
-      }
-    });
-  }
 
   // ── Item 5: Audiências últimos 3 anos ──
   var audYears = [refY-2, refY-1, refY];
@@ -1818,7 +1928,8 @@ function generate(){
   serv.forEach(function(r){
     var d=r[servDateFld]; if(!d) return;
     if(parseYear(d)!==refY) return;
-    var t=uT(r['Tipo']); if(t==='Atividade Interna') return;
+    var t=uT(r['Tipo']);
+    if(t==null || t==='Atividade Interna' || t==='__DESCARTAR__') return;  // não mapeado ou descartado fica fora
     sTipoY[t]=(sTipoY[t]||0)+1;
   });
   var sTYS = Object.entries(sTipoY).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
@@ -1827,7 +1938,7 @@ function generate(){
   serv.forEach(function(r){
     var d=r[servDateFld]; if(!d) return;
     if(parseYear(d)!==refY) return;
-    var n=uNat(r['Natureza']); sNatY[n]=(sNatY[n]||0)+1;
+    var n=uNatFinal(r); if(n==='__DESCARTAR__') return; sNatY[n]=(sNatY[n]||0)+1;
   });
   var sNYS = Object.entries(sNatY).sort(function(a,b){return b[1]-a[1];}).slice(0,12);
 
@@ -1836,7 +1947,7 @@ function generate(){
 
   // Header
   document.getElementById('dtitle').textContent = title;
-  document.getElementById('dsub').textContent = 'Dashboard Jurídico Executivo — Referência '+refY;
+  document.getElementById('dsub').textContent = 'Dashboard de Governança Jurídica - Referência '+refY;
   // Build services row dynamically — hide company chart for single client
   var sMulti = sCYS.length > 1;
   var rowserv = document.getElementById('rowserv');
@@ -1853,11 +1964,11 @@ function generate(){
 
   if(sMulti){
     document.getElementById('sct1').textContent = 'Total de Serviços por Empresa Realizados em '+refY;
-    _setCp('cp-sc', sCYS.length+' empresas');
+    _setFilterSummary('cp-sc',[['Base','Serviços'],['Ano de referência','2026'],['Naturezas','Todas']]);
   }
   document.getElementById('sct2').textContent = 'Total de Serviços Realizados em '+refY+' – As 10 Atividades Mais Executadas';
-  _setCp('cp-st', 'Top 10 atividades · Excluíndo Atividade Interna');
-  _setCp('cp-sn', 'Por natureza jurídica');
+  _setFilterSummary('cp-st',[['Ano de referência','2026'],['Naturezas','Todas']]);
+  _setFilterSummary('cp-sn',[['Base','Serviços'],['Ano de referência','2026'],['Naturezas','Todas']]);
   document.getElementById('sct3').textContent = 'Total de Serviços Realizados em '+refY+' por Natureza';
   if(ST.logo){
     document.getElementById('clogoimg').src=ST.logo;
@@ -1872,7 +1983,7 @@ function generate(){
     kpiCard('c4','Total da Carteira',active.length+archived.length,'Ativos e Encerrados') +
     kpiCard('gd','Serviços em '+refY,refYCount,'Serviços realizados');
 
-  var audLbl = ST.aud ? 'Realizadas em '+refY : 'Planilha não carregada';
+  var audLbl = ST.aud ? 'Realizadas em '+(new Date().getFullYear()) : 'Planilha não carregada';
   document.getElementById('kpi2').innerHTML =
     kpiCard('c6','Audiências Realizadas',nAud,audLbl) +
     kpiCard('c5','Prazos Realizados',nPrz,audLbl) +
@@ -1882,15 +1993,27 @@ function generate(){
   var _allNat = Object.keys(natC).join(', ');
   var _cpBase = active.length+' proc. ativos | '+archived.length+' arquivados';
   function _setCp(id,txt){var el=document.getElementById(id);if(el)el.textContent=txt;}
-  _setCp('cp-regano', 'Todas as naturezas · Status: Ativo, Suspenso e Arquivado');
-  _setCp('cp-fase',   Object.keys(faseC).length+' fases identificadas');
+// Resumo dos filtros aplicados com o MESMO padrão estético da Exposição Financeira
+// items = array de pares [rótulo, valor]. extra = texto opcional ao final (diagnóstico).
+function _setFilterSummary(id, items, extra){
+  var el=document.getElementById(id); if(!el) return;
+  var html='<div style="font-size:.66rem;color:var(--ink);background:var(--c0);border-radius:6px;padding:9px 12px;margin:4px 0 14px;line-height:1.7">';
+  html+='<b style="color:var(--c8);text-transform:uppercase;font-size:.6rem;letter-spacing:.05em">Resumo dos filtros aplicados</b><br>';
+  items.forEach(function(it){ html+='• <b>'+esc(it[0])+':</b> '+esc(it[1])+'<br>'; });
+  if(extra){ html+='<span style="color:var(--mu);font-size:.62rem">'+esc(extra)+'</span>'; }
+  html+='</div>';
+  el.innerHTML=html;
+  el.style.display='block';
+}
+  _setFilterSummary('cp-regano',[['Status do processo','Ativos, Suspensos e Arquivados'],['Agrupamento','Ano da data do cadastro'],['Naturezas','Todas']]);
+  _setFilterSummary('cp-fase',[['Status do processo','Ativos e Suspensos'],['Agrupamento','Fase processual'],['Naturezas','Todas']]);
 
   // Top charts row
   var rtop = document.getElementById('rowtop');
   rtop.className = 'cg c2';
   rtop.innerHTML =
-    '<div class="cc"><div class="ct">Distribuição por Status</div><div class="cp">Ativos+Suspensos vs Arquivados · Total: '+(active.length+archived.length)+' processos</div><div class="ch" style="height:230px"><canvas id="chpie"></canvas></div></div>' +
-    '<div class="cc"><div class="ct">Processos Ativos por Natureza</div><div class="cp">'+active.length+' processos ativos e suspensos · '+natSort.length+' naturezas</div><div class="ch" style="height:230px"><canvas id="chnat"></canvas></div></div>';
+    '<div class="cc"><div class="ct">Distribuição por Status</div><div class="cp" id="cp-status"></div><div class="ch" style="height:230px"><canvas id="chpie"></canvas></div></div>' +
+    '<div class="cc"><div class="ct">Processos Ativos por Natureza</div><div class="cp" id="cp-natureza"></div><div class="ch" style="height:230px"><canvas id="chnat"></canvas></div></div>';
   // Empresa em linha própria full-width (quando multi-cliente)
   if(multi){
     var empRow=document.getElementById('row-empresa');
@@ -1899,9 +2022,13 @@ function generate(){
       empRow.id='row-empresa'; empRow.className='cg c1'; empRow.style.marginBottom='12px';
       rtop.parentNode.insertBefore(empRow, rtop.nextSibling);
     }
-    empRow.innerHTML='<div class="cc"><div class="ct">Processos Ativos por Empresa</div><div class="cp">'+active.length+' processos ativos e suspensos · '+compSort.length+' empresas</div><div class="ch" style="height:300px"><canvas id="chcmp"></canvas></div></div>';
+    empRow.innerHTML='<div class="cc"><div class="ct">Processos Ativos por Empresa</div><div class="cp" id="cp-empresa"></div><div class="ch" style="height:300px"><canvas id="chcmp"></canvas></div></div>';
   }
 
+  // Resumos de filtros dos gráficos do topo
+  _setFilterSummary('cp-status',[['Status do processo','Ativos e Suspensos vs Arquivados'],['Agrupamento','Status']]);
+  _setFilterSummary('cp-natureza',[['Status do processo','Ativos e Suspensos'],['Agrupamento','Natureza'],['Naturezas','Todas']]);
+  if(multi) _setFilterSummary('cp-empresa',[['Status do processo','Ativos e Suspensos'],['Agrupamento','Empresa'],['Naturezas','Todas']]);
   // Draw charts
   mkDonut('chpie', ['Ativos','Arquivados'], [active.length, archived.length]);
   mkBar('chnat', natSort.map(function(e){return e[0];}), natSort.map(function(e){return e[1];}), true,
@@ -1923,7 +2050,7 @@ function generate(){
 
   // ── Item 2: Cadastrados vs Encerrados por mês no ano vigente ──
   document.getElementById('ctcmp').textContent = 'Processos Cadastrados × Encerrados em '+refY+' (por mês)';
-  (function(){var el=document.querySelector('#row-mensal .cc:first-child .cp');if(!el){var ct=document.getElementById('ctcmp');if(ct){var d=document.createElement('div');d.className='cp';d.textContent='Todos os status · Ano: '+refY+' · Todas as naturezas';ct.parentNode.insertBefore(d,ct.nextSibling);}}})();
+  _setFilterSummary('cp-mensal',[['Status do processo','Todos'],['Ano de referência','2026'],['Agrupamento','Mês'],['Naturezas','Todas']]);
   if(CH['chcmp2']) CH['chcmp2'].destroy();
   // Ocultar meses futuros: se refY for o ano corrente, limitar ao mês atual
   var _monthsToShow = 12;
@@ -1978,7 +2105,7 @@ function generate(){
       return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
     };
     var pct = provTotalCausa>0 ? Math.round(provReducao/provTotalCausa*100) : 0;
-    var _cpArq='<div class="cp">'+provQtd+' proc. arquivados com valor registrado · Inclui todas as naturezas e probabilidades</div>';
+    var _cpArq='<div class="cp" id="cp-passivo"></div>';
     var html = '';
     html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:4px">';
     html += '<div style="background:var(--c0);border-radius:8px;padding:14px;text-align:center;border-top:3px solid var(--c6)">';
@@ -1996,6 +2123,7 @@ function generate(){
     html += '</div>';
     if(provQtd===0) html='<div style="padding:20px;text-align:center;color:var(--mu);font-size:.82rem">Nenhum processo arquivado com valores cadastrados.</div>';
     document.getElementById('passivo-content').innerHTML=html+_cpArq;
+    _setFilterSummary('cp-passivo',[['Status do processo','Arquivados'],['Agrupamento','Valor da Causa x Valor Envolvido'],['Naturezas','Todas']]);
   })();
 
   // ── Exposição Financeira por Probabilidade — render ──
@@ -2010,68 +2138,113 @@ function generate(){
       return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
     };
 
-    // KPI cards
-    var kpi='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">';
-    kpi+='<div style="background:var(--c0);border-radius:8px;padding:12px;text-align:center;border-top:3px solid var(--c7)">';
-    kpi+='<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;font-weight:600">Valor da Causa</div>';
-    kpi+='<div style="font-family:Libre Baskerville,serif;font-size:1.1rem;color:var(--c8);font-weight:700;margin-top:3px">'+fmtM(expTotalCausa)+'</div>';
-    kpi+='<div style="font-size:.62rem;color:var(--mu);margin-top:2px">'+active.length+' processos ativos</div></div>';
-    kpi+='<div style="background:var(--c0);border-radius:8px;padding:12px;text-align:center;border-top:3px solid var(--gd)">';
-    kpi+='<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;font-weight:600">Valor Envolvido</div>';
-    kpi+='<div style="font-family:Libre Baskerville,serif;font-size:1.1rem;color:var(--c8);font-weight:700;margin-top:3px">'+fmtM(expTotalEnvol)+'</div>';
-    kpi+='<div style="font-size:.62rem;color:var(--mu);margin-top:2px">Exposição real estimada</div></div>';
-    kpi+='<div style="background:#EAF5EA;border-radius:8px;padding:12px;text-align:center;border-top:3px solid #5A8A5A">';
-    kpi+='<div style="font-size:.6rem;color:#2A5A2A;text-transform:uppercase;letter-spacing:.05em;font-weight:600">Saldo / Redução</div>';
-    kpi+='<div style="font-family:Libre Baskerville,serif;font-size:1.1rem;color:#2A5A2A;font-weight:700;margin-top:3px">'+fmtM(expTotalSaldo)+'</div>';
-    kpi+='<div style="font-size:.62rem;color:#2A5A2A;margin-top:2px">Causa − Envolvido</div></div>';
-    kpi+='<div style="background:var(--c0);border-radius:8px;padding:12px;text-align:center;border-top:3px solid var(--c6)">';
-    kpi+='<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;font-weight:600">% de Redução</div>';
-    kpi+='<div style="font-family:Libre Baskerville,serif;font-size:1.9rem;color:var(--c8);font-weight:700;line-height:1;margin-top:3px">'+expPctReducao+'%</div>';
-    kpi+='<div style="font-size:.62rem;color:var(--mu);margin-top:2px">Causa vs Envolvido</div></div>';
-    kpi+='</div>';
-    kpi+='<div style="height:1px;background:var(--c1);margin:14px 0 10px"></div>';
-    var cpAtivo='<div style="font-size:.62rem;color:var(--mu);background:var(--c0);border-radius:6px;padding:6px 10px;margin-bottom:12px;line-height:1.6">Processos ativos e suspensos · Agrupamento: Faixa de probabilidade atual (Provável / Possível / Remota)</div>';
+    // KPI cards removidos (Print 1) — manter apenas gráfico + tabela
+    var kpi='';
+    var cpAtivo='<div style="font-size:.66rem;color:var(--ink);background:var(--c0);border-radius:6px;padding:9px 12px;margin-bottom:14px;line-height:1.7">'+
+      '<b style="color:var(--c8);text-transform:uppercase;font-size:.6rem;letter-spacing:.05em">Resumo dos filtros aplicados</b><br>'+
+      '• <b>Status do processo:</b> Ativos e Suspensos<br>'+
+      '• <b>Tipo de probabilidade atual:</b> Perda<br>'+
+      '• <b>Agrupamento:</b> Faixa de probabilidade atual (Provável · Possível · Remota)'+
+      '</div>';
 
     // Detail table
     var cats=['Provável','Possível','Remota'];
     var catC={'Provável':'var(--c7)','Possível':'var(--gd)','Remota':'#5A8A5A'};
-    var tbl='<table style="width:100%;border-collapse:collapse;font-size:.7rem;margin-top:2px">';
+    // Valor da Causa total exibido acima da tabela (usado no cálculo de Variação do Passivo)
+    var tblRef='<div style="font-size:.72rem;color:var(--ink);background:var(--c0);border-radius:6px;padding:6px 12px;margin-bottom:10px;font-weight:600">';
+    tblRef+='Valor da Causa total: <span style="color:var(--c8)">'+fmtM(expTotalCausa)+'</span></div>';
+
+    var tbl=tblRef+'<table style="width:100%;border-collapse:collapse;font-size:.8rem;margin-top:2px">';
     tbl+='<thead><tr>';
     tbl+='<th style="text-align:left;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Probabilidade</th>';
     tbl+='<th style="text-align:right;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Qtd.</th>';
-    tbl+='<th style="text-align:right;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Valor da Causa</th>';
     tbl+='<th style="text-align:right;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Valor Envolvido</th>';
-    tbl+='<th style="text-align:right;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Saldo</th>';
+    tbl+='<th style="text-align:right;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Variação do Passivo (%)</th>';
     tbl+='</tr></thead><tbody>';
     cats.forEach(function(cat,i){
       var d=expProb[cat];
-      var saldo=d.causa-d.envol;
+      var variacao=expTotalCausa>0?((expTotalCausa-d.envol)/expTotalCausa*100):0;
       var bg=i%2===0?'#fff':'var(--c0)';
       tbl+='<tr style="background:'+bg+'">';
       tbl+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd)"><b style="color:'+catC[cat]+'">'+cat+'</b></td>';
       tbl+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd);text-align:right">'+d.qtd+'</td>';
-      tbl+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd);text-align:right">'+fmtM(d.causa)+'</td>';
       tbl+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd);text-align:right">'+fmtM(d.envol)+'</td>';
-      tbl+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd);text-align:right;color:#5A8A5A;font-weight:600">'+fmtM(saldo)+'</td>';
+      tbl+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd);text-align:right;color:#5A8A5A;font-weight:600">'+variacao.toFixed(1).replace('.',',')+'%</td>';
       tbl+='</tr>';
     });
-    // Total row
+    var variacaoTotal=expTotalCausa>0?((expTotalCausa-expTotalEnvol)/expTotalCausa*100):0;
     tbl+='<tr style="background:var(--c0);font-weight:700">';
     tbl+='<td style="padding:6px 8px;color:var(--c8)">Total Geral</td>';
-    tbl+='<td style="padding:6px 8px;text-align:right;color:var(--c8)">'+active.length+'</td>';
-    tbl+='<td style="padding:6px 8px;text-align:right;color:var(--c8)">'+fmtM(expTotalCausa)+'</td>';
+    tbl+='<td style="padding:6px 8px;text-align:right;color:var(--c8)">'+( expProb['Provável'].qtd+expProb['Possível'].qtd+expProb['Remota'].qtd)+'</td>';
     tbl+='<td style="padding:6px 8px;text-align:right;color:var(--c8)">'+fmtM(expTotalEnvol)+'</td>';
-    tbl+='<td style="padding:6px 8px;text-align:right;color:#5A8A5A">'+fmtM(expTotalSaldo)+'</td>';
+    tbl+='<td style="padding:6px 8px;text-align:right;color:#5A8A5A">'+variacaoTotal.toFixed(1).replace('.',',')+'%</td>';
     tbl+='</tr>';
     tbl+='</tbody></table>';
 
-    // Chart + table side by side
-    var body='<div style="display:grid;grid-template-columns:1.3fr 1fr;gap:24px;align-items:start;margin-top:4px">';
-    body+='<div>';
-    body+='<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--gd)">Causa vs Envolvido por Categoria (R$ Mi)</div>';
-    body+='<div style="position:relative;height:280px"><canvas id="ch-exp-prob"></canvas></div>';
+    // ── Tabela: Detalhamento por Probabilidade por Natureza (modelo da imagem) ──
+    var tblNat='<table style="width:100%;border-collapse:collapse;font-size:.8rem;margin-top:2px">';
+    tblNat+='<thead><tr>';
+    tblNat+='<th style="text-align:left;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Natureza</th>';
+    tblNat+='<th style="text-align:left;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Probabilidade</th>';
+    tblNat+='<th style="text-align:right;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Qtd.</th>';
+    tblNat+='<th style="text-align:right;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Valor Envolvido</th>';
+    tblNat+='<th style="text-align:right;padding:5px 8px;background:var(--c8);color:#fff;font-size:.62rem">Variação do Passivo (%)</th>';
+    tblNat+='</tr></thead><tbody>';
+    var catCN={'Provável':'var(--c7)','Possível':'var(--gd)','Remota':'#5A8A5A'};
+    var PROV_BG='#F6E9EB';  // vinho bem claro (paleta) — destaque só do Provável
+    expNatKeys.forEach(function(nat,ni){
+      var natE=0,natQ=0;
+      // 3 faixas + linha Total Geral = 4 linhas; Natureza ocupa todas (rowspan 4)
+      ['Provável','Possível','Remota'].forEach(function(cat,ci){
+        var d=expNat[nat][cat];
+        var variacao=expTotalCausa>0?((expTotalCausa-d.envol)/expTotalCausa*100):0;
+        natE+=d.envol; natQ+=d.qtd;
+        var isProv=(cat==='Provável');
+        tblNat+='<tr style="background:'+(isProv?PROV_BG:'#fff')+'">';
+        if(ci===0){
+          tblNat+='<td rowspan="4" style="padding:8px 10px;border-bottom:3px solid var(--gd);border-right:1px solid var(--bd);vertical-align:middle;font-weight:700;color:var(--c8);background:'+(ni%2===0?'#FBF4F5':'#F6E9EB')+'">'+esc(nat)+'</td>';
+        }
+        tblNat+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd);'+(isProv?'font-weight:700;':'')+'">'+(isProv?'▶ ':'')+'<b style="color:'+catCN[cat]+'">'+cat+'</b></td>';
+        tblNat+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd);text-align:right;'+(isProv?'font-weight:700;':'')+'">'+d.qtd+'</td>';
+        tblNat+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd);text-align:right;'+(isProv?'font-weight:700;':'')+'">'+fmtM(d.envol)+'</td>';
+        tblNat+='<td style="padding:5px 8px;border-bottom:1px solid var(--bd);text-align:right;color:#5A8A5A;font-weight:600">'+(variacao.toFixed(1).replace('.',','))+'%</td>';
+        tblNat+='</tr>';
+      });
+      var variacaoNat=expTotalCausa>0?((expTotalCausa-natE)/expTotalCausa*100):0;
+      var _div='border-bottom:3px solid var(--gd)';
+      tblNat+='<tr style="background:var(--c0);font-weight:700">';
+      tblNat+='<td style="padding:6px 8px;'+_div+';color:var(--c8)">Total Geral</td>';
+      tblNat+='<td style="padding:6px 8px;'+_div+';text-align:right;color:var(--c8)">'+natQ+'</td>';
+      tblNat+='<td style="padding:6px 8px;'+_div+';text-align:right;color:var(--c8)">'+fmtM(natE)+'</td>';
+      tblNat+='<td style="padding:6px 8px;'+_div+';text-align:right;color:#5A8A5A">'+(variacaoNat.toFixed(1).replace('.',','))+'%</td>';
+      tblNat+='</tr>';
+    });
+    tblNat+='</tbody></table>';
+
+    // Gráfico e tabela em VERTICAL (um abaixo do outro), largura total
+    var body='<div style="display:block;margin-top:4px">';
+    // 1) Gráfico — largura total
+    body+='<div style="width:100%;margin-bottom:24px">';
+    // Dois gráficos empilhados: Valor da Causa (ref) + Valor Envolvido (provisionado), mesma escala
+    body+='<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:6px;padding-bottom:6px;border-bottom:2px solid var(--gd)">Valor da Causa — Referência Total (R$ Mi)</div>';
+    body+='<div style="position:relative;height:80px;width:100%;margin-bottom:0"><canvas id="ch-exp-causa"></canvas></div>';
+    body+='<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin:14px 0 6px;padding-bottom:6px;border-bottom:2px solid var(--gd)">Valor Envolvido — Provisionado (R$ Mi)</div>';
+    body+='<div style="position:relative;height:160px;width:100%"><canvas id="ch-exp-envol"></canvas></div>';
+    // canvas legado mantido oculto para compatibilidade (não exibido)
+    body+='<div style="display:none"><canvas id="ch-exp-prob"></canvas></div>';
     body+='</div>';
-    body+='<div style="padding-left:8px;border-left:2px solid var(--c1)">'+tbl+'</div>';
+    // 2) Tabela — largura total
+    body+='<div style="width:100%">';
+    body+='<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--gd)">Detalhamento por Probabilidade</div>';
+    body+='<div style="font-size:.68rem;color:var(--mu);margin:4px 0 10px;font-style:italic">Saldo = Valor da Causa − Valor Envolvido</div>';
+    body+=tbl;
+    body+='</div>';
+    // Tabela: Exposição por Natureza e Probabilidade — largura total
+    body+='<div style="width:100%;margin-top:24px">';
+    body+='<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--gd)">Detalhamento por Probabilidade por Natureza</div>';
+    body+='<div style="font-size:.68rem;color:var(--mu);margin:4px 0 10px;font-style:italic">Saldo = Valor da Causa − Valor Envolvido</div>';
+    body+=tblNat;
+    body+='</div>';
     body+='</div>';
 
     document.getElementById('passivo-ativo-content').innerHTML=kpi+cpAtivo+body;
@@ -2081,17 +2254,25 @@ function generate(){
     var CATS=['Provável','Possível','Remota'];
     var causaVals=CATS.map(function(c){return Math.round(expProb[c].causa/1e4)/100;});
     var envolVals=CATS.map(function(c){return Math.round(expProb[c].envol/1e4)/100;});
+    // Variação do Passivo (%) por faixa: (Causa Total − Envolvido da faixa) / Causa Total
+    var variacaoVals=CATS.map(function(c){
+      return expTotalCausa>0?((expTotalCausa-expProb[c].envol)/expTotalCausa*100):0;
+    });
     CH['ch-exp-prob']=new Chart(document.getElementById('ch-exp-prob'),{
       type:'bar',
       data:{
         labels:CATS,
         datasets:[
           {label:'Valor da Causa',data:causaVals,
-           backgroundColor:['#7E1F2C','#9E3340','#BE5060'],
+           backgroundColor:['#7E1F2C','#B36572','#D2A0A8'],
+           borderColor:['#3A0A12','transparent','transparent'],
+           borderWidth:[2,0,0],
            borderRadius:4,borderSkipped:false,
            barPercentage:0.45,categoryPercentage:0.75},
           {label:'Valor Envolvido',data:envolVals,
-           backgroundColor:['#CDA736','#D4B040','#DBC060'],
+           backgroundColor:['#CDA736','#DCC274','#E8D9A8'],
+           borderColor:['#8A6A10','transparent','transparent'],
+           borderWidth:[2,0,0],
            borderRadius:4,borderSkipped:false,
            barPercentage:0.45,categoryPercentage:0.75}
         ]
@@ -2105,7 +2286,13 @@ function generate(){
             color:'#2A2420',font:{size:9,weight:'700'},
             formatter:function(v,ctx){
               if(!v||v<=0) return '';
-              return v>=1000?'R$ '+(v/1000).toLocaleString('pt-BR',{minimumFractionDigits:1})+'Bi':'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:0})+'Mi';
+              var base=v>=1000?'R$ '+(v/1000).toLocaleString('pt-BR',{minimumFractionDigits:1})+'Bi':'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:0})+'Mi';
+              // Dataset 1 = Valor Envolvido: adiciona % de Variação do Passivo
+              if(ctx.datasetIndex===1){
+                var pct=variacaoVals[ctx.dataIndex];
+                return base+' · '+pct.toFixed(1).replace('.',',')+'%';
+              }
+              return base;
             },
             clamp:true,clip:false,padding:{right:6}
           }
@@ -2115,17 +2302,99 @@ function generate(){
              ticks:{color:'#7A4050',font:{size:9},callback:function(v){return v>=1000?(v/1000).toFixed(1)+'Bi':v+'Mi';}},
              border:{display:false}},
           y:{grid:{color:'var(--c0)'},
-             ticks:{color:'#3A2020',font:{size:12,weight:'700'},padding:10},
+             ticks:{color:'#3A2020',font:{size:12,weight:'700'},padding:10,
+               callback:function(v){var l=this.getLabelForValue(v);return l==='Provável'?'▶ '+l:l;}},
              border:{display:false}}
         },
         layout:{padding:{right:110,top:8,bottom:8}}
       }
     });
+
+
+    // ── Dois gráficos empilhados: Causa (referência) + Envolvido (provisionado), mesma escala ──
+    // Escala: max = Valor da Causa Total (referência) × 1.15
+    var _expMax = expTotalCausa * 1.15 / 1e6;
+    var _expLabels = [
+      (causaVals[0]>0?'▶ Provável':'Provável'),
+      'Possível',
+      'Remota'
+    ];
+    var _chartOpts = function(maxVal, color, labelFn){
+      return {
+        type:'bar',
+        data:{
+          labels:_expLabels,
+          datasets:[{data:[],backgroundColor:color,borderRadius:4,borderSkipped:false,barPercentage:0.55,categoryPercentage:0.7}]
+        },
+        options:{
+          indexAxis:'y',responsive:true,maintainAspectRatio:false,
+          plugins:{
+            legend:{display:false},
+            datalabels:{anchor:'end',align:'end',color:'#2A2420',font:{size:9,weight:'700'},
+              formatter:labelFn,clamp:true,clip:false,padding:{right:4}}
+          },
+          scales:{
+            x:{min:0,max:maxVal,grid:{color:'var(--c1)',lineWidth:1},
+               ticks:{color:'#7A4050',font:{size:9},callback:function(v){return v+'Mi';}},
+               border:{display:false}},
+            y:{grid:{display:false},ticks:{color:'#3A2020',font:{size:10,weight:'600'}},border:{display:false}}
+          },
+          layout:{padding:{right:90,top:4,bottom:4}}
+        }
+      };
+    };
+    var _fmtMi=function(v){
+      if(!v||v<=0) return '';
+      return v>=1000?'R$ '+(v/1000).toLocaleString('pt-BR',{minimumFractionDigits:1})+'Bi':'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:0})+'Mi';
+    };
+    // Gráfico 1: UMA ÚNICA barra com o Valor da Causa TOTAL
+    if(CH['ch-exp-causa']) CH['ch-exp-causa'].destroy();
+    if(document.getElementById('ch-exp-causa')){
+      var _optsCausa={
+        type:'bar',
+        data:{
+          labels:['Valor da Causa Total'],
+          datasets:[{data:[Math.round(expTotalCausa/1e4)/100],
+            backgroundColor:'#7E1F2C',borderRadius:4,borderSkipped:false,
+            barPercentage:0.4,categoryPercentage:0.6}]
+        },
+        options:{
+          indexAxis:'y',responsive:true,maintainAspectRatio:false,
+          plugins:{
+            legend:{display:false},
+            datalabels:{anchor:'end',align:'end',color:'#2A2420',font:{size:9,weight:'700'},
+              formatter:function(v){return _fmtMi(v);},clamp:true,clip:false,padding:{right:4}}
+          },
+          scales:{
+            x:{min:0,max:_expMax,grid:{color:'var(--c1)',lineWidth:1},
+               ticks:{color:'#7A4050',font:{size:9},callback:function(v){return v+'Mi';}},
+               border:{display:false}},
+            y:{grid:{display:false},ticks:{color:'#3A2020',font:{size:10,weight:'600'}},border:{display:false},
+               afterFit:function(axis){axis.width=160;}}
+          },
+          layout:{padding:{right:90,top:4,bottom:4}}
+        }
+      };
+      CH['ch-exp-causa']=new Chart(document.getElementById('ch-exp-causa'),_optsCausa);
+    }
+    // Gráfico 2: Valor Envolvido (mesma escala) com % de Variação do Passivo no rótulo
+    if(CH['ch-exp-envol']) CH['ch-exp-envol'].destroy();
+    if(document.getElementById('ch-exp-envol')){
+      var _optsEnvol=_chartOpts(_expMax,['#CDA736','#DCC274','#E8D9A8'],function(v,ctx){
+        if(!v||v<=0) return '';
+        var pct=variacaoVals[ctx.dataIndex];
+        return _fmtMi(v)+' · '+pct.toFixed(1).replace('.',',')+'%';
+      });
+      _optsEnvol.data.datasets[0].data=envolVals;
+      // forçar mesma largura do eixo Y para alinhar barras com o gráfico de cima
+      _optsEnvol.options.scales.y.afterFit=function(axis){axis.width=160;};
+      CH['ch-exp-envol']=new Chart(document.getElementById('ch-exp-envol'),_optsEnvol);
+    }
   })();
 
   // ── Item 5: Audiências últimos 3 anos ──
   document.getElementById('ctaud3').textContent = 'Audiências Realizadas — '+audYears[0]+' a '+audYears[2];
-  _setCp('cp-aud3', 'Período: '+audYears[0]+'–'+audYears[2]+' · Somente datas anteriores a hoje');
+  _setFilterSummary('cp-aud3',[['Agrupamento','Ano da data de início'],['Naturezas','Todas']]);
   if(CH['chaud3']) CH['chaud3'].destroy();
   CH['chaud3'] = new Chart(document.getElementById('chaud3'), {
     type:'bar',
@@ -2143,30 +2412,51 @@ function generate(){
   });
 
 
-  // ── Audiências e Perícias Futuras cards ──
+  // ── Audiências e Perícias Futuras cards (planilha de FUTURAS = só pendentes) ──
   (function(){
     var row=document.getElementById('aud-future-row');
-    var hasFutSource = (ST.audfut && ST.audfut.length) || (ST.aud && ST.aud.length);
-    if(!hasFutSource||!isVis('vis-aud-fut')){row.style.display='none';return;}
+    // Fonte correta: planilha de Futuras (ST.audfut). Esta planilha contém só o pendente.
+    var futRows = audfut || [];
+    if(!futRows.length || !isVis('vis-aud-fut')){row.style.display='none';return;}
     row.style.display='';
     var fmtD=function(d){return d?d.toLocaleDateString('pt-BR'):'Não agendada';};
+    // detectar campos de data e tipo na planilha de futuras
+    var fk=Object.keys(futRows[0]);
+    var dateFld = fk.indexOf('Data de início')>=0?'Data de início':(fk.indexOf('Data')>=0?'Data':fk[0]);
+    var tipoFld = fk.indexOf('Tipo')>=0?'Tipo':null;
+    var fAud=0, fPer=0, nextA=null, nextP=null;
+    futRows.forEach(function(r){
+      var d=r[dateFld]; var dt=d instanceof Date?new Date(d.getTime()):new Date(String(d).trim());
+      var validDt=!isNaN(dt.getTime());
+      var dtz=validDt?new Date(dt.getFullYear(),dt.getMonth(),dt.getDate()):null;
+      var t=tipoFld?String(r[tipoFld]||''):'';
+      if(t==='Perícia'||t==='Pauta de Julgamento'){
+        fPer++; if(dtz&&(!nextP||dtz<nextP)) nextP=new Date(dtz);
+      } else { // padrão: trata como audiência
+        fAud++; if(dtz&&(!nextA||dtz<nextA)) nextA=new Date(dtz);
+      }
+    });
     var s='<div class="sbn" style="background:var(--c7);margin-bottom:10px"><h2>📅 Audiências e Perícias Futuras</h2></div>';
     s+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">';
-    s+='<div class="kp" style="border-top-color:var(--c7)"><div class="kl">AUDIÊNCIAS FUTURAS</div><div class="kv">'+nAudFut+'</div><div class="kd">Agendadas a partir de hoje</div></div>';
-    s+='<div class="kp" style="border-top-color:var(--gd)"><div class="kl">PERÍCIAS FUTURAS</div><div class="kv">'+nPerFut+'</div><div class="kd">Agendadas a partir de hoje</div></div>';
+    s+='<div class="kp" style="border-top-color:var(--c7)"><div class="kl">AUDIÊNCIAS FUTURAS</div><div class="kv">'+fAud+'</div><div class="kd">Pendentes (agendadas)</div></div>';
+    s+='<div class="kp" style="border-top-color:var(--gd)"><div class="kl">PERÍCIAS FUTURAS</div><div class="kv">'+fPer+'</div><div class="kd">Pendentes (agendadas)</div></div>';
     s+='<div class="kp" style="border-top-color:var(--c6)"><div class="kl">PRÓXIMA AUDIÊNCIA</div>';
-    s+='<div class="kv" style="font-size:1.25rem;color:var(--c7)">'+fmtD(nextAudDate)+'</div>';
+    s+='<div class="kv" style="font-size:1.25rem;color:var(--c7)">'+fmtD(nextA)+'</div>';
     s+='<div class="kd">Data mais próxima</div></div>';
     s+='<div class="kp" style="border-top-color:var(--gd)"><div class="kl">PRÓXIMA PERÍCIA</div>';
-    s+='<div class="kv" style="font-size:1.25rem;color:var(--c7)">'+fmtD(nextPerDate)+'</div>';
+    s+='<div class="kv" style="font-size:1.25rem;color:var(--c7)">'+fmtD(nextP)+'</div>';
     s+='<div class="kd">Data mais próxima</div></div>';
     s+='</div>';
-    row.innerHTML=s;
+    // Título (faixa vinho) ACIMA do resumo dos filtros
+    var _titBanner='<div class="sbn" style="background:var(--c7);margin-bottom:10px"><h2>📅 Audiências e Perícias Futuras</h2></div>';
+    var _sNoBanner=s.replace(_titBanner,'');
+    row.innerHTML=_titBanner+'<div class="cp" id="cp-futuras"></div>'+_sNoBanner;
+    _setFilterSummary('cp-futuras',[['Base','Audiências e Perícias Futuras (pendentes)'],['Agrupamento','Tipo (Audiência · Perícia)'],['Naturezas','Todas']]);
   })();
 
   mkBar('chsy', syArr, syArr.map(function(y){return servY[y]||0;}), false,
     syArr.map(function(y){return y===refY?'#7E1F2C':'#E8A0A8';}));
-  _setCp('cp-sy', serv.length+' serviços no total · '+syArr.length+' anos · Ano destacado: '+refY);
+  _setFilterSummary('cp-sy',[['Agrupamento','Ano da data do cadastro'],['Ano de referência destacado','2026'],['Naturezas','Todas']]);
 
   if(sMulti && document.getElementById('chsc')){
     mkBar('chsc',
@@ -2190,13 +2480,13 @@ function generate(){
     var decBlock = document.getElementById('decblock');
     if(!ST.dec || ST.dec.length===0 || !isVis('vis-dec')){ decBlock.innerHTML=''; return; }
 
-    var keys = Object.keys(ST.dec[0]);
-    var poloFld=keys[3]||'', dataPubFld=keys[21]||'', clientFld=keys[2]||'',
-        textoFld=keys[keys.length-1]||'', procFld_d=keys[1]||'';
+    var F = _decFields(ST.dec);
+    var poloFld=F.polo, dataPubFld=F.data, clientFld=F.cliente,
+        textoFld=F.texto, procFld_d=F.proc;
 
     var _cset = clients ? _normSet(clients) : null;
     var decRows = _cset
-      ? ST.dec.filter(function(r){ if(r[clientFld]==null) return false; var ns=splitClients(r[clientFld]); for(var i=0;i<ns.length;i++){if(_cset[_normCli(ns[i])])return true;} return false; })
+      ? ST.dec.filter(function(r){ if(!clientFld||r[clientFld]==null) return false; var ns=splitClients(r[clientFld]); for(var i=0;i<ns.length;i++){if(_cset[_normCli(ns[i])])return true;} return false; })
       : ST.dec;
     if(decRows.length===0){ decBlock.innerHTML=''; return; }
 
@@ -2206,7 +2496,7 @@ function generate(){
     decRows.forEach(function(r){
       var datePub=r[dataPubFld];
       if(datePub){ var dp=datePub instanceof Date?datePub:new Date(String(datePub).split('/').reverse().join('-')); if(!isNaN(dp.getTime())){ if(!minDate||dp<minDate)minDate=dp; if(!maxDate||dp>maxDate)maxDate=dp; } }
-      var lbl=finalDecLabel(r[procFld_d], r[poloFld], r[textoFld]);
+      var lbl=finalDecLabel(procFld_d?r[procFld_d]:'', poloFld?r[poloFld]:'', textoFld?r[textoFld]:'');
       if(lbl==='Favorável') nFav++;
       else if(lbl==='Desfavorável') nDesfav++;
       // Extinção e Inconclusivo NÃO entram no gráfico
@@ -2222,7 +2512,7 @@ function generate(){
     decBlock.innerHTML = '<div class="sd"></div><div class="sbn" style="background:var(--c9)"><h2>🏛️ Decisões Judiciais</h2></div>' +
       '<div class="cg c2" style="margin-bottom:12px">' +
       '<div class="cc"><div class="ct">'+chartTitle+'</div>' +
-      '<div class="cp">Apenas decisões Favoráveis e Desfavoráveis · Classificações revisadas na etapa de validação</div>' +
+      '<div class="cp" id="cp-dec"></div>' +
       '<div class="ch" style="height:220px"><canvas id="chdec"></canvas></div></div>' +
       '<div class="cc"><div class="ct">Resultado por Tipo</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 0" id="dec-kpis"></div></div>' +
@@ -2240,6 +2530,7 @@ function generate(){
         '<div style="font-family:Libre Baskerville,serif;font-size:1.8rem;color:var(--c8);font-weight:700">'+nDesfav+'</div>'+
         '<div style="font-size:.65rem;color:var(--mu)">'+pctDesfav+'% (de '+totalGraf+')</div></div>';
 
+    _setFilterSummary('cp-dec',[['Status do processo','Todos'],['Período','Ago/2025 até a data atual']]);
     if(CH['chdec']) CH['chdec'].destroy();
     CH['chdec'] = new Chart(document.getElementById('chdec'),{
       type:'doughnut',
@@ -2257,10 +2548,10 @@ function generate(){
     // dec filtrado por cliente (mesma lógica do decblock)
   var decFiltered = [];
   if(ST.dec && ST.dec.length){
-    var _decClientFld = Object.keys(ST.dec[0])[2] || '';
+    var _decClientFld = _decFields(ST.dec).cliente || '';
     var _cset2 = clients ? _normSet(clients) : null;
     decFiltered = _cset2
-      ? ST.dec.filter(function(r){ if(r[_decClientFld]==null) return false; var ns=splitClients(r[_decClientFld]); for(var i=0;i<ns.length;i++){if(_cset2[_normCli(ns[i])])return true;} return false; })
+      ? ST.dec.filter(function(r){ if(!_decClientFld||r[_decClientFld]==null) return false; var ns=splitClients(r[_decClientFld]); for(var i=0;i<ns.length;i++){if(_cset2[_normCli(ns[i])])return true;} return false; })
       : ST.dec;
   }
   window._rpt = {proc:proc, active:active, archived:archived, natSort:natSort, title:title, refY:refY, nAud:nAud, nPrz:nPrz, nPer:nPer,
@@ -2402,8 +2693,17 @@ function exportXLS_proc(){
 // ════ Serviços ════
 function exportXLS_serv(){
   var d=window._rpt; if(!d||!d.serv||!d.serv.length){alert('Planilha de Serviços não carregada.');return;}
-  var hdrs=Object.keys(d.serv[0]||{});
-  var tbl=_xlsGeneric(d.serv,hdrs,d.title,'Serviços');
+  // adiciona colunas com a classificação validada (categoria PARA + natureza final)
+  var rows=d.serv.map(function(r){
+    var o={}; for(var k in r) o[k]=r[k];
+    var _cat=uT(r['Tipo']);
+    o['Categoria (classificada)']=(_cat==='__DESCARTAR__')?'(não usado)':(_cat||'(não mapeado)');
+    var _nat=uNatFinal(r);
+    o['Natureza (classificada)']=(_nat==='__DESCARTAR__')?'(não usado)':_nat;
+    return o;
+  });
+  var hdrs=Object.keys(rows[0]||{});
+  var tbl=_xlsGeneric(rows,hdrs,d.title,'Serviços');
   _xlsDl(new Blob(['\ufeff'+_xlsWrap(tbl)],{type:'application/vnd.ms-excel;charset=utf-8'}),_xlsName(d.title,'Servicos'));
 }
 
@@ -2418,8 +2718,13 @@ function exportXLS_aud(){
 // ════ Classificação de decisão (global, p/ relatório e Excel) ════
 function classifyDecisionGlobal(polo, texto){
   var polo_l = String(polo||'').trim().toLowerCase();
-  var polAt = polo_l==='ativo'||polo_l==='autor';
-  var polPas= polo_l==='passivo'||polo_l==='réu'||polo_l==='reu';
+  // Polo Ativo: ativo, autor, testemunha
+  var polAt = polo_l==='ativo'||polo_l==='autor'||polo_l==='testemunha';
+  // Polo Passivo: passivo, réu, reu, parte
+  var polPas= polo_l==='passivo'||polo_l==='réu'||polo_l==='reu'||polo_l==='parte';
+  // Polo Terceiro: terceiro, terceiro envolvido, terceiro interessado, interessado → Inconclusivo
+  var polTer= polo_l==='terceiro'||polo_l==='terceiro envolvido'||polo_l==='terceiro interessado'||polo_l==='interessado';
+  if(polTer) return null;  // Terceiro sempre inconclusivo
   if(!polAt && !polPas) return null;
   var t = String(texto||'').toLowerCase();
   if(!t||t==='nan'||t==='null') return null;
@@ -2451,14 +2756,11 @@ function decLabel(cls){
 function exportXLS_dec(){
   var d=window._rpt; if(!d||!d.dec||!d.dec.length){alert('Planilha de Decisões não carregada.');return;}
   var keys=Object.keys(d.dec[0]||{});
-  var poloFld=keys[3]||'';
-  var textoFld=keys[keys.length-1]||'';
-  // adiciona coluna de conclusão a cada linha
-  var procFld_d=keys[1]||'';
+  var F=_decFields(d.dec);
   var rows=d.dec.map(function(r){
     var o={}; for(var k in r) o[k]=r[k];
     // usa a conclusão REVISADA pelo usuário (com parciais unificadas)
-    o['Conclusão da Análise']=finalDecLabel(r[procFld_d], r[poloFld], r[textoFld]);
+    o['Conclusão da Análise']=finalDecLabel(F.proc?r[F.proc]:'', F.polo?r[F.polo]:'', F.texto?r[F.texto]:'');
     return o;
   });
   var hdrs=keys.concat(['Conclusão da Análise']);
@@ -2663,7 +2965,23 @@ function exportXLS(){
 
 function goBack(){ document.getElementById('dsh').style.display='none'; document.getElementById('cfg').style.display='flex'; }
 function hideReport(){ document.getElementById('rpt').style.display='none'; document.getElementById('dsh').style.display='block'; }
-function printDash(){ document.body.setAttribute('data-print','dash'); window.print(); setTimeout(function(){document.body.removeAttribute('data-print');},2000); }
+function printDash(){
+  // Cada passo protegido — o window.print() SEMPRE executa, mesmo se algo antes falhar
+  try{ var dsh=document.getElementById('dsh'); if(dsh) dsh.style.display='block'; }catch(e){}
+  try{ var sval=document.getElementById('sval'); if(sval) sval.style.display='none'; }catch(e){}
+  try{ var dval=document.getElementById('dval'); if(dval) dval.style.display='none'; }catch(e){}
+  try{ var cfg=document.getElementById('cfg'); if(cfg) cfg.style.display='none'; }catch(e){}
+  try{ document.body.setAttribute('data-print','dash'); }catch(e){}
+  try{ if(typeof CH!=='undefined'){ for(var id in CH){ if(CH[id]&&CH[id].resize) CH[id].resize(); } } }catch(e){}
+  setTimeout(function(){
+    try{ window.print(); }
+    catch(e){ alert('Não foi possível abrir a impressão. Use o menu do navegador (Ctrl+P) para salvar como PDF.'); }
+    setTimeout(function(){
+      try{ document.body.removeAttribute('data-print'); }catch(e){}
+      try{ if(typeof CH!=='undefined'){ for(var id in CH){ if(CH[id]&&CH[id].resize) CH[id].resize(); } } }catch(e){}
+    },1500);
+  },300);
+}
 function printReport(){ document.body.setAttribute('data-print','report'); window.print(); setTimeout(function(){document.body.removeAttribute('data-print');},2000); }
 
 window.addEventListener('DOMContentLoaded',function(){
@@ -2705,10 +3023,28 @@ window.addEventListener('DOMContentLoaded',function(){
   }
   KEYS.forEach(function(k){
     idbLoad(k,function(data,ts){
-      if(data){ if(k==='proc') data=_normalizeProcCols(data); ST[k]=data;
-        var dz=document.getElementById('dz-'+k);if(dz)dz.classList.add('ok');
-        var lbl=document.getElementById(LBLS[k]);
-        if(lbl)lbl.textContent='✓ Dados salvos ('+data.length+' reg'+(ts?' — '+ts:'')+')';}
+      if(data){ if(k==='proc') data=_normalizeProcCols(data);
+        // Detecta dados de PROCESSOS quebrados (cabeçalho deslocado salvo antes da correção):
+        // se não têm a coluna 'Status', as colunas estão erradas → descarta e pede recarga
+        if(k==='proc' && data && data.length>0 && !('Status' in data[0])){
+          data=null;
+          var lblP=document.getElementById(LBLS[k]);
+          if(lblP)lblP.textContent='⚠ Recarregue a planilha de Processos';
+          try{openIDB(function(db){if(db){try{var tx=db.transaction('proc','readwrite');tx.objectStore('proc').clear();}catch(e){}}});}catch(e){}
+        }
+        // Detecta dados de SERVIÇOS quebrados (salvos antes da correção do cabeçalho):
+        // se não têm 'Data do cadastro' nem 'Data', as colunas estão desalinhadas → descarta
+        if(k==='serv' && data.length>0 && data[0]['Data do cadastro']===undefined && data[0]['Data']===undefined){
+          data=null;
+          var lblS=document.getElementById(LBLS[k]);
+          if(lblS)lblS.textContent='⚠ Recarregue a planilha de Serviços';
+          try{openIDB(function(db){if(db){try{var tx=db.transaction('serv','readwrite');tx.objectStore('serv').clear();}catch(e){}}});}catch(e){}
+        }
+        if(data){ ST[k]=data;
+          var dz=document.getElementById('dz-'+k);if(dz)dz.classList.add('ok');
+          var lbl=document.getElementById(LBLS[k]);
+          if(lbl)lbl.textContent='✓ Dados salvos ('+data.length+' reg'+(ts?' — '+ts:'')+')';}
+      }
       loaded++;
       if(loaded===KEYS.length)onAllLoaded();
     });
