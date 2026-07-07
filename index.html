@@ -2337,7 +2337,7 @@ function _setFilterSummary(id, items, extra){
           },
           scales:{
             x:{min:0,max:maxVal,grid:{color:'var(--c1)',lineWidth:1},
-               ticks:{color:'#7A4050',font:{size:9},callback:function(v){return v>=1?v+'Mi':Math.round(v*1000)+' Mil';}},
+               ticks:{color:'#7A4050',font:{size:9},callback:function(v){return v>=1?v.toLocaleString('pt-BR',{maximumFractionDigits:2})+'Mi':Math.round(v*1000)+' Mil';}},
                border:{display:false}},
             y:{grid:{display:false},ticks:{color:'#3A2020',font:{size:10,weight:'600'}},border:{display:false}}
           },
@@ -2371,7 +2371,7 @@ function _setFilterSummary(id, items, extra){
           },
           scales:{
             x:{min:0,max:_expMax,grid:{color:'var(--c1)',lineWidth:1},
-               ticks:{color:'#7A4050',font:{size:9},callback:function(v){return v>=1?v+'Mi':Math.round(v*1000)+' Mil';}},
+               ticks:{color:'#7A4050',font:{size:9},callback:function(v){return v>=1?v.toLocaleString('pt-BR',{maximumFractionDigits:2})+'Mi':Math.round(v*1000)+' Mil';}},
                border:{display:false}},
             y:{grid:{display:false},ticks:{color:'#3A2020',font:{size:10,weight:'600'}},border:{display:false},
                afterFit:function(axis){axis.width=160;}}
