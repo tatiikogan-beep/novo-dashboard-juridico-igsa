@@ -16,7 +16,3 @@ __pycache__/
 *.xlsx
 *.xls
 *.html
-
-# Exceção: HTMLs de produto (templates versionados, não dados de clientes)
-!index.html
-!formulario-avaliacao.html
