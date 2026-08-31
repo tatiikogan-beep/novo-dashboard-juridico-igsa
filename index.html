@@ -688,6 +688,64 @@ function uT(t){
   if(idx[n]) return idx[n];
   return null;  // não mapeado
 }
+// ── Fallback de classificação do Tipo de Serviço (exclusivo da Nova Base de Serviços) ──
+// Ordem: 1) uT() direto; 2) remove prefixo genérico do texto e tenta uT() de novo;
+// 3) procura o nome de uma categoria já existente da TAX em Assunto → Descrição → Observação,
+// nessa ordem. Nunca cria/inventa categoria nova — só reconhece categorias já cadastradas na TAX.
+var _GENERIC_TIPO_PREFIXES=['diversos','prazo','andamento','protocolo','workflow','revisao',
+  'pesquisas','estudos','relatorio de processos','atendimento','ligacao'];
+function _stripGenericTipoPrefix(raw){
+  var s=String(raw||'').trim();
+  var m=s.match(/^([^\-]+)-\s*(.+)$/);
+  if(!m) return null;
+  var pre=_normServ(m[1]);
+  for(var i=0;i<_GENERIC_TIPO_PREFIXES.length;i++){
+    if(pre===_GENERIC_TIPO_PREFIXES[i]) return m[2].trim();
+  }
+  return null;
+}
+// Lista das categorias-destino (PARA) já existentes na TAX, da mais longa/específica p/ mais curta
+var _TAXCATS=null;
+function _taxCats(){
+  if(_TAXCATS) return _TAXCATS;
+  var seen={}, list=[];
+  for(var k in TAX){
+    var v=TAX[k];
+    if(v && v!=='Atividade Interna' && v!=='__DESCARTAR__' && !seen[v]){ seen[v]=true; list.push(v); }
+  }
+  list.sort(function(a,b){ return b.length-a.length; });
+  _TAXCATS=list;
+  return _TAXCATS;
+}
+function _findTaxCatInText(text){
+  // Limita a busca aos primeiros caracteres do campo: em Observação/Descrição
+  // é comum haver e-mails colados/encadeados — o relato da atividade real fica
+  // no início; buscar no texto inteiro gera falsos positivos por palavras soltas
+  // no meio de e-mails encaminhados.
+  var n=_normServ(String(text||'').slice(0,250));
+  if(!n) return null;
+  var cats=_taxCats();
+  for(var i=0;i<cats.length;i++){
+    if(n.indexOf(_normServ(cats[i]))>=0) return cats[i];
+  }
+  return null;
+}
+// Classificação completa do Tipo de Serviço para a Nova Base — nunca inventa categoria nova
+function uTFull(r){
+  var t=uT(r['Tipo']);
+  if(t!=null) return t;
+  var stripped=_stripGenericTipoPrefix(r['Tipo']);
+  if(stripped){
+    var t2=uT(stripped);
+    if(t2!=null) return t2;
+  }
+  var fields=['Assunto','Descrição','Observação'];
+  for(var i=0;i<fields.length;i++){
+    var found=_findTaxCatInText(r[fields[i]]);
+    if(found!=null) return found;
+  }
+  return null;
+}
 var POS_MAP={
   'Ativo':'Ativo','Autor':'Ativo',
   'Interessado':'Terceiro Interessado',
@@ -2043,7 +2101,7 @@ function _setFilterSummary(id, items, extra){
     // 5) Por Tipo de Serviço revisado (regra já existente: uT/TAX)
     var byTipo2={};
     refRows2.forEach(function(r){
-      var t=uT(r['Tipo']);
+      var t=uTFull(r);
       if(t==null || t==='Atividade Interna' || t==='__DESCARTAR__') return;
       byTipo2[t]=(byTipo2[t]||0)+1;
     });
