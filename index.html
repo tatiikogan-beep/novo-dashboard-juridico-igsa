@@ -331,12 +331,34 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
   <div class="kr" id="kpi2" style="margin-bottom:18px"></div>
   <div class="cg c1" id="rowtop"></div>
   <div class="cg c2" id="row-evolucao" style="margin-bottom:12px">
-    <div class="cc"><div class="ct">Processos Cadastrados por Ano</div><div class="cp" id="cp-regano"></div><div class="ch" style="height:190px"><canvas id="chry"></canvas></div></div>
-    <div class="cc"><div class="ct">Processos Encerrados por Ano</div><div class="cp" id="cp-arcano"></div><div class="ch" style="height:190px"><canvas id="chay"></canvas></div></div>
+    <div class="cc">
+      <div style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px">
+        <div style="font-family:'Libre Baskerville',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">Processos Cadastrados por Ano</div>
+        <div style="font-size:.68rem;color:var(--c2);line-height:1.4">Status: Ativos, Suspensos e Arquivados | Período: Histórico completo | Agrupamento: Ano da data do cadastro | Naturezas: Todas</div>
+      </div>
+      <div class="ch" style="height:230px"><canvas id="chry"></canvas></div>
+    </div>
+    <div class="cc">
+      <div style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px">
+        <div style="font-family:'Libre Baskerville',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">Processos Encerrados por Ano</div>
+        <div style="font-size:.68rem;color:var(--c2);line-height:1.4">Status: Arquivados | Período: Histórico completo | Agrupamento: Ano da data do encerramento | Naturezas: Todas</div>
+      </div>
+      <div class="cp" id="cp-arcano"></div>
+      <div class="ch" style="height:230px"><canvas id="chay"></canvas></div>
+    </div>
   </div>
   <div class="cg c2" id="row-mensal" style="margin-bottom:12px">
-    <div class="cc"><div class="ct" id="ctcmp">—</div><div class="cp" id="cp-mensal"></div><div class="ch" style="height:200px"><canvas id="chcmp2"></canvas></div></div>
-    <div class="cc"><div class="ct">Distribuição por Fase Processual</div><div class="cp" id="cp-fase"></div><div class="ch" style="height:200px"><canvas id="chfase"></canvas></div></div>
+    <div class="cc">
+      <div id="banner-mensal" style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px"></div>
+      <div class="ch" style="height:240px"><canvas id="chcmp2"></canvas></div>
+    </div>
+    <div class="cc">
+      <div style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px">
+        <div style="font-family:'Libre Baskerville',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">Distribuição por Fase Processual</div>
+        <div style="font-size:.68rem;color:var(--c2);line-height:1.4">Status: Ativos e Suspensos | Agrupamento: Fase processual | Naturezas: Todas</div>
+      </div>
+      <div class="ch" style="height:240px"><canvas id="chfase"></canvas></div>
+    </div>
   </div>
   <div id="potencial-reducao-row" style="margin-bottom:12px">
     <div class="sbn" style="background:var(--c7)"><h2>📉 Potencial de Redução</h2></div>
@@ -1532,7 +1554,7 @@ function generate(){
   // Nota de diagnóstico no gráfico
   var _archTotal=Object.values(archY).reduce(function(a,b){return a+b;},0);
   if(_archFldName&&_archTotal>0){
-    _setFilterSummary('cp-arcano',[['Status do processo','Arquivados'],['Agrupamento','Ano da data do encerramento'],['Naturezas','Todas']]);
+    _setCp('cp-arcano','');
   } else {
     var _diagMsg=_archFldName
       ? 'Campo "'+_archFldName+'" encontrado mas sem datas válidas ('+_archTotal+' de '+archived.length+' registros). Colunas: '+_archDiagFields.slice(0,25).join(', ')
@@ -1719,8 +1741,6 @@ function _setFilterSummary(id, items, extra){
   el.innerHTML=html;
   el.style.display='block';
 }
-  _setFilterSummary('cp-regano',[['Status do processo','Ativos, Suspensos e Arquivados'],['Agrupamento','Ano da data do cadastro'],['Naturezas','Todas']]);
-  _setFilterSummary('cp-fase',[['Status do processo','Ativos e Suspensos'],['Agrupamento','Fase processual'],['Naturezas','Todas']]);
 
   // Top charts row
   var rtop = document.getElementById('rowtop');
@@ -1778,8 +1798,9 @@ function _setFilterSummary(id, items, extra){
     ayK.map(function(){return GOLD;}));
 
   // ── Item 2: Cadastrados vs Encerrados por mês no ano vigente ──
-  document.getElementById('ctcmp').textContent = 'Processos Cadastrados × Encerrados em '+refY+' (por mês)';
-  _setFilterSummary('cp-mensal',[['Status do processo','Todos'],['Ano de referência','2026'],['Agrupamento','Mês'],['Naturezas','Todas']]);
+  document.getElementById('banner-mensal').innerHTML =
+    '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">Processos Cadastrados × Encerrados em '+refY+' (por mês)</div>' +
+    '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Ano de referência: '+refY+' | Status: Todos | Agrupamento: Mês | Naturezas: Todas</div>';
   if(CH['chcmp2']) CH['chcmp2'].destroy();
   // Ocultar meses futuros: se refY for o ano corrente, limitar ao mês atual
   var _monthsToShow = 12;
