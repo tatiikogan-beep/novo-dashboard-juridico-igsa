@@ -199,6 +199,14 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
       <div class="dzs">.xlsx / .xls</div><div class="dzst" id="saf">Nenhum arquivo</div>
     </div>
   </div>
+  <div class="stl" style="margin-top:16px">🆕 Nova Base de Serviços <em style="font-size:.62rem;font-weight:400;text-transform:none">(análise independente, opcional)</em></div>
+  <div class="dz" id="dz-serv2" style="display:flex;align-items:center;gap:12px;text-align:left;border-color:var(--gd)">
+    <input type="file" accept=".xlsx,.xls" onchange="loadF(this,'serv2')">
+    <div style="font-size:1.5rem">🆕</div>
+    <div style="flex:1"><div class="dzl">Planilha crua de Serviços (Portal IGSA / LegalOne)</div>
+    <div class="dzs">.xlsx / .xls — fonte separada; não altera a base nem os gráficos de "Serviços Realizados" já existentes</div>
+    <div class="dzst" id="s2">Nenhum arquivo</div></div>
+  </div>
   <div class="stl"><span class="sn">2</span>Logo do cliente / grupo</div>
   <div class="dz" id="dz-logo" style="display:flex;align-items:center;gap:12px;text-align:left">
     <input type="file" accept="image/*" onchange="loadLogo(this)">
@@ -247,6 +255,8 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
     <label class="chk"><input type="checkbox" id="vis-aud-fut" checked> Próximas Audiências e Perícias</label>
     <span class="cfg-grp">Outros</span>
     <label class="chk"><input type="checkbox" id="vis-serv" checked> Serviços Realizados</label>
+    <span class="cfg-grp">Nova Base de Serviços</span>
+    <label class="chk"><input type="checkbox" id="vis-serv2" checked> Nova Análise de Serviços</label>
   </div>
   <div id="errbox" class="err"></div>
   <button class="bgen" onclick="generate()">▶ Gerar Dashboard</button>
@@ -387,6 +397,30 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
   </div>
   <div id="rowserv"></div>
   </div><!-- /serv-section -->
+  <div id="serv2-section" style="display:none">
+    <div class="cg c1" style="margin-bottom:12px">
+      <div class="cc">
+        <div id="banner-sy2" style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px"></div>
+        <div class="ch" style="height:260px"><canvas id="chsy2"></canvas></div>
+      </div>
+    </div>
+    <div class="cg c1" style="margin-bottom:12px">
+      <div class="cc">
+        <div id="banner-sc2" style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px"></div>
+        <div class="ch" style="height:340px"><canvas id="chsc2"></canvas></div>
+      </div>
+    </div>
+    <div class="cg c2" style="margin-bottom:12px">
+      <div class="cc">
+        <div id="banner-st2" style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px"></div>
+        <div class="ch" style="height:360px"><canvas id="chst2"></canvas></div>
+      </div>
+      <div class="cc">
+        <div id="banner-sn2" style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px"></div>
+        <div class="ch" style="height:360px"><canvas id="chsn2"></canvas></div>
+      </div>
+    </div>
+  </div><!-- /serv2-section -->
 </div>
 </div>
 
@@ -436,7 +470,7 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <script>
 
-const ST={proc:null,serv:null,aud:null,audfut:null,logo:null};
+const ST={proc:null,serv:null,aud:null,audfut:null,serv2:null,logo:null};
 
 /* ╔══════════════════════════════════════════════════════════════════╗
    ║  TOKEN DO NETLIFY — COLE SEU TOKEN ENTRE AS ASPAS ABAIXO          ║
@@ -708,10 +742,10 @@ var _IDB=null;
 function openIDB(cb){
   if(_IDB){cb(_IDB);return;}
   try{
-    var req=indexedDB.open('igsa_dash_v1',2);
+    var req=indexedDB.open('igsa_dash_v1',3);
     req.onupgradeneeded=function(e){
       var db=e.target.result;
-      ['proc','serv','aud','audfut','meta'].forEach(function(s){
+      ['proc','serv','aud','audfut','serv2','meta'].forEach(function(s){
         if(!db.objectStoreNames.contains(s)) db.createObjectStore(s);
       });
     };
@@ -755,14 +789,14 @@ function clearStorage(){
   _svalDone=false;
   openIDB(function(db){
     if(db){
-      ['proc','serv','aud','audfut','meta'].forEach(function(s){
+      ['proc','serv','aud','audfut','serv2','meta'].forEach(function(s){
         try{var tx=db.transaction(s,'readwrite');tx.objectStore(s).clear();}catch(e){}
       });
     }
   });
   try{['igsa_logo','igsa_title','igsa_cli','igsa_yr'].forEach(function(k){localStorage.removeItem(k);});}catch(e){}
-  var ids={proc:'sp',serv:'ss',aud:'sa',audfut:'saf'};
-  ['proc','serv','aud','audfut'].forEach(function(k){
+  var ids={proc:'sp',serv:'ss',aud:'sa',audfut:'saf',serv2:'s2'};
+  ['proc','serv','aud','audfut','serv2'].forEach(function(k){
     ST[k]=null;
     var dz=document.getElementById('dz-'+k);if(dz)dz.classList.remove('ok');
     var lbl=document.getElementById(ids[k]);if(lbl)lbl.textContent='Nenhum arquivo';
@@ -861,7 +895,8 @@ function loadF(inp, key){
           proc:['status','número do processo','numero do processo','natureza','valor da causa','fase'],
           serv:['pasta','tipo','data do cadastro','assunto','cliente principal'],
           aud:['data de início','data de inicio','tipo','vara','órgão'],
-          audfut:['data de início','data de inicio','tipo','vara','órgão']
+          audfut:['data de início','data de inicio','tipo','vara','órgão'],
+          serv2:['pasta','tipo','data do cadastro','assunto','cliente principal']
         };
         var want=EXPECT[key]||[];
         var best=null, bestScore=-1;
@@ -885,7 +920,7 @@ function loadF(inp, key){
         ws = wb.Sheets[best||wb.SheetNames[0]];
       })();
       var rows = XLSX.utils.sheet_to_json(ws, {defval:null, raw:true, cellDates:true});
-      if(key==='serv'){
+      if(key==='serv'||key==='serv2'){
         // Planilha de Serviços tem cabeçalho REAL na linha 2 (linha 1 = 'usuario - data').
         // Releitura robusta em modo matriz (header:1) para localizar a linha de cabeçalho real.
         var aoa = XLSX.utils.sheet_to_json(ws, {header:1, defval:null, raw:true, cellDates:true});
@@ -951,7 +986,7 @@ function loadF(inp, key){
       saveToStorage(key, rows);
       document.getElementById('dz-'+key).classList.add('ok');
       if(key==='proc'||key==='serv'||key==='aud') buildClientList();
-      var ids = {proc:'sp', serv:'ss', aud:'sa', audfut:'saf'};
+      var ids = {proc:'sp', serv:'ss', aud:'sa', audfut:'saf', serv2:'s2'};
       document.getElementById(ids[key]).textContent = '✓ '+f.name+' ('+rows.length+')';
     }catch(ex){
       showErr('Erro ao ler '+f.name+': '+ex.message);
@@ -1456,7 +1491,7 @@ function _updateCmsCount(){
 function generate(){
   clrErr();
   // Nenhuma planilha é obrigatória, mas é preciso ao menos uma
-  if(!ST.proc && !ST.serv && !ST.aud && !ST.audfut){
+  if(!ST.proc && !ST.serv && !ST.aud && !ST.audfut && !ST.serv2){
     showErr('Carregue ao menos uma planilha para gerar o painel.'); return;
   }
   // Etapa 1: validação de Serviços/Natureza (se houver não mapeados ou natureza inválida)
@@ -1964,6 +1999,114 @@ function _setFilterSummary(id, items, extra){
     sNYS.map(function(e){return e[1];}), true,
     sNYS.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
 
+  // ══════════════════════════════════════════════════════════════
+  // NOVA BASE DE SERVIÇOS — análise independente (fonte exclusiva: ST.serv2)
+  // Não reutiliza serv/servY/sCYS/sTYS/sNYS/refY da base de Serviços existente.
+  // Reaplica as mesmas regras de classificação (uT/TAX, uNatFinal/NAT_MAP).
+  // ══════════════════════════════════════════════════════════════
+  (function(){
+    var section2 = document.getElementById('serv2-section');
+    var rows2 = ST.serv2 || [];
+    if(!rows2.length || !isVis('vis-serv2')){ if(section2) section2.style.display='none'; return; }
+
+    var dateFld2 = (rows2[0]['Data do cadastro']!==undefined) ? 'Data do cadastro' : 'Data';
+    var cliFld2  = ('Cliente principal' in rows2[0]) ? 'Cliente principal' : null;
+
+    // 1) Tratar/normalizar primeiro: só entram linhas com data de cadastro válida
+    //    (linhas totalmente vazias, cabeçalhos e linhas auxiliares não têm data válida)
+    var validRows2 = rows2.filter(function(r){
+      var d=r[dateFld2];
+      if(d==null || String(d).trim()==='') return false;
+      var y=parseYear(d);
+      return !isNaN(y) && y>=2000 && y<=2100;
+    });
+    if(!validRows2.length){ if(section2) section2.style.display='none'; return; }
+
+    // 2) Ano de Referência = ano mais recente da nova base (automático, não fixo)
+    var servY2={};
+    validRows2.forEach(function(r){ var y=parseYear(r[dateFld2]); servY2[y]=(servY2[y]||0)+1; });
+    var syArr2 = Object.keys(servY2).map(Number).sort(function(a,b){return a-b;});
+    var refY2 = syArr2[syArr2.length-1];
+
+    // 3) Linhas do Ano de Referência (base dos gráficos 2, 3 e 4)
+    var refRows2 = validRows2.filter(function(r){ return parseYear(r[dateFld2])===refY2; });
+
+    // 4) Por Cliente principal — todo registro do ano entra, sem exclusões
+    var byCliente2={};
+    refRows2.forEach(function(r){
+      var c = cliFld2 ? String(r[cliFld2]||'').trim() : '';
+      if(!c) c='Não informado';
+      byCliente2[c]=(byCliente2[c]||0)+1;
+    });
+    var clienteSort2 = Object.entries(byCliente2).sort(function(a,b){return b[1]-a[1];});
+
+    // 5) Por Tipo de Serviço revisado (regra já existente: uT/TAX)
+    var byTipo2={};
+    refRows2.forEach(function(r){
+      var t=uT(r['Tipo']);
+      if(t==null || t==='Atividade Interna' || t==='__DESCARTAR__') return;
+      byTipo2[t]=(byTipo2[t]||0)+1;
+    });
+    var tipoSort2 = Object.entries(byTipo2).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+
+    // 6) Por Natureza da Atividade revisada (regra já existente: uNatFinal/NAT_MAP) —
+    //    uNatFinal nunca descarta um registro (cai em 'Não informado'), garantindo
+    //    que a soma bata com o total do ano.
+    var byNat2={};
+    refRows2.forEach(function(r){
+      var n=uNatFinal(r); if(n==='__DESCARTAR__') return;
+      byNat2[n]=(byNat2[n]||0)+1;
+    });
+    var natSort2 = Object.entries(byNat2).sort(function(a,b){return b[1]-a[1];});
+
+    // 7) Validação obrigatória dos totais antes de exibir os gráficos
+    var totalAno2 = refRows2.length;
+    var somaEmpresa2 = clienteSort2.reduce(function(s,e){return s+e[1];},0);
+    var somaNatureza2 = natSort2.reduce(function(s,e){return s+e[1];},0);
+    if(somaEmpresa2!==totalAno2 || somaNatureza2!==totalAno2){
+      warns.push('⚠ Nova Base de Serviços: divergência nos totais de '+refY2+' (Ano: '+totalAno2+', Empresa: '+somaEmpresa2+', Natureza: '+somaNatureza2+'). Os gráficos não foram atualizados — revise a planilha.');
+      showWarns(warns);
+      if(section2) section2.style.display='none';
+      return;
+    }
+
+    if(section2) section2.style.display='';
+
+    // ── Gráfico 1: Total de Serviços por Ano ──
+    mkBar('chsy2', syArr2, syArr2.map(function(y){return servY2[y]||0;}), false,
+      syArr2.map(function(y){return y===refY2?'#7E1F2C':'#E8A0A8';}));
+    document.getElementById('banner-sy2').innerHTML =
+      '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">Total de Serviços por Ano</div>' +
+      '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Período: Histórico completo | Agrupamento: Ano da data do cadastro | Ano em destaque: '+refY2+' | Naturezas: Todas</div>';
+
+    // ── Gráfico 2: Total de Serviços por Empresa ──
+    mkBar('chsc2',
+      clienteSort2.map(function(e){return e[0].length>44?e[0].substring(0,44)+'…':e[0];}),
+      clienteSort2.map(function(e){return e[1];}), true,
+      clienteSort2.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
+    document.getElementById('banner-sc2').innerHTML =
+      '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">Total de Serviços por Empresa</div>' +
+      '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Base: Nova base de Serviços | Ano de referência: '+refY2+' | Agrupamento: Empresa | Naturezas: Todas</div>';
+
+    // ── Gráfico 3: 10 Atividades Mais Executadas ──
+    mkBar('chst2',
+      tipoSort2.map(function(e){return e[0];}),
+      tipoSort2.map(function(e){return e[1];}), true,
+      tipoSort2.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
+    document.getElementById('banner-st2').innerHTML =
+      '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">10 Atividades Mais Executadas</div>' +
+      '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Base: Nova base de Serviços | Ano de referência: '+refY2+' | Ranking: 10 maiores | Agrupamento: Tipo de Serviço | Naturezas: Todas</div>';
+
+    // ── Gráfico 4: Total de Serviços por Natureza ──
+    mkBar('chsn2',
+      natSort2.map(function(e){return e[0];}),
+      natSort2.map(function(e){return e[1];}), true,
+      natSort2.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
+    document.getElementById('banner-sn2').innerHTML =
+      '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">Total de Serviços por Natureza</div>' +
+      '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Base: Nova base de Serviços | Ano de referência: '+refY2+' | Agrupamento: Natureza | Naturezas: Todas</div>';
+  })();
+
   window._rpt = {proc:proc, active:active, archived:archived, natSort:natSort, title:title, refY:refY, nAud:nAud, nPrz:nPrz, nPer:nPer,
     serv:serv||[], aud:aud||[], audfut:audfut||[]};
 
@@ -2340,8 +2483,8 @@ function printReport(){ document.body.setAttribute('data-print','report'); windo
 window.addEventListener('DOMContentLoaded',function(){
   var btn=document.querySelector('.bgen');
   if(btn){btn.disabled=true;btn.textContent='⏳ Carregando dados salvos...'}
-  var KEYS=['proc','serv','aud','audfut'];
-  var LBLS={proc:'sp',serv:'ss',aud:'sa',audfut:'saf'};
+  var KEYS=['proc','serv','aud','audfut','serv2'];
+  var LBLS={proc:'sp',serv:'ss',aud:'sa',audfut:'saf',serv2:'s2'};
   var loaded=0;
   function onAllLoaded(){
     openIDB(function(db){
