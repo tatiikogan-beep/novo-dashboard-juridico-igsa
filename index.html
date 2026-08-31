@@ -1748,11 +1748,16 @@ function _setFilterSummary(id, items, extra){
       empRow.id='row-empresa'; empRow.className='cg c1'; empRow.style.marginBottom='12px';
       rtop.parentNode.insertBefore(empRow, rtop.nextSibling);
     }
-    empRow.innerHTML='<div class="cc"><div class="ct">Processos Ativos por Empresa</div><div class="cp" id="cp-empresa"></div><div class="ch" style="height:300px"><canvas id="chcmp"></canvas></div></div>';
+    empRow.innerHTML =
+      '<div class="cc">' +
+        '<div style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px">' +
+          '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">🏢 Processos Ativos por Empresa</div>' +
+          '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Status: Ativos e Suspensos | Agrupamento: Empresa | Naturezas: Todas</div>' +
+        '</div>' +
+        '<div class="ch" style="height:340px"><canvas id="chcmp"></canvas></div>' +
+      '</div>';
   }
 
-  // Resumos de filtros dos gráficos do topo
-  if(multi) _setFilterSummary('cp-empresa',[['Status do processo','Ativos e Suspensos'],['Agrupamento','Empresa'],['Naturezas','Todas']]);
   // Draw charts
   mkDonut('chpie', ['Ativos','Arquivados'], [active.length, archived.length]);
   mkBar('chnat', natSort.map(function(e){return e[0];}), natSort.map(function(e){return e[1];}), true,
