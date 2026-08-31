@@ -1696,22 +1696,34 @@ function generate(){
   rowserv.className = '';
   // Empresa: full-width (linha própria). Atividades + Natureza: lado a lado (c2).
   var compCard = sMulti
-    ? '<div class="cg c1" style="margin-bottom:12px"><div class="cc"><div class="ct" id="sct1">—</div><div class="cp" id="cp-sc"></div><div class="ch" style="height:300px"><canvas id="chsc"></canvas></div></div></div>'
+    ? '<div class="cg c1" style="margin-bottom:12px"><div class="cc">' +
+        '<div id="banner-sc" style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px"></div>' +
+        '<div class="ch" style="height:340px"><canvas id="chsc"></canvas></div>' +
+      '</div></div>'
     : '';
   rowserv.innerHTML = compCard +
     '<div class="cg c2">' +
-    '<div class="cc"><div class="ct" id="sct2">—</div><div class="cp" id="cp-st"></div><div class="ch" style="height:320px"><canvas id="chst"></canvas></div></div>' +
-    '<div class="cc"><div class="ct" id="sct3">—</div><div class="cp" id="cp-sn"></div><div class="ch" style="height:320px"><canvas id="chsn"></canvas></div></div>' +
+    '<div class="cc">' +
+      '<div id="banner-st" style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px"></div>' +
+      '<div class="ch" style="height:360px"><canvas id="chst"></canvas></div>' +
+    '</div>' +
+    '<div class="cc">' +
+      '<div id="banner-sn" style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px"></div>' +
+      '<div class="ch" style="height:360px"><canvas id="chsn"></canvas></div>' +
+    '</div>' +
     '</div>';
 
   if(sMulti){
-    document.getElementById('sct1').textContent = 'Total de Serviços por Empresa Realizados em '+refY;
-    _setFilterSummary('cp-sc',[['Base','Serviços'],['Ano de referência','2026'],['Naturezas','Todas']]);
+    document.getElementById('banner-sc').innerHTML =
+      '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">🏢 Total de Serviços por Empresa</div>' +
+      '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Base: Serviços | Ano de referência: '+refY+' | Agrupamento: Empresa | Naturezas: Todas</div>';
   }
-  document.getElementById('sct2').textContent = 'Total de Serviços Realizados em '+refY+' – As 10 Atividades Mais Executadas';
-  _setFilterSummary('cp-st',[['Ano de referência','2026'],['Naturezas','Todas']]);
-  _setFilterSummary('cp-sn',[['Base','Serviços'],['Ano de referência','2026'],['Naturezas','Todas']]);
-  document.getElementById('sct3').textContent = 'Total de Serviços Realizados em '+refY+' por Natureza';
+  document.getElementById('banner-st').innerHTML =
+    '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">📋 10 Atividades Mais Executadas</div>' +
+    '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Base: Serviços | Ano de referência: '+refY+' | Ranking: 10 maiores | Agrupamento: Tipo de Serviço | Naturezas: Todas</div>';
+  document.getElementById('banner-sn').innerHTML =
+    '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">⚖️ Total de Serviços por Natureza</div>' +
+    '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Base: Serviços | Ano de referência: '+refY+' | Agrupamento: Natureza | Naturezas: Todas</div>';
   if(ST.logo){
     document.getElementById('clogoimg').src=ST.logo;
     document.getElementById('clogoimg').style.display='block';
