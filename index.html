@@ -107,7 +107,7 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
 .pt td{padding:6px 8px;border-bottom:1px solid var(--bd);vertical-align:top}
 .pt tr:nth-child(even) td{background:var(--c0)}
 @media print{
-  #cfg,#sval,#dval,.tbar,.rbtns{display:none!important}
+  #cfg,#sval,.tbar,.rbtns{display:none!important}
   body[data-print=dash] #rpt{display:none!important}
   body[data-print=dash] #dsh{display:block!important}
   body[data-print=report] #dsh{display:none!important}
@@ -197,11 +197,6 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
       <div class="dzi">🗓️</div><div class="dzl">Aud / Prazos / Perícias</div>
       <div class="dzs">.xlsx / .xls</div><div class="dzst" id="sa">Nenhum arquivo</div>
     </div>
-    <div class="dz" id="dz-dec">
-      <input type="file" accept=".xlsx,.xls" onchange="loadF(this,'dec')">
-      <div class="dzi">⚖️</div><div class="dzl">Decisões <em style="font-size:.62rem;font-weight:400">(opcional)</em></div>
-      <div class="dzs">.xlsx / .xls</div><div class="dzst" id="sd">Nenhum arquivo</div>
-    </div>
     <div class="dz" id="dz-audfut">
       <input type="file" accept=".xlsx,.xls" onchange="loadF(this,'audfut')">
       <div class="dzi">📅</div><div class="dzl">Aud. e Perícias Futuras <em style="font-size:.62rem;font-weight:400">(opcional)</em></div>
@@ -257,7 +252,6 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
     <label class="chk"><input type="checkbox" id="vis-aud-fut" checked> Próximas Audiências e Perícias</label>
     <span class="cfg-grp">Outros</span>
     <label class="chk"><input type="checkbox" id="vis-serv" checked> Serviços Realizados</label>
-    <label class="chk"><input type="checkbox" id="vis-dec" checked> Decisões Judiciais</label>
   </div>
   <div id="errbox" class="err"></div>
   <button class="bgen" onclick="generate()">▶ Gerar Dashboard</button>
@@ -267,41 +261,6 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
 </div>
 </div>
 </div>
-</div>
-
-<!-- VALIDAÇÃO DE DECISÕES -->
-<div id="dval" style="display:none">
-  <div class="tbar">
-    <button class="tb tbk" onclick="dvalBack()">← Voltar à configuração</button>
-    <span class="thi">Validação das Decisões · Conferência antes do painel</span>
-    <div class="tbtns">
-      <button class="tb tpd" onclick="dvalConfirm()">✓ Confirmar e gerar painel</button>
-    </div>
-  </div>
-  <div style="max-width:1400px;margin:0 auto;padding:20px">
-    <div class="cc">
-      <div class="ct">Conferência da Classificação das Decisões</div>
-      <div class="cp" id="dval-info">Revise a conclusão de cada decisão. Ajuste o que estiver incorreto no menu de seleção. As alterações ficam salvas.</div>
-      <div style="display:flex;gap:10px;align-items:center;margin:10px 0;flex-wrap:wrap">
-        <input type="text" id="dval-search" placeholder="🔍 Buscar por cliente, processo ou natureza..." oninput="dvalRender()" style="flex:1;min-width:240px;padding:8px 11px;border:1px solid var(--bd);border-radius:6px;font-size:.8rem;font-family:inherit">
-        <select id="dval-filter" onchange="dvalRender()" style="padding:8px 11px;border:1px solid var(--bd);border-radius:6px;font-size:.8rem;font-family:inherit;background:#fff">
-          <option value="">Todas as conclusões</option>
-          <option value="Favorável">Favorável</option>
-          <option value="Desfavorável">Desfavorável</option>
-          <option value="Extinção">Extinção</option>
-          <option value="Inconclusivo">Inconclusivo</option>
-          <option value="_ajustadas">Apenas ajustadas manualmente</option>
-        </select>
-        <span id="dval-count" style="font-size:.72rem;color:var(--mu)"></span>
-      </div>
-      <div style="max-height:62vh;overflow:auto;border:1px solid var(--bd);border-radius:8px">
-        <table style="width:100%;border-collapse:collapse;font-size:.7rem">
-          <thead style="position:sticky;top:0;z-index:2"><tr id="dval-head"></tr></thead>
-          <tbody id="dval-body"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- VALIDAÇÃO DE SERVIÇOS E NATUREZA -->
@@ -352,7 +311,6 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
         <a onclick="exportXLS_proc();closeRelDrop()">⬇ Processos (.xls)</a>
         <a onclick="exportXLS_serv();closeRelDrop()">⬇ Serviços (.xls)</a>
         <a onclick="exportXLS_aud();closeRelDrop()">⬇ Aud / Prazos / Perícias (.xls)</a>
-        <a onclick="exportXLS_dec();closeRelDrop()">⬇ Decisões (.xls)</a>
         <a onclick="exportXLS_fut();closeRelDrop()">⬇ Aud. e Perícias Futuras (.xls)</a>
       </div>
     </div>
@@ -406,7 +364,6 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
     </div>
   </div>
   <div id="aud-future-row" style="margin-bottom:12px"></div>
-  <div id="decblock"></div>
   <div class="sd"></div>
   <div id="serv-section">
   <div class="sbn" style="background:var(--c7)"><h2>⚖️ Serviços Realizados</h2></div>
@@ -464,7 +421,7 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <script>
 
-const ST={proc:null,serv:null,aud:null,audfut:null,dec:null,logo:null};
+const ST={proc:null,serv:null,aud:null,audfut:null,logo:null};
 
 /* ╔══════════════════════════════════════════════════════════════════╗
    ║  TOKEN DO NETLIFY — COLE SEU TOKEN ENTRE AS ASPAS ABAIXO          ║
@@ -739,7 +696,7 @@ function openIDB(cb){
     var req=indexedDB.open('igsa_dash_v1',2);
     req.onupgradeneeded=function(e){
       var db=e.target.result;
-      ['proc','serv','aud','audfut','dec','meta'].forEach(function(s){
+      ['proc','serv','aud','audfut','meta'].forEach(function(s){
         if(!db.objectStoreNames.contains(s)) db.createObjectStore(s);
       });
     };
@@ -780,17 +737,17 @@ function idbLoad(key,cb){
 }
 
 function clearStorage(){
-  _svalDone=false; _dvalDone=false;
+  _svalDone=false;
   openIDB(function(db){
     if(db){
-      ['proc','serv','aud','audfut','dec','meta'].forEach(function(s){
+      ['proc','serv','aud','audfut','meta'].forEach(function(s){
         try{var tx=db.transaction(s,'readwrite');tx.objectStore(s).clear();}catch(e){}
       });
     }
   });
   try{['igsa_logo','igsa_title','igsa_cli','igsa_yr'].forEach(function(k){localStorage.removeItem(k);});}catch(e){}
-  var ids={proc:'sp',serv:'ss',aud:'sa',audfut:'saf',dec:'sd'};
-  ['proc','serv','aud','audfut','dec'].forEach(function(k){
+  var ids={proc:'sp',serv:'ss',aud:'sa',audfut:'saf'};
+  ['proc','serv','aud','audfut'].forEach(function(k){
     ST[k]=null;
     var dz=document.getElementById('dz-'+k);if(dz)dz.classList.remove('ok');
     var lbl=document.getElementById(ids[k]);if(lbl)lbl.textContent='Nenhum arquivo';
@@ -806,10 +763,6 @@ function clearStorage(){
   var cliInp=document.getElementById('cli'); if(cliInp) cliInp.value='';
   var srch=document.getElementById('cms-search'); if(srch) srch.value='';
   buildClientList();
-  // Limpar ajustes de classificação de decisões
-  _dvalOverrides={};
-  try{localStorage.removeItem('igsa_dec_ov');}catch(e){}
-  openIDB(function(db){ if(db){ try{var tx=db.transaction('meta','readwrite');tx.objectStore('meta').delete('dec_overrides');}catch(e){} } });
   // Limpar ajustes de serviços e natureza (recomeço limpo)
   _servOverrides={}; _natOverrides={};
   try{localStorage.removeItem('igsa_serv_ov');localStorage.removeItem('igsa_nat_ov');}catch(e){}
@@ -823,7 +776,7 @@ function _showStoWarn(){
 function updateStoBar(){
   openIDB(function(db){
     if(!db)return;
-    var keys=['proc','serv','aud','audfut','dec'];
+    var keys=['proc','serv','aud','audfut'];
     var res={},done=0;
     keys.forEach(function(k){
       try{
@@ -893,8 +846,7 @@ function loadF(inp, key){
           proc:['status','número do processo','numero do processo','natureza','valor da causa','fase'],
           serv:['pasta','tipo','data do cadastro','assunto','cliente principal'],
           aud:['data de início','data de inicio','tipo','vara','órgão'],
-          audfut:['data de início','data de inicio','tipo','vara','órgão'],
-          dec:['número de cnj','numero de cnj','descrição da decisão','descricao da decisao','status']
+          audfut:['data de início','data de inicio','tipo','vara','órgão']
         };
         var want=EXPECT[key]||[];
         var best=null, bestScore=-1;
@@ -983,8 +935,8 @@ function loadF(inp, key){
       if(rows.length>0){ ST[key+'_cols'] = Object.keys(rows[0]); }
       saveToStorage(key, rows);
       document.getElementById('dz-'+key).classList.add('ok');
-      if(key==='proc'||key==='serv'||key==='aud'||key==='dec') buildClientList();
-      var ids = {proc:'sp', serv:'ss', aud:'sa', dec:'sd', audfut:'saf'};
+      if(key==='proc'||key==='serv'||key==='aud') buildClientList();
+      var ids = {proc:'sp', serv:'ss', aud:'sa', audfut:'saf'};
       document.getElementById(ids[key]).textContent = '✓ '+f.name+' ('+rows.length+')';
     }catch(ex){
       showErr('Erro ao ler '+f.name+': '+ex.message);
@@ -1132,170 +1084,8 @@ function filterClients(rows, field, clients){
   });
 }
 
-// ════ Validação de Decisões ════
-// Detecta campos da planilha de Decisões por NOME (à prova de mudança de ordem)
-function _decFields(rows){
-  if(!rows||!rows.length) return {};
-  var keys=Object.keys(rows[0]);
-  function find(cands, fallbackIdx){
-    for(var i=0;i<cands.length;i++){ if(keys.indexOf(cands[i])>=0) return cands[i]; }
-    return (fallbackIdx!=null && keys[fallbackIdx]!=null) ? keys[fallbackIdx] : null;
-  }
-  return {
-    keys: keys,
-    nat:    find(['Natureza'], 0),
-    proc:   find(['Número de CNJ','Numero de CNJ','Número do Processo','Ação','Processo'], 1),
-    cnj:    find(['Número de CNJ','Numero de CNJ'], null),
-    acao:   find(['Ação','Acao'], null),
-    cliente:find(['Cliente principal','Cliente Processo','Cliente'], 2),
-    polo:   find(['Posição','Posicao','Polo'], 3),
-    contrario: find(['Contrário principal','Contrario principal','Parte contrária'], null),
-    status: find(['Status'], null),
-    data:   find(['Data da Decisão','Data da decisão','Data da Publicação','Data de publicação','Data'], 21),
-    texto:  find(['Descrição da Decisão','Descrição da decisão','Descrição','Texto'], keys.length-1)
-  };
-}
-var _dvalRows = [];          // decisões preparadas p/ validação
-var _dvalOverrides = {};     // {decKey: 'Favorável'|...} ajustes manuais
 var _servOverrides = {};     // {tipoNormalizado: 'Categoria PARA'} ajustes manuais de serviço
-var _dvalOpts = ['Favorável','Desfavorável','Extinção','Inconclusivo'];
-function _decKey(proc, polo, texto){
-  var s=String(proc||'')+'|'+String(polo||'')+'|'+String(texto||'').substring(0,60);
-  var hh=0; for(var i=0;i<s.length;i++){ hh=((hh<<5)-hh+s.charCodeAt(i))|0; }
-  return 'd'+(hh>>>0);
-}
-// classificação automática REDUZIDA (parciais unificadas)
-function autoDecLabel(polo, texto){
-  var cls=classifyDecisionGlobal(polo, texto);
-  if(cls==='favoravel'||cls==='favoravel_parcial') return 'Favorável';
-  if(cls==='desfavoravel'||cls==='desfavoravel_parcial') return 'Desfavorável';
-  if(cls==='extinto') return 'Extinção';
-  return 'Inconclusivo';
-}
-function loadDvalOverrides(cb){
-  function fromLS(){ try{var s=localStorage.getItem('igsa_dec_ov'); _dvalOverrides=s?JSON.parse(s):{};}catch(e){_dvalOverrides={};} }
-  openIDB(function(db){
-    if(!db || !db.objectStoreNames || !db.objectStoreNames.contains('meta')){ fromLS(); cb&&cb(); return; }
-    try{
-      var done=false; var finish=function(){ if(done)return; done=true; cb&&cb(); };
-      var tx=db.transaction('meta','readonly');
-      var rq=tx.objectStore('meta').get('dec_overrides');
-      rq.onsuccess=function(e){ try{_dvalOverrides=e.target.result?JSON.parse(e.target.result):{};}catch(_){_dvalOverrides={};} finish(); };
-      rq.onerror=function(){ fromLS(); finish(); };
-      tx.onerror=function(){ fromLS(); finish(); };
-      setTimeout(finish,1500);
-    }catch(ex){ fromLS(); cb&&cb(); }
-  });
-}
-function saveDvalOverrides(){
-  var json=JSON.stringify(_dvalOverrides);
-  try{localStorage.setItem('igsa_dec_ov',json);}catch(e){}
-  openIDB(function(db){
-    if(!db) return;
-    try{ var tx=db.transaction('meta','readwrite'); tx.objectStore('meta').put(json,'dec_overrides'); }catch(ex){}
-  });
-}
-// prepara as linhas de decisão (aplica filtro de cliente) — retorna array
-function prepareDvalRows(clients){
-  var rows=[];
-  if(!ST.dec || !ST.dec.length) return rows;
-  var F=_decFields(ST.dec);
-  var _cset = clients ? _normSet(clients) : null;
-  var src = _cset ? ST.dec.filter(function(r){ if(!F.cliente||r[F.cliente]==null) return false; var ns=splitClients(r[F.cliente]); for(var i=0;i<ns.length;i++){if(_cset[_normCli(ns[i])])return true;} return false; }) : ST.dec;
-  src.forEach(function(r){
-    var proc=(F.proc?r[F.proc]:'')||'', polo=(F.polo?r[F.polo]:'')||'', texto=(F.texto?r[F.texto]:'')||'';
-    var key=_decKey(proc,polo,texto);
-    var auto=autoDecLabel(polo,texto);
-    var fin=_dvalOverrides[key]||auto;
-    rows.push({key:key,
-      nat:(F.nat?r[F.nat]:'')||'',
-      proc:proc,
-      cnj:(F.cnj?r[F.cnj]:'')||'',
-      acao:(F.acao?r[F.acao]:'')||'',
-      cliente:(F.cliente?r[F.cliente]:'')||'',
-      polo:polo,
-      contrario:(F.contrario?r[F.contrario]:'')||'',
-      status:(F.status?r[F.status]:'')||'',
-      data:(F.data?r[F.data]:'')||'',
-      texto:String(texto), auto:auto, final:fin});
-  });
-  return rows;
-}
-function dvalRender(){
-  var head=document.getElementById('dval-head');
-  var body=document.getElementById('dval-body');
-  if(!head||!body) return;
-  head.innerHTML=['Natureza','Ação','Nº CNJ','Cliente','Polo','Contrário','Status','Data','Classificação automática','Conclusão (ajustável)','Descrição da decisão']
-    .map(function(hh){return '<th style="text-align:left;padding:7px 9px;background:var(--c8);color:#fff;font-size:.62rem;white-space:nowrap">'+hh+'</th>';}).join('');
-  var fSearch=(document.getElementById('dval-search').value||'').toLowerCase();
-  var fSel=document.getElementById('dval-filter').value;
-  var shown=0, adj=0;
-  var html='';
-  _dvalRows.forEach(function(d,i){
-    var isAdj=!!_dvalOverrides[d.key];
-    if(isAdj) adj++;
-    if(fSearch){ var hay=(d.cliente+' '+d.proc+' '+d.nat+' '+(d.cnj||'')+' '+(d.contrario||'')).toLowerCase(); if(hay.indexOf(fSearch)<0) return; }
-    if(fSel){ if(fSel==='_ajustadas'){ if(!isAdj) return; } else if(d.final!==fSel) return; }
-    shown++;
-    var bg=i%2?'var(--c0)':'#fff';
-    var selHtml='<select onchange="dvalSet(\''+d.key+'\',this.value)" style="padding:4px 6px;border:1px solid '+(isAdj?'var(--gd)':'var(--bd)')+';border-radius:5px;font-size:.68rem;font-family:inherit;background:'+(isAdj?'#FFF8E0':'#fff')+';font-weight:'+(isAdj?'700':'400')+'">';
-    _dvalOpts.forEach(function(o){ selHtml+='<option value="'+o+'" '+(d.final===o?'selected':'')+'>'+o+'</option>'; });
-    selHtml+='</select>'+(isAdj?' <span title="ajustado manualmente" style="color:var(--gd)">●</span>':'');
-    html+='<tr style="background:'+bg+'">';
-    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(d.nat)+'</td>';
-    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(String(d.acao||'').substring(0,30))+'</td>';
-    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd);font-family:monospace;font-size:.58rem;white-space:nowrap">'+esc(d.cnj||d.proc)+'</td>';
-    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(String(d.cliente).substring(0,26))+'</td>';
-    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(d.polo)+'</td>';
-    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(String(d.contrario||'').substring(0,26))+'</td>';
-    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(d.status||'')+'</td>';
-    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd);white-space:nowrap">'+esc(fDate(d.data))+'</td>';
-    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd);color:var(--mu)">'+esc(d.auto)+'</td>';
-    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+selHtml+'</td>';
-    html+='<td style="padding:5px 9px;border-bottom:1px solid var(--bd);color:var(--mu)">'+esc(d.texto.substring(0,160))+'…</td>';
-    html+='</tr>';
-  });
-  body.innerHTML=html||'<tr><td colspan="11" style="padding:20px;text-align:center;color:var(--mu)">Nenhuma decisão para os filtros aplicados.</td></tr>';
-  document.getElementById('dval-count').textContent=shown+' de '+_dvalRows.length+' decisões · '+adj+' ajustadas';
-}
-function dvalSet(key,val){
-  var auto=null;
-  for(var i=0;i<_dvalRows.length;i++){ if(_dvalRows[i].key===key){ _dvalRows[i].final=val; auto=_dvalRows[i].auto; break; } }
-  // se igual ao automático, remove override; senão grava
-  if(val===auto) delete _dvalOverrides[key]; else _dvalOverrides[key]=val;
-  saveDvalOverrides();
-  dvalRender();
-}
-var _pendingGenerate=null;
-var _dvalDone=false;
 var _svalDone=false;
-function showDval(clients){
-  loadDvalOverrides(function(){
-    _dvalRows=prepareDvalRows(clients);
-    document.getElementById('cfg').style.display='none';
-    document.getElementById('dsh').style.display='none';
-    document.getElementById('dval').style.display='block';
-    document.getElementById('dval-search').value='';
-    document.getElementById('dval-filter').value='';
-    dvalRender();
-    window.scrollTo(0,0);
-  });
-}
-function dvalBack(){
-  document.getElementById('dval').style.display='none';
-  document.getElementById('dsh').style.display='none';
-  document.getElementById('cfg').style.display='block';
-  window.scrollTo(0,0);
-}
-function dvalConfirm(){
-  document.getElementById('dval').style.display='none';
-  if(_pendingGenerate){ var fn=_pendingGenerate; _pendingGenerate=null; fn(); }
-}
-// retorna a conclusão final (revisada) de uma decisão
-function finalDecLabel(proc, polo, texto){
-  var key=_decKey(proc,polo,texto);
-  return _dvalOverrides[key] || autoDecLabel(polo,texto);
-}
 
 // ════ Validação de Serviços e Natureza ════
 var SERV_PARA_OPTS = ['Acompanhamento Em Depoimento/Oitiva','Acompanhamento Em Reunião','Alteração Age','Alteração Contratual','Alteração Estatuto','Alteração Inst. Societário','Alvara','Análise De Contrato','Análise De Distrato','Análise De Documentação','Análise De Inst. Societário','Análise De Inventario De Processos Com Dados Pessoais','Análise De Política De Privacidade','Análise De Procuração','Análise De Proposta','Análise De Termo De Compromisso','Análise de Aditivo','Atendimento Titular de Dados -DPO','Atualização Be Compliance','Audiência','Canal de Denúncia','Consulta','Criação de conteúdo','Demanda Sefaz','Despacho com Magistrado','Diligência','Diligência externa','Edital','Elaboração de Aditivo','Elaboração de Aviso de Privacidade','Elaboração de Aviso de cookies','Elaboração de Contrato','Elaboração de Distrato','Elaboração de Inst. Societário','Elaboração de Manifestação','Elaboração de Minuta','Elaboração de Notificação.','Elaboração de Ofício','Elaboração de Plano de Notificações','Elaboração de Plano de Treinamento','Elaboração de Política','Elaboração de Política de Privacidade','Elaboração de Política de Segurança da Informação','Elaboração de Procuração','Elaboração de Proposta','Elaboração de ROPA','Elaboração de Recibo','Elaboração de Requerimento','Elaboração de Termo','Elaboração de Termo de Compromisso','Elaboração de certificados','Elaboração de cláusula','Elaboração de cláusula contratual','Elaboração de doc societário','Elaboração de material treinamento','Elaboração de relatório da análise dos riscos','Elaboração de termos de uso','Estudo de Caso','Notificação Extrajudicial','Palestra','Parecer','Protocolo de Aditivo','Requerimento','Reunião','Revisão Contratual','Serviços Redesim','Serviços Siscoex','Tratativa de Acordo','Treinamento','Venda','Visto Jurídico'];
@@ -1546,7 +1336,6 @@ function buildClientList(){
   collect(ST.proc, 'Processos');
   collect(ST.serv, 'Serviços');
   collect(ST.aud,  'Audiências');
-  collect(ST.dec,  'Decisões');
   _allClients = Object.keys(set).sort(function(a,b){return a.localeCompare(b,'pt-BR');});
   renderClientList('');
 }
@@ -1651,21 +1440,13 @@ function _updateCmsCount(){
 function generate(){
   clrErr();
   // Nenhuma planilha é obrigatória, mas é preciso ao menos uma
-  if(!ST.proc && !ST.serv && !ST.aud && !ST.audfut && !ST.dec){
+  if(!ST.proc && !ST.serv && !ST.aud && !ST.audfut){
     showErr('Carregue ao menos uma planilha para gerar o painel.'); return;
   }
   // Etapa 1: validação de Serviços/Natureza (se houver não mapeados ou natureza inválida)
   if(ST.serv && ST.serv.length && !_svalDone && _svalNeeded()){
     _svalDone=true;
     showSval(function(){ generate(); });
-    return;
-  }
-  // Etapa 2: validação de Decisões
-  if(ST.dec && ST.dec.length && !_dvalDone){
-    var _cliRaw=document.getElementById('cli').value.trim();
-    var _cli=_cliRaw?_cliRaw.split(';').map(function(s){return s.trim();}).filter(Boolean):null;
-    _pendingGenerate=function(){ _dvalDone=true; generate(); _dvalDone=false; };
-    showDval(_cli);
     return;
   }
 
@@ -2475,87 +2256,8 @@ function _setFilterSummary(id, items, extra){
     sNYS.map(function(e){return e[1];}), true,
     sNYS.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
 
-  // ── Decisões: classification & chart ──
-  (function(){
-    var decBlock = document.getElementById('decblock');
-    if(!ST.dec || ST.dec.length===0 || !isVis('vis-dec')){ decBlock.innerHTML=''; return; }
-
-    var F = _decFields(ST.dec);
-    var poloFld=F.polo, dataPubFld=F.data, clientFld=F.cliente,
-        textoFld=F.texto, procFld_d=F.proc;
-
-    var _cset = clients ? _normSet(clients) : null;
-    var decRows = _cset
-      ? ST.dec.filter(function(r){ if(!clientFld||r[clientFld]==null) return false; var ns=splitClients(r[clientFld]); for(var i=0;i<ns.length;i++){if(_cset[_normCli(ns[i])])return true;} return false; })
-      : ST.dec;
-    if(decRows.length===0){ decBlock.innerHTML=''; return; }
-
-    // Usa a conclusão REVISADA pelo usuário (validação). Parciais já unificadas.
-    var nFav=0, nDesfav=0;
-    var minDate=null, maxDate=null;
-    decRows.forEach(function(r){
-      var datePub=r[dataPubFld];
-      if(datePub){ var dp=datePub instanceof Date?datePub:new Date(String(datePub).split('/').reverse().join('-')); if(!isNaN(dp.getTime())){ if(!minDate||dp<minDate)minDate=dp; if(!maxDate||dp>maxDate)maxDate=dp; } }
-      var lbl=finalDecLabel(procFld_d?r[procFld_d]:'', poloFld?r[poloFld]:'', textoFld?r[textoFld]:'');
-      if(lbl==='Favorável') nFav++;
-      else if(lbl==='Desfavorável') nDesfav++;
-      // Extinção e Inconclusivo NÃO entram no gráfico
-    });
-    var totalGraf=nFav+nDesfav;
-    if(totalGraf===0){ decBlock.innerHTML=''; return; }
-
-    var fmtD=function(d){ return d?d.toLocaleDateString('pt-BR',{month:'short',year:'numeric'}):''; };
-    var period=(minDate&&maxDate)?(minDate.getMonth()===maxDate.getMonth()&&minDate.getFullYear()===maxDate.getFullYear()?fmtD(minDate):fmtD(minDate)+' a '+fmtD(maxDate)):'';
-    var chartTitle='Resultado das Decisões'+(period?' — '+period:'');
-
-    // Apenas gráfico + KPIs (a tabela de conferência NÃO aparece no painel final)
-    decBlock.innerHTML = '<div class="sd"></div><div class="sbn" style="background:var(--c9)"><h2>🏛️ Decisões Judiciais</h2></div>' +
-      '<div class="cg c2" style="margin-bottom:12px">' +
-      '<div class="cc"><div class="ct">'+chartTitle+'</div>' +
-      '<div class="cp" id="cp-dec"></div>' +
-      '<div class="ch" style="height:220px"><canvas id="chdec"></canvas></div></div>' +
-      '<div class="cc"><div class="ct">Resultado por Tipo</div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 0" id="dec-kpis"></div></div>' +
-      '</div>';
-
-    var pctFav=totalGraf>0?Math.round(nFav/totalGraf*100):0;
-    var pctDesfav=totalGraf>0?Math.round(nDesfav/totalGraf*100):0;
-    document.getElementById('dec-kpis').innerHTML =
-      '<div style="background:#EAF5EA;border-radius:8px;padding:14px;text-align:center;border-top:3px solid #4A8A4A">'+
-        '<div style="font-size:.6rem;color:#2A5A2A;text-transform:uppercase;letter-spacing:.05em;font-weight:600">Favoráveis</div>'+
-        '<div style="font-family:Libre Baskerville,serif;font-size:1.8rem;color:#2A5A2A;font-weight:700">'+nFav+'</div>'+
-        '<div style="font-size:.65rem;color:#2A5A2A">'+pctFav+'% (de '+totalGraf+')</div></div>'+
-      '<div style="background:var(--c0);border-radius:8px;padding:14px;text-align:center;border-top:3px solid var(--c7)">'+
-        '<div style="font-size:.6rem;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;font-weight:600">Desfavoráveis</div>'+
-        '<div style="font-family:Libre Baskerville,serif;font-size:1.8rem;color:var(--c8);font-weight:700">'+nDesfav+'</div>'+
-        '<div style="font-size:.65rem;color:var(--mu)">'+pctDesfav+'% (de '+totalGraf+')</div></div>';
-
-    _setFilterSummary('cp-dec',[['Status do processo','Todos'],['Período','Ago/2025 até a data atual']]);
-    if(CH['chdec']) CH['chdec'].destroy();
-    CH['chdec'] = new Chart(document.getElementById('chdec'),{
-      type:'doughnut',
-      data:{labels:['Favoráveis','Desfavoráveis'],datasets:[{data:[nFav,nDesfav],backgroundColor:['#4A8A4A','#7E1F2C'],borderWidth:3,borderColor:'#fff'}]},
-      options:{cutout:'55%',responsive:true,maintainAspectRatio:false,
-        plugins:{
-          legend:{position:'bottom',labels:{font:{family:'Inter,sans-serif',size:11},color:'#3A2020',padding:10}},
-          datalabels:{color:'#fff',font:{size:11,weight:'700'},
-            formatter:function(v,ctx){var t=ctx.dataset.data.reduce(function(a,b){return a+b;},0);return v>0&&t>0?Math.round(v/t*100)+'%':'';}},
-          tooltip:{callbacks:{label:function(ctx){return ' '+ctx.label+': '+ctx.parsed+(totalGraf>0?' ('+Math.round(ctx.parsed/totalGraf*100)+'%)':'');}}}
-        }}
-    });
-  })();
-
-    // dec filtrado por cliente (mesma lógica do decblock)
-  var decFiltered = [];
-  if(ST.dec && ST.dec.length){
-    var _decClientFld = _decFields(ST.dec).cliente || '';
-    var _cset2 = clients ? _normSet(clients) : null;
-    decFiltered = _cset2
-      ? ST.dec.filter(function(r){ if(!_decClientFld||r[_decClientFld]==null) return false; var ns=splitClients(r[_decClientFld]); for(var i=0;i<ns.length;i++){if(_cset2[_normCli(ns[i])])return true;} return false; })
-      : ST.dec;
-  }
   window._rpt = {proc:proc, active:active, archived:archived, natSort:natSort, title:title, refY:refY, nAud:nAud, nPrz:nPrz, nPer:nPer,
-    serv:serv||[], aud:aud||[], dec:decFiltered, audfut:audfut||[]};
+    serv:serv||[], aud:aud||[], audfut:audfut||[]};
 
   // Apply section visibility (checkbox E presença da planilha)
   (function(){
@@ -2584,7 +2286,6 @@ function _setFilterSummary(id, items, extra){
     var sbnProc=document.getElementById('sbn-proc'); if(sbnProc) sbnProc.style.display=hasProc?'':'none';
     var kpi2=document.getElementById('kpi2'); if(kpi2) kpi2.style.display=(hasProc&&hasAud)?'':'none';
     var rowEmp=document.getElementById('row-empresa'); if(rowEmp) rowEmp.style.display=hasProc?'':'none';
-    // dec vis tratado no render do decblock
   })();
 
   document.getElementById('cfg').style.display = 'none';
@@ -2715,59 +2416,6 @@ function exportXLS_aud(){
   _xlsDl(new Blob(['\ufeff'+_xlsWrap(tbl)],{type:'application/vnd.ms-excel;charset=utf-8'}),_xlsName(d.title,'Aud_Prazos_Pericias'));
 }
 
-// ════ Classificação de decisão (global, p/ relatório e Excel) ════
-function classifyDecisionGlobal(polo, texto){
-  var polo_l = String(polo||'').trim().toLowerCase();
-  // Polo Ativo: ativo, autor, testemunha
-  var polAt = polo_l==='ativo'||polo_l==='autor'||polo_l==='testemunha';
-  // Polo Passivo: passivo, réu, reu, parte
-  var polPas= polo_l==='passivo'||polo_l==='réu'||polo_l==='reu'||polo_l==='parte';
-  // Polo Terceiro: terceiro, terceiro envolvido, terceiro interessado, interessado → Inconclusivo
-  var polTer= polo_l==='terceiro'||polo_l==='terceiro envolvido'||polo_l==='terceiro interessado'||polo_l==='interessado';
-  if(polTer) return null;  // Terceiro sempre inconclusivo
-  if(!polAt && !polPas) return null;
-  var t = String(texto||'').toLowerCase();
-  if(!t||t==='nan'||t==='null') return null;
-  if(/declaro\s+extint|extingo\s+o\s+processo|extinta\s+a\s+execu|extinção.*processo/.test(t))
-    return 'extinto';
-  if(/parcialmente\s+proced|julgo\s+parcial|procedente\s+em\s+parte|em\s+parte\s+procedente/.test(t)){
-    return polAt ? 'favoravel_parcial' : 'desfavoravel_parcial';
-  }
-  if(/julgo\s+proced[ea]nte(?!\s*ncia)|julgado\s+proced(?!ência)|julgar\s+proced(?!ência)|procedência\s+do|dou\s+provimento|concedo\s+(parcialmente\s+)?a\s+seguran|condeno\s+[ao]\s+r[eéu]|acolho\s+os?\s+pedidos?/.test(t)){
-    return polAt ? 'favoravel' : 'desfavoravel';
-  }
-  if(/julgo\s+improced[ea]nte|julgado\s+improced|julgar\s+improced|improcedência\s+do|improcedentes\s+os\s+pedidos|totalmente\s+improcedentes|pedidos?.*improced|rejeito\s+os?\s+pedidos?|decide.*julgar\s+improced|decide.*improcedente|julgar\s+os\s+pedidos.*improced/.test(t)){
-    return polAt ? 'desfavoravel' : 'favoravel';
-  }
-  return null;
-}
-function decLabel(cls){
-  switch(cls){
-    case 'favoravel': return 'Favorável';
-    case 'favoravel_parcial': return 'Favorável parcial';
-    case 'desfavoravel': return 'Desfavorável';
-    case 'desfavoravel_parcial': return 'Desfavorável parcial';
-    case 'extinto': return 'Extinção';
-    default: return 'Inconclusivo';
-  }
-}
-
-// ════ Decisões ════
-function exportXLS_dec(){
-  var d=window._rpt; if(!d||!d.dec||!d.dec.length){alert('Planilha de Decisões não carregada.');return;}
-  var keys=Object.keys(d.dec[0]||{});
-  var F=_decFields(d.dec);
-  var rows=d.dec.map(function(r){
-    var o={}; for(var k in r) o[k]=r[k];
-    // usa a conclusão REVISADA pelo usuário (com parciais unificadas)
-    o['Conclusão da Análise']=finalDecLabel(F.proc?r[F.proc]:'', F.polo?r[F.polo]:'', F.texto?r[F.texto]:'');
-    return o;
-  });
-  var hdrs=keys.concat(['Conclusão da Análise']);
-  var tbl=_xlsGeneric(rows,hdrs,d.title,'Decisões');
-  _xlsDl(new Blob(['\ufeff'+_xlsWrap(tbl)],{type:'application/vnd.ms-excel;charset=utf-8'}),_xlsName(d.title,'Decisoes'));
-}
-
 // ════ Aud. e Perícias Futuras ════
 function exportXLS_fut(){
   var d=window._rpt; if(!d||!d.audfut||!d.audfut.length){alert('Planilha de Aud. e Perícias Futuras não carregada.');return;}
@@ -2781,7 +2429,6 @@ function exportXLS_fut(){
 function _buildShareHTML(){
   var clone=document.documentElement.cloneNode(true);
   var cloneCfg=clone.querySelector('#cfg'); if(cloneCfg)cloneCfg.style.display='none';
-  var cloneDval=clone.querySelector('#dval'); if(cloneDval)cloneDval.style.display='none';
   var cloneDsh=clone.querySelector('#dsh'); if(cloneDsh)cloneDsh.style.display='block';
   // Oculta a barra de ferramentas do dashboard no HTML publicado
   var cloneDshTbar=clone.querySelector('#dsh .tbar'); if(cloneDshTbar)cloneDshTbar.style.display='none';
@@ -2970,7 +2617,6 @@ function printDash(){
   // Cada passo protegido — o window.print() SEMPRE executa, mesmo se algo antes falhar
   try{ var dsh=document.getElementById('dsh'); if(dsh) dsh.style.display='block'; }catch(e){}
   try{ var sval=document.getElementById('sval'); if(sval) sval.style.display='none'; }catch(e){}
-  try{ var dval=document.getElementById('dval'); if(dval) dval.style.display='none'; }catch(e){}
   try{ var cfg=document.getElementById('cfg'); if(cfg) cfg.style.display='none'; }catch(e){}
   try{ document.body.setAttribute('data-print','dash'); }catch(e){}
   try{ if(typeof CH!=='undefined'){ for(var id in CH){ if(CH[id]&&CH[id].resize) CH[id].resize(); } } }catch(e){}
@@ -2988,8 +2634,8 @@ function printReport(){ document.body.setAttribute('data-print','report'); windo
 window.addEventListener('DOMContentLoaded',function(){
   var btn=document.querySelector('.bgen');
   if(btn){btn.disabled=true;btn.textContent='⏳ Carregando dados salvos...'}
-  var KEYS=['proc','serv','aud','audfut','dec'];
-  var LBLS={proc:'sp',serv:'ss',aud:'sa',audfut:'saf',dec:'sd'};
+  var KEYS=['proc','serv','aud','audfut'];
+  var LBLS={proc:'sp',serv:'ss',aud:'sa',audfut:'saf'};
   var loaded=0;
   function onAllLoaded(){
     openIDB(function(db){
