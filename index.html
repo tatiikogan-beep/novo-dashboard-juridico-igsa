@@ -1797,11 +1797,14 @@ function _setFilterSummary(id, items, extra){
     });
     var clienteSort2 = Object.entries(byCliente2).sort(function(a,b){return b[1]-a[1];});
 
-    // 5) Por Tipo de Serviço revisado (regra já existente: uT/TAX)
+    // 5) Por Tipo de Serviço revisado (regra já existente: uT/TAX + fallback uTFull) —
+    //    tipos não identificados por nenhuma regra caem em 'Outras Atividades' em vez de
+    //    serem descartados, garantindo que 100% dos registros do ano apareçam no gráfico.
     var byTipo2={};
     refRows2.forEach(function(r){
       var t=uTFull(r);
-      if(t==null || t==='Atividade Interna' || t==='__DESCARTAR__') return;
+      if(t==='Atividade Interna' || t==='__DESCARTAR__') return;
+      if(t==null) t='Outras Atividades';
       byTipo2[t]=(byTipo2[t]||0)+1;
     });
     var tipoSort2 = Object.entries(byTipo2).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
@@ -1817,11 +1820,13 @@ function _setFilterSummary(id, items, extra){
     var natSort2 = Object.entries(byNat2).sort(function(a,b){return b[1]-a[1];});
 
     // 7) Validação obrigatória dos totais antes de exibir os gráficos
+    //    (soma de byTipo2 completo, não do tipoSort2 já limitado ao Top 10)
     var totalAno2 = refRows2.length;
     var somaEmpresa2 = clienteSort2.reduce(function(s,e){return s+e[1];},0);
     var somaNatureza2 = natSort2.reduce(function(s,e){return s+e[1];},0);
-    if(somaEmpresa2!==totalAno2 || somaNatureza2!==totalAno2){
-      warns.push('⚠ Nova Base de Serviços: divergência nos totais de '+refY2+' (Ano: '+totalAno2+', Empresa: '+somaEmpresa2+', Natureza: '+somaNatureza2+'). Os gráficos não foram atualizados — revise a planilha.');
+    var somaTipo2 = Object.values(byTipo2).reduce(function(s,v){return s+v;},0);
+    if(somaEmpresa2!==totalAno2 || somaNatureza2!==totalAno2 || somaTipo2!==totalAno2){
+      warns.push('⚠ Nova Base de Serviços: divergência nos totais de '+refY2+' (Ano: '+totalAno2+', Empresa: '+somaEmpresa2+', Natureza: '+somaNatureza2+', Tipo de Serviço: '+somaTipo2+'). Os gráficos não foram atualizados — revise a planilha.');
       showWarns(warns);
       if(section2) section2.style.display='none';
       return;
