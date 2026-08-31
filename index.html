@@ -107,7 +107,7 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
 .pt td{padding:6px 8px;border-bottom:1px solid var(--bd);vertical-align:top}
 .pt tr:nth-child(even) td{background:var(--c0)}
 @media print{
-  #cfg,#sval,.tbar,.rbtns{display:none!important}
+  #cfg,.tbar,.rbtns{display:none!important}
   body[data-print=dash] #rpt{display:none!important}
   body[data-print=dash] #dsh{display:block!important}
   body[data-print=report] #dsh{display:none!important}
@@ -259,39 +259,6 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
 </div>
 </div>
 </div>
-</div>
-
-<!-- VALIDAÇÃO DE SERVIÇOS E NATUREZA -->
-<div id="sval" style="display:none">
-  <div class="tbar">
-    <button class="tb tbk" onclick="svalBack()">← Voltar à configuração</button>
-    <span class="thi">Validação de Serviços e Natureza · Conferência antes do painel</span>
-    <div class="tbtns">
-      <button class="tb tpd" onclick="svalConfirm()">✓ Confirmar e continuar</button>
-    </div>
-  </div>
-  <div style="max-width:1200px;margin:0 auto;padding:20px">
-    <div class="cc" id="sval-serv-card" style="margin-bottom:16px">
-      <div class="ct">Tipos de serviço não mapeados</div>
-      <div class="cp" id="sval-serv-info">Defina a categoria (coluna PARA) para os tipos abaixo. Eles não constam na tabela de correspondência.</div>
-      <div style="max-height:40vh;overflow:auto;border:1px solid var(--bd);border-radius:8px;margin-top:8px">
-        <table style="width:100%;border-collapse:collapse;font-size:.72rem">
-          <thead style="position:sticky;top:0;z-index:1"><tr id="sval-serv-head"></tr></thead>
-          <tbody id="sval-serv-body"></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="cc" id="sval-nat-card">
-      <div class="ct">Registros sem Natureza ou fora das regras</div>
-      <div class="cp" id="sval-nat-info">Registros cuja Natureza está vazia ou não corresponde às regras. Defina a natureza correta.</div>
-      <div style="max-height:40vh;overflow:auto;border:1px solid var(--bd);border-radius:8px;margin-top:8px">
-        <table style="width:100%;border-collapse:collapse;font-size:.72rem">
-          <thead style="position:sticky;top:0;z-index:1"><tr id="sval-nat-head"></tr></thead>
-          <tbody id="sval-nat-body"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- DASHBOARD -->
@@ -827,7 +794,6 @@ function idbLoad(key,cb){
 }
 
 function clearStorage(){
-  _svalDone=false;
   openIDB(function(db){
     if(db){
       ['proc','serv','aud','audfut','serv2','meta'].forEach(function(s){
@@ -1176,156 +1142,10 @@ function filterClients(rows, field, clients){
   });
 }
 
-var _servOverrides = {};     // {tipoNormalizado: 'Categoria PARA'} ajustes manuais de serviço
-var _svalDone=false;
-
-// ════ Validação de Serviços e Natureza ════
-var SERV_PARA_OPTS = ['Acompanhamento Em Depoimento/Oitiva','Acompanhamento Em Reunião','Alteração Age','Alteração Contratual','Alteração Estatuto','Alteração Inst. Societário','Alvara','Análise De Contrato','Análise De Distrato','Análise De Documentação','Análise De Inst. Societário','Análise De Inventario De Processos Com Dados Pessoais','Análise De Política De Privacidade','Análise De Procuração','Análise De Proposta','Análise De Termo De Compromisso','Análise de Aditivo','Atendimento Titular de Dados -DPO','Atualização Be Compliance','Audiência','Canal de Denúncia','Consulta','Criação de conteúdo','Demanda Sefaz','Despacho com Magistrado','Diligência','Diligência externa','Edital','Elaboração de Aditivo','Elaboração de Aviso de Privacidade','Elaboração de Aviso de cookies','Elaboração de Contrato','Elaboração de Distrato','Elaboração de Inst. Societário','Elaboração de Manifestação','Elaboração de Minuta','Elaboração de Notificação.','Elaboração de Ofício','Elaboração de Plano de Notificações','Elaboração de Plano de Treinamento','Elaboração de Política','Elaboração de Política de Privacidade','Elaboração de Política de Segurança da Informação','Elaboração de Procuração','Elaboração de Proposta','Elaboração de ROPA','Elaboração de Recibo','Elaboração de Requerimento','Elaboração de Termo','Elaboração de Termo de Compromisso','Elaboração de certificados','Elaboração de cláusula','Elaboração de cláusula contratual','Elaboração de doc societário','Elaboração de material treinamento','Elaboração de relatório da análise dos riscos','Elaboração de termos de uso','Estudo de Caso','Notificação Extrajudicial','Palestra','Parecer','Protocolo de Aditivo','Requerimento','Reunião','Revisão Contratual','Serviços Redesim','Serviços Siscoex','Tratativa de Acordo','Treinamento','Venda','Visto Jurídico'];
-var NAT_OPTS = ['Ambiental','Consultas','Consumidor','Contratual','Cível','Direito Administrativo','Hospitalar','LGPD','Operações e Negócios','Penal','Regulatório','Societária','Trabalhista','Tributário'];
+// Ajustes manuais de classificação (não há mais tela de revisão; ficam sempre vazios,
+// mas uT()/uNatFinal() seguem consultando estes objetos por estrutura).
+var _servOverrides = {};     // {tipoNormalizado: 'Categoria PARA'}
 var _natOverrides = {};      // {naturezaOriginalNorm: 'NaturezaCorreta'}
-var _svalUnmappedServ = [];  // tipos de serviço não mapeados [{tipo, count}]
-var _svalBadNat = [];        // registros com natureza inválida [{nat, count}]
-// Verbos/categorias de natureza válidas (alvos do NAT_MAP)
-function _natIsValid(n){
-  var v=String(n||'').trim();
-  if(!v) return false;  // vazio = inválido (precisa revisão)
-  // válido se está no NAT_MAP (nome longo) OU já é um alvo curto válido OU tem override
-  if(NAT_MAP[v]) return true;
-  if(NAT_OPTS.indexOf(v)>=0) return true;        // já é a forma curta (ex: 'Trabalhista')
-  if(_natOverrides[_normServ(v)]) return true;
-  return false;
-}
-// Coleta tipos de serviço não mapeados e naturezas inválidas (na planilha de serviços)
-function _svalScan(){
-  _svalUnmappedServ=[]; _svalBadNat=[];
-  if(!ST.serv || !ST.serv.length) return;
-  // Respeita o filtro de cliente selecionado (igual ao dashboard)
-  var _cliRaw=(document.getElementById('cli')||{}).value||'';
-  var _cli=_cliRaw.trim()?_cliRaw.split(';').map(function(s){return s.trim();}).filter(Boolean):null;
-  var _servFld=getField(ST.serv,['Cliente principal','cliente principal']);
-  var scanRows=(_cli && _servFld)?filterClients(ST.serv,_servFld,_cli):ST.serv;
-  var unmapped={}, badnat={};
-  scanRows.forEach(function(r){
-    var tipo=r['Tipo'];
-    // só conta como não-mapeado se tiver algum valor e uT retornar null
-    if(tipo!=null && String(tipo).trim()!=='' && String(tipo).toLowerCase()!=='nan'){
-      if(uT(tipo)==null){ var k=String(tipo).trim(); unmapped[k]=(unmapped[k]||0)+1; }
-    }
-    // natureza inválida só se não houver natureza na coluna B NEM extração do Assunto
-    var nat=r['Natureza'];
-    // chave usada para override quando a natureza está vazia (pelo Assunto)
-    var _nk=(r['Assunto']!=null&&String(r['Assunto']).trim()!=='')?String(r['Assunto']).trim():'(sem natureza e sem assunto)';
-    // resolvido se: natureza válida OU extraível do Assunto OU já tem override (inclui descarte)
-    var natOk = _natIsValid(nat) || (natFromAssunto(r['Assunto'])!=null) || !!_natOverrides[_normServ(_nk)];
-    if(!natOk){
-      badnat[_nk]=(badnat[_nk]||0)+1;
-    }
-  });
-  _svalUnmappedServ=Object.keys(unmapped).map(function(k){return {tipo:k,count:unmapped[k]};}).sort(function(a,b){return b.count-a.count;});
-  _svalBadNat=Object.keys(badnat).map(function(k){return {nat:k,count:badnat[k]};}).sort(function(a,b){return b.count-a.count;});
-}
-function _svalNeeded(){ _svalScan(); return _svalUnmappedServ.length>0 || _svalBadNat.length>0; }
-function loadServOverrides(cb){
-  // fallback do localStorage primeiro (sempre funciona)
-  function fromLS(){ try{var s=localStorage.getItem('igsa_serv_ov');_servOverrides=s?JSON.parse(s):{};var s2=localStorage.getItem('igsa_nat_ov');_natOverrides=s2?JSON.parse(s2):{};}catch(e){_servOverrides=_servOverrides||{};_natOverrides=_natOverrides||{};} }
-  openIDB(function(db){
-    // se não há banco OU a store 'meta' não existe, usa localStorage e segue
-    if(!db || !db.objectStoreNames || !db.objectStoreNames.contains('meta')){ fromLS(); cb&&cb(); return; }
-    try{
-      var tx=db.transaction('meta','readonly'), st=tx.objectStore('meta');
-      var done=false; var finish=function(){ if(done) return; done=true; cb&&cb(); };
-      var r1=st.get('serv_overrides');
-      r1.onsuccess=function(e){ try{_servOverrides=e.target.result?JSON.parse(e.target.result):{};}catch(_){_servOverrides={};}
-        var r2=st.get('nat_overrides'); r2.onsuccess=function(e2){ try{_natOverrides=e2.target.result?JSON.parse(e2.target.result):{};}catch(_){_natOverrides={};} finish(); }; r2.onerror=finish; };
-      r1.onerror=function(){ fromLS(); finish(); };
-      tx.onerror=function(){ fromLS(); finish(); };
-      // rede de segurança: se nada disparar em 1.5s, segue mesmo assim
-      setTimeout(finish,1500);
-    }catch(ex){ fromLS(); cb&&cb(); }
-  });
-}
-function saveServOverrides(){
-  var j1=JSON.stringify(_servOverrides), j2=JSON.stringify(_natOverrides);
-  try{localStorage.setItem('igsa_serv_ov',j1);localStorage.setItem('igsa_nat_ov',j2);}catch(e){}
-  openIDB(function(db){ if(!db)return; try{var tx=db.transaction('meta','readwrite');tx.objectStore('meta').put(j1,'serv_overrides');tx.objectStore('meta').put(j2,'nat_overrides');}catch(ex){} });
-}
-function svalSetServ(tipoNorm,val){ if(val) _servOverrides[tipoNorm]=val; else delete _servOverrides[tipoNorm]; _TAXNORM=null; saveServOverrides(); }
-function svalSetNat(natNorm,val){ if(val) _natOverrides[natNorm]=val; else delete _natOverrides[natNorm]; saveServOverrides(); }
-function svalDiscardServ(tipoNorm){
-  delete _servOverrides[tipoNorm];
-  _TAXNORM=null;
-  saveServOverrides();
-  svalRender();
-}
-function svalDiscardNat(natNorm){
-  delete _natOverrides[natNorm];
-  saveServOverrides();
-  svalRender();
-}
-function svalRender(){
-  // Serviços não mapeados
-  var sh=document.getElementById('sval-serv-head'), sb=document.getElementById('sval-serv-body');
-  var servCard=document.getElementById('sval-serv-card');
-  if(_svalUnmappedServ.length===0){ servCard.style.display='none'; }
-  else {
-    servCard.style.display='';
-    sh.innerHTML=['Tipo de serviço (não mapeado)','Registros','Categoria (PARA)','Ação'].map(function(x){return '<th style="text-align:left;padding:7px 9px;background:var(--c8);color:#fff;font-size:.62rem">'+x+'</th>';}).join('');
-    var html='';
-    _svalUnmappedServ.forEach(function(u,i){
-      var norm=_normServ(u.tipo); var cur=_servOverrides[norm]||'';
-      var opts='<option value="">— escolher —</option>'+
-        '<option value="__DESCARTAR__" '+(cur==='__DESCARTAR__'?'selected':'')+'>🚫 Não usar no dashboard</option>'+
-        SERV_PARA_OPTS.map(function(o){return '<option value="'+esc(o)+'" '+(cur===o?'selected':'')+'>'+esc(o)+'</option>';}).join('');
-      html+='<tr style="background:'+(i%2?'var(--c0)':'#fff')+'"><td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(u.tipo)+'</td>'+
-        '<td style="padding:5px 9px;border-bottom:1px solid var(--bd);text-align:right">'+u.count+'</td>'+
-        '<td style="padding:5px 9px;border-bottom:1px solid var(--bd)"><select onchange="svalSetServ(\''+esc(norm)+'\',this.value)" style="padding:4px 6px;border:1px solid '+(cur?'var(--gd)':'var(--bd)')+';border-radius:5px;font-size:.68rem;font-family:inherit">'+opts+'</select></td>'+
-        '<td style="padding:5px 9px;border-bottom:1px solid var(--bd);text-align:center">'+(cur?'<button title="Descartar este ajuste" onclick="svalDiscardServ(\''+esc(norm)+'\')" style="background:transparent;border:1px solid var(--bd);border-radius:5px;color:var(--c8);cursor:pointer;padding:2px 8px;font-size:.72rem">✕</button>':'<span style="color:var(--bd)">—</span>')+'</td></tr>';
-    });
-    sb.innerHTML=html;
-  }
-  // Naturezas inválidas
-  var nh=document.getElementById('sval-nat-head'), nb=document.getElementById('sval-nat-body');
-  var natCard=document.getElementById('sval-nat-card');
-  if(_svalBadNat.length===0){ natCard.style.display='none'; }
-  else {
-    natCard.style.display='';
-    nh.innerHTML=['Natureza original','Registros','Natureza correta','Ação'].map(function(x){return '<th style="text-align:left;padding:7px 9px;background:var(--c8);color:#fff;font-size:.62rem">'+x+'</th>';}).join('');
-    var html2='';
-    _svalBadNat.forEach(function(u,i){
-      var norm=_normServ(u.nat); var cur=_natOverrides[norm]||'';
-      var opts='<option value="">— escolher —</option>'+
-        '<option value="__DESCARTAR__" '+(cur==='__DESCARTAR__'?'selected':'')+'>🚫 Não usar no dashboard</option>'+
-        NAT_OPTS.map(function(o){return '<option value="'+esc(o)+'" '+(cur===o?'selected':'')+'>'+esc(o)+'</option>';}).join('');
-      html2+='<tr style="background:'+(i%2?'var(--c0)':'#fff')+'"><td style="padding:5px 9px;border-bottom:1px solid var(--bd)">'+esc(u.nat)+'</td>'+
-        '<td style="padding:5px 9px;border-bottom:1px solid var(--bd);text-align:right">'+u.count+'</td>'+
-        '<td style="padding:5px 9px;border-bottom:1px solid var(--bd)"><select onchange="svalSetNat(\''+esc(norm)+'\',this.value)" style="padding:4px 6px;border:1px solid '+(cur?'var(--gd)':'var(--bd)')+';border-radius:5px;font-size:.68rem;font-family:inherit">'+opts+'</select></td>'+
-        '<td style="padding:5px 9px;border-bottom:1px solid var(--bd);text-align:center">'+(cur?'<button title="Descartar este ajuste" onclick="svalDiscardNat(\''+esc(norm)+'\')" style="background:transparent;border:1px solid var(--bd);border-radius:5px;color:var(--c8);cursor:pointer;padding:2px 8px;font-size:.72rem">✕</button>':'<span style="color:var(--bd)">—</span>')+'</td></tr>';
-    });
-    nb.innerHTML=html2;
-  }
-}
-var _pendingAfterSval=null;
-function showSval(after){
-  loadServOverrides(function(){
-    _svalScan();
-    document.getElementById('cfg').style.display='none';
-    document.getElementById('dsh').style.display='none';
-    document.getElementById('sval').style.display='block';
-    svalRender();
-    _pendingAfterSval=after;
-    window.scrollTo(0,0);
-  });
-}
-function svalBack(){
-  _svalDone=false;  // permite revalidar ao gerar de novo
-  document.getElementById('sval').style.display='none';
-  document.getElementById('cfg').style.display='block';
-  window.scrollTo(0,0);
-}
-function svalConfirm(){
-  document.getElementById('sval').style.display='none';
-  if(_pendingAfterSval){ var fn=_pendingAfterSval; _pendingAfterSval=null; fn(); }
-}
 // Natureza FINAL: coluna B → se vazia, extrai do Assunto → override → 'Não informado'
 // Aceita o registro inteiro (r) para poder ler o Assunto quando a Natureza está vazia.
 function uNatFinal(r){
@@ -1532,14 +1352,8 @@ function _updateCmsCount(){
 function generate(){
   clrErr();
   // Nenhuma planilha é obrigatória, mas é preciso ao menos uma
-  if(!ST.proc && !ST.serv && !ST.aud && !ST.audfut && !ST.serv2){
+  if(!ST.proc && !ST.aud && !ST.audfut && !ST.serv2){
     showErr('Carregue ao menos uma planilha para gerar o painel.'); return;
-  }
-  // Etapa 1: validação de Serviços/Natureza (se houver não mapeados ou natureza inválida)
-  if(ST.serv && ST.serv.length && !_svalDone && _svalNeeded()){
-    _svalDone=true;
-    showSval(function(){ generate(); });
-    return;
   }
 
   var title = document.getElementById('ttl').value.trim() || 'Dashboard de Governança Jurídica';
