@@ -975,9 +975,10 @@ function mkBar(id, labels, vals, horiz, colors){
       indexAxis: horiz?'y':'x', responsive:true, maintainAspectRatio:false,
       plugins: Object.assign({legend:{display:false}}, dlPlugin),
       scales:{
-        x:{grid:{color:horiz?'#F5E8EA':'transparent'}, ticks:{color:'#7A4050',font:{size:10}}, border:{display:false}},
+        x:{grid:{color:horiz?'#F5E8EA':'transparent'}, ticks:{color:'#7A4050',font:{size:10}, display:!horiz}, border:{display:false}},
         y:{grid:{color:horiz?'transparent':'#F5E8EA'},
            ticks:{color:'#3A2020',font:{size:10},
+             display:horiz,
              autoSkip:false,
              callback:function(val){
                var lbl=this.getLabelForValue(val);
@@ -1789,7 +1790,7 @@ function _setFilterSummary(id, items, extra){
           formatter:function(v){return v>0?v:'';},clamp:true,clip:false}},
       scales:{
         x:{grid:{display:false},ticks:{color:'#3A2020',font:{size:10}},border:{display:false}},
-        y:{grid:{color:'#F5E8EA'},ticks:{color:'#7A4050',font:{size:10},stepSize:1},border:{display:false}}},
+        y:{grid:{color:'#F5E8EA'},ticks:{color:'#7A4050',font:{size:10},stepSize:1,display:false},border:{display:false}}},
       layout:{padding:{top:24}}}
   });
 
@@ -1805,7 +1806,7 @@ function _setFilterSummary(id, items, extra){
       plugins:{legend:{display:false},
         datalabels:{anchor:'end',align:'end',color:'#333',font:{size:10,weight:'700'},
           formatter:function(v){return v;},clamp:true,clip:false,padding:{right:6}}},
-      scales:{x:{grid:{color:'#F5E8EA'},ticks:{color:'#7A4050',font:{size:10}},border:{display:false}},
+      scales:{x:{grid:{color:'#F5E8EA'},ticks:{color:'#7A4050',font:{size:10},display:false},border:{display:false}},
               y:{grid:{display:false},ticks:{color:'#3A2020',font:{size:11}},border:{display:false}}},
       layout:{padding:{right:40}}}
   });
@@ -1842,7 +1843,7 @@ function _setFilterSummary(id, items, extra){
         datalabels:{anchor:'end',align:'top',color:'#333',font:{size:14,weight:'700'},
           formatter:function(v){return v||0;},clamp:true,clip:false}},
       scales:{x:{grid:{display:false},ticks:{color:'#3A2020',font:{size:12,weight:'600'}},border:{display:false}},
-              y:{grid:{color:'#F5E8EA'},ticks:{color:'#7A4050',font:{size:10}},border:{display:false}}},
+              y:{grid:{color:'#F5E8EA'},ticks:{color:'#7A4050',font:{size:10},display:false},border:{display:false}}},
       layout:{padding:{top:30}}}
   });
 
