@@ -2079,14 +2079,15 @@ function _setFilterSummary(id, items, extra){
       '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">Total de Serviços por Ano</div>' +
       '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Período: Histórico completo | Agrupamento: Ano da data do cadastro | Ano em destaque: '+refY2+' | Naturezas: Todas</div>';
 
-    // ── Gráfico 2: Total de Serviços por Empresa ──
+    // ── Gráfico 2: Total de Serviços por Empresa (Top 10 — validação continua usando clienteSort2 completo) ──
+    var clienteSort2Top10 = clienteSort2.slice(0,10);
     mkBar('chsc2',
-      clienteSort2.map(function(e){return e[0].length>44?e[0].substring(0,44)+'…':e[0];}),
-      clienteSort2.map(function(e){return e[1];}), true,
-      clienteSort2.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
+      clienteSort2Top10.map(function(e){return e[0].length>44?e[0].substring(0,44)+'…':e[0];}),
+      clienteSort2Top10.map(function(e){return e[1];}), true,
+      clienteSort2Top10.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
     document.getElementById('banner-sc2').innerHTML =
       '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">Total de Serviços por Empresa</div>' +
-      '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Base: Nova base de Serviços | Ano de referência: '+refY2+' | Agrupamento: Empresa | Naturezas: Todas</div>';
+      '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Base: Nova base de Serviços | Ano de referência: '+refY2+' | Ranking: 10 maiores | Agrupamento: Empresa | Naturezas: Todas</div>';
 
     // ── Gráfico 3: 10 Atividades Mais Executadas ──
     mkBar('chst2',
