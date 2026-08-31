@@ -1799,7 +1799,9 @@ function _setFilterSummary(id, items, extra){
 
     // 5) Por Tipo de Serviço revisado (regra já existente: uT/TAX + fallback uTFull) —
     //    tipos não identificados por nenhuma regra caem em 'Outras Atividades' em vez de
-    //    serem descartados, garantindo que 100% dos registros do ano apareçam no gráfico.
+    //    serem descartados, garantindo que 100% dos registros do ano entrem na validação.
+    //    'Outras Atividades' fica sempre fora do ranking exibido (não é uma atividade
+    //    específica) — só conta para a soma de validação (somaTipo2).
     var byTipo2={};
     refRows2.forEach(function(r){
       var t=uTFull(r);
@@ -1807,7 +1809,9 @@ function _setFilterSummary(id, items, extra){
       if(t==null) t='Outras Atividades';
       byTipo2[t]=(byTipo2[t]||0)+1;
     });
-    var tipoSort2 = Object.entries(byTipo2).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+    var tipoSort2 = Object.entries(byTipo2)
+      .filter(function(e){return e[0]!=='Outras Atividades';})
+      .sort(function(a,b){return b[1]-a[1];}).slice(0,10);
 
     // 6) Por Natureza da Atividade revisada (regra já existente: uNatFinal/NAT_MAP) —
     //    uNatFinal nunca descarta um registro (cai em 'Não informado'), garantindo
