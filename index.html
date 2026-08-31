@@ -1733,7 +1733,13 @@ function _setFilterSummary(id, items, extra){
       '</div>' +
       '<div style="max-width:340px;margin:0 auto"><div class="ch" style="height:300px"><canvas id="chpie"></canvas></div></div>' +
     '</div>' +
-    '<div class="cc"><div class="ct">Processos Ativos por Natureza</div><div class="cp" id="cp-natureza"></div><div class="ch" style="height:230px"><canvas id="chnat"></canvas></div></div>';
+    '<div class="cc">' +
+      '<div style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px">' +
+        '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">⚖️ Processos Ativos por Natureza</div>' +
+        '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Status: Ativos e Suspensos | Agrupamento: Natureza | Naturezas: Todas</div>' +
+      '</div>' +
+      '<div class="ch" style="height:320px"><canvas id="chnat"></canvas></div>' +
+    '</div>';
   // Empresa em linha própria full-width (quando multi-cliente)
   if(multi){
     var empRow=document.getElementById('row-empresa');
@@ -1746,7 +1752,6 @@ function _setFilterSummary(id, items, extra){
   }
 
   // Resumos de filtros dos gráficos do topo
-  _setFilterSummary('cp-natureza',[['Status do processo','Ativos e Suspensos'],['Agrupamento','Natureza'],['Naturezas','Todas']]);
   if(multi) _setFilterSummary('cp-empresa',[['Status do processo','Ativos e Suspensos'],['Agrupamento','Empresa'],['Naturezas','Todas']]);
   // Draw charts
   mkDonut('chpie', ['Ativos','Arquivados'], [active.length, archived.length]);
