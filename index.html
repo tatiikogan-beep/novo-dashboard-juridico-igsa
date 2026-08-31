@@ -364,12 +364,13 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
     <div class="sbn" style="background:var(--c7)"><h2>📉 Potencial de Redução</h2></div>
     <div class="kr" id="kpi-potencial"></div>
   </div>
-  <div id="aud-real-banner" class="sbn" style="background:var(--c7);margin-bottom:10px"><h2>📅 Audiências Realizadas</h2></div>
   <div id="aud-real-row" style="margin-bottom:12px">
     <div class="cc" id="aud-real-wrap">
-      <div class="ct" id="ctaud3">—</div>
-      <div class="cp" id="cp-aud3"></div>
-      <div class="ch" style="height:240px"><canvas id="chaud3"></canvas></div>
+      <div style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px">
+        <div style="font-family:'Libre Baskerville',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">📅 Audiências Realizadas</div>
+        <div style="font-size:.68rem;color:var(--c2);line-height:1.4">Período: Histórico disponível | Agrupamento: Ano da data de início | Naturezas: Todas</div>
+      </div>
+      <div class="ch" style="height:300px"><canvas id="chaud3"></canvas></div>
     </div>
   </div>
   <div id="aud-future-row" style="margin-bottom:12px"></div>
@@ -1865,8 +1866,6 @@ function _setFilterSummary(id, items, extra){
   })();
 
   // ── Item 5: Audiências últimos 3 anos ──
-  document.getElementById('ctaud3').textContent = 'Audiências Realizadas — '+audYears[0]+' a '+audYears[2];
-  _setFilterSummary('cp-aud3',[['Agrupamento','Ano da data de início'],['Naturezas','Todas']]);
   if(CH['chaud3']) CH['chaud3'].destroy();
   CH['chaud3'] = new Chart(document.getElementById('chaud3'), {
     type:'bar',
@@ -1960,7 +1959,6 @@ function _setFilterSummary(id, items, extra){
       'row-evolucao':   ['vis-evolucao',     hasProc],
       'row-mensal':     ['vis-mensal',       hasProc],
       'potencial-reducao-row':['vis-potencial-reducao', hasProc],
-      'aud-real-banner':['vis-aud-real',     hasAud],
       'aud-real-row':   ['vis-aud-real',     hasAud],
       'aud-real-wrap':  ['vis-aud-real',     hasAud],
       'serv-section':   ['vis-serv',         hasServ]
