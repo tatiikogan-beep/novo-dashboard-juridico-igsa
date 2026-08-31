@@ -376,9 +376,11 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
   <div id="aud-future-row" style="margin-bottom:12px"></div>
   <div class="sd"></div>
   <div id="serv-section">
-  <div class="sbn" style="background:var(--c7)"><h2>⚖️ Serviços Realizados</h2></div>
   <div class="cg c1" style="margin-bottom:12px">
-    <div class="cc"><div class="ct">Total de Serviços por Ano</div><div class="cp" id="cp-sy"></div><div class="ch" style="height:170px"><canvas id="chsy"></canvas></div></div>
+    <div class="cc">
+      <div id="banner-sy" style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px"></div>
+      <div class="ch" style="height:260px"><canvas id="chsy"></canvas></div>
+    </div>
   </div>
   <div id="rowserv"></div>
   </div><!-- /serv-section -->
@@ -1927,7 +1929,9 @@ function _setFilterSummary(id, items, extra){
 
   mkBar('chsy', syArr, syArr.map(function(y){return servY[y]||0;}), false,
     syArr.map(function(y){return y===refY?'#7E1F2C':'#E8A0A8';}));
-  _setFilterSummary('cp-sy',[['Agrupamento','Ano da data do cadastro'],['Ano de referência destacado','2026'],['Naturezas','Todas']]);
+  document.getElementById('banner-sy').innerHTML =
+    '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">⚖️ Total de Serviços por Ano</div>' +
+    '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Período: Histórico completo | Agrupamento: Ano da data do cadastro | Ano em destaque: '+refY+' | Naturezas: Todas</div>';
 
   if(sMulti && document.getElementById('chsc')){
     mkBar('chsc',
