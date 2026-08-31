@@ -240,6 +240,8 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
     <span class="cfg-grp">Processos</span>
     <label class="chk"><input type="checkbox" id="vis-evolucao" checked> Evolução Anual</label>
     <label class="chk"><input type="checkbox" id="vis-mensal" checked> Mês a Mês / Fase</label>
+    <span class="cfg-grp">Passivo</span>
+    <label class="chk"><input type="checkbox" id="vis-potencial-reducao" checked> Potencial de Redução</label>
     <span class="cfg-grp">Audiências</span>
     <label class="chk"><input type="checkbox" id="vis-aud-real" checked> Audiências Realizadas</label>
     <label class="chk"><input type="checkbox" id="vis-aud-fut" checked> Próximas Audiências e Perícias</label>
@@ -335,6 +337,10 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
   <div class="cg c2" id="row-mensal" style="margin-bottom:12px">
     <div class="cc"><div class="ct" id="ctcmp">—</div><div class="cp" id="cp-mensal"></div><div class="ch" style="height:200px"><canvas id="chcmp2"></canvas></div></div>
     <div class="cc"><div class="ct">Distribuição por Fase Processual</div><div class="cp" id="cp-fase"></div><div class="ch" style="height:200px"><canvas id="chfase"></canvas></div></div>
+  </div>
+  <div id="potencial-reducao-row" style="margin-bottom:12px">
+    <div class="sbn" style="background:var(--c7)"><h2>📉 Potencial de Redução</h2></div>
+    <div class="kr" id="kpi-potencial"></div>
   </div>
   <div id="aud-real-banner" class="sbn" style="background:var(--c7);margin-bottom:10px"><h2>📅 Audiências Realizadas</h2></div>
   <div id="aud-real-row" style="margin-bottom:12px">
@@ -1595,6 +1601,20 @@ function generate(){
   });
   var faseSort = Object.entries(faseC).sort(function(a,b){return b[1]-a[1];});
 
+  // ── Item 4: Potencial de Redução (Ativos+Suspensos, Tipo da probabilidade atual = Perda) ──
+  var potCausaTotal=0, potEnvolProvavel=0;
+  active.forEach(function(r){
+    var tipoProb=String(r['Tipo da probabilidade atual']||r['Tipo da Probabilidade Atual']||'').trim().toLowerCase();
+    var tipoN=tipoProb.normalize?tipoProb.normalize('NFD').replace(/[̀-ͯ]/g,''):tipoProb;
+    if(tipoN.indexOf('perda')<0) return;  // mantém apenas 'Perda'
+    potCausaTotal+=numBR(r['Valor da causa']);
+    var prob=String(r['Faixa de probabilidade atual']||r['Faixa de Probabilidade Atual']||'').trim();
+    var probN=(prob.normalize?prob.normalize('NFD').replace(/[̀-ͯ]/g,''):prob).toLowerCase();
+    if(probN.indexOf('prov')>=0) potEnvolProvavel+=numBR(r['Valor envolvido']);
+  });
+  var potReducaoValor=potCausaTotal-potEnvolProvavel;
+  var potReducaoPct=potCausaTotal>0?(potReducaoValor/potCausaTotal*100):0;
+
   // ── Item 5: Audiências últimos 3 anos ──
   var audYears = [refY-2, refY-1, refY];
   var audByYear = {};
@@ -1790,6 +1810,23 @@ function _setFilterSummary(id, items, extra){
       layout:{padding:{right:40}}}
   });
 
+  // ── Item 4: Potencial de Redução — render ──
+  (function(){
+    var row=document.getElementById('potencial-reducao-row');
+    if(!isVis('vis-potencial-reducao')){row.style.display='none';return;}
+    row.style.display='';
+    var fmt=function(v){
+      if(v>=1e9) return 'R$ '+(v/1e9).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' Bi';
+      if(v>=1e6) return 'R$ '+(v/1e6).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' Mi';
+      return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
+    };
+    var pctTxt=potReducaoPct.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';
+    document.getElementById('kpi-potencial').innerHTML =
+      kpiCard('c6','Valor da Causa',fmt(potCausaTotal),'Ativos e Suspensos · Perda') +
+      kpiCard('gd','Valor Envolvido',fmt(potEnvolProvavel),'Perda · Provável') +
+      kpiCard('c7','Potencial de Redução',pctTxt,fmt(potReducaoValor)+' de redução potencial');
+  })();
+
   // ── Item 5: Audiências últimos 3 anos ──
   document.getElementById('ctaud3').textContent = 'Audiências Realizadas — '+audYears[0]+' a '+audYears[2];
   _setFilterSummary('cp-aud3',[['Agrupamento','Ano da data de início'],['Naturezas','Todas']]);
@@ -1885,6 +1922,7 @@ function _setFilterSummary(id, items, extra){
     var map={
       'row-evolucao':   ['vis-evolucao',     hasProc],
       'row-mensal':     ['vis-mensal',       hasProc],
+      'potencial-reducao-row':['vis-potencial-reducao', hasProc],
       'aud-real-banner':['vis-aud-real',     hasAud],
       'aud-real-row':   ['vis-aud-real',     hasAud],
       'aud-real-wrap':  ['vis-aud-real',     hasAud],
