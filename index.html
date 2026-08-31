@@ -1726,7 +1726,13 @@ function _setFilterSummary(id, items, extra){
   var rtop = document.getElementById('rowtop');
   rtop.className = 'cg c2';
   rtop.innerHTML =
-    '<div class="cc"><div class="ct">Distribuição por Status</div><div class="cp" id="cp-status"></div><div class="ch" style="height:230px"><canvas id="chpie"></canvas></div></div>' +
+    '<div class="cc">' +
+      '<div style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px">' +
+        '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">📊 Distribuição por Status</div>' +
+        '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Status considerados: Ativos e Suspensos × Arquivados | Agrupamento: Status</div>' +
+      '</div>' +
+      '<div style="max-width:340px;margin:0 auto"><div class="ch" style="height:300px"><canvas id="chpie"></canvas></div></div>' +
+    '</div>' +
     '<div class="cc"><div class="ct">Processos Ativos por Natureza</div><div class="cp" id="cp-natureza"></div><div class="ch" style="height:230px"><canvas id="chnat"></canvas></div></div>';
   // Empresa em linha própria full-width (quando multi-cliente)
   if(multi){
@@ -1740,7 +1746,6 @@ function _setFilterSummary(id, items, extra){
   }
 
   // Resumos de filtros dos gráficos do topo
-  _setFilterSummary('cp-status',[['Status do processo','Ativos e Suspensos vs Arquivados'],['Agrupamento','Status']]);
   _setFilterSummary('cp-natureza',[['Status do processo','Ativos e Suspensos'],['Agrupamento','Natureza'],['Naturezas','Todas']]);
   if(multi) _setFilterSummary('cp-empresa',[['Status do processo','Ativos e Suspensos'],['Agrupamento','Empresa'],['Naturezas','Todas']]);
   // Draw charts
