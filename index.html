@@ -38,7 +38,7 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
 .dzs{font-size:.68rem;color:var(--mu);margin-top:2px}
 .dzst{font-size:.68rem;color:var(--c8);font-weight:700;margin-top:4px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .up3{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.up5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.up5{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
 .fld{margin-bottom:12px}
 .fld label{display:block;font-size:.72rem;font-weight:600;color:var(--mu);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
 .fld input{width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.86rem;color:var(--tx);background:#fff;transition:border-color .2s;outline:none}
@@ -183,11 +183,6 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
       <div class="dzi">📋</div><div class="dzl">Processos</div>
       <div class="dzs">.xlsx / .xls</div><div class="dzst" id="sp">Nenhum arquivo</div>
     </div>
-    <div class="dz" id="dz-serv">
-      <input type="file" accept=".xlsx,.xls" onchange="loadF(this,'serv')">
-      <div class="dzi">⚖️</div><div class="dzl">Serviços</div>
-      <div class="dzs">.xlsx / .xls</div><div class="dzst" id="ss">Nenhum arquivo</div>
-    </div>
     <div class="dz" id="dz-aud">
       <input type="file" accept=".xlsx,.xls" onchange="loadF(this,'aud')">
       <div class="dzi">🗓️</div><div class="dzl">Aud / Prazos / Perícias</div>
@@ -204,7 +199,7 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
     <input type="file" accept=".xlsx,.xls" onchange="loadF(this,'serv2')">
     <div style="font-size:1.5rem">🆕</div>
     <div style="flex:1"><div class="dzl">Planilha crua de Serviços (Portal IGSA / LegalOne)</div>
-    <div class="dzs">.xlsx / .xls — fonte separada; não altera a base nem os gráficos de "Serviços Realizados" já existentes</div>
+    <div class="dzs">.xlsx / .xls — planilha crua exportada do Portal IGSA / LegalOne</div>
     <div class="dzst" id="s2">Nenhum arquivo</div></div>
   </div>
   <div class="stl"><span class="sn">2</span>Logo do cliente / grupo</div>
@@ -233,14 +228,14 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
           <span class="cms-count" id="cms-count">0 selecionados</span>
         </div>
         <div class="cms-list" id="cms-list">
-          <div class="cms-empty">Carregue a planilha de Processos ou Serviços para listar os clientes.</div>
+          <div class="cms-empty">Carregue a planilha de Processos para listar os clientes.</div>
         </div>
       </div>
       <div id="cms-diag" style="font-size:.6rem;color:var(--mu);margin-top:5px;line-height:1.4"></div>
     </div>
     <small>💡 Deixe nenhum marcado para incluir todos os clientes.</small>
   </div>
-  <div class="fld"><label>Ano de referência dos serviços <em style="font-weight:300;text-transform:none">(opcional)</em></label>
+  <div class="fld"><label>Ano de referência do dashboard <em style="font-weight:300;text-transform:none">(opcional)</em></label>
     <input type="text" id="ayr" placeholder="Deixe em branco para usar o ano mais recente">
   </div>
   <div class="stl" style="margin-top:16px"><span class="sn">4</span>Seções do Dashboard</div>
@@ -253,8 +248,6 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
     <span class="cfg-grp">Audiências</span>
     <label class="chk"><input type="checkbox" id="vis-aud-real" checked> Audiências Realizadas</label>
     <label class="chk"><input type="checkbox" id="vis-aud-fut" checked> Próximas Audiências e Perícias</label>
-    <span class="cfg-grp">Outros</span>
-    <label class="chk"><input type="checkbox" id="vis-serv" checked> Serviços Realizados</label>
     <span class="cfg-grp">Nova Base de Serviços</span>
     <label class="chk"><input type="checkbox" id="vis-serv2" checked> Nova Análise de Serviços</label>
   </div>
@@ -314,7 +307,6 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
         <a onclick="showReport();closeRelDrop()">📄 Ver Relatório de Processos</a>
         <div class="reldrop-title">Exportar Planilhas Excel</div>
         <a onclick="exportXLS_proc();closeRelDrop()">⬇ Processos (.xls)</a>
-        <a onclick="exportXLS_serv();closeRelDrop()">⬇ Serviços (.xls)</a>
         <a onclick="exportXLS_aud();closeRelDrop()">⬇ Aud / Prazos / Perícias (.xls)</a>
         <a onclick="exportXLS_fut();closeRelDrop()">⬇ Aud. e Perícias Futuras (.xls)</a>
       </div>
@@ -388,15 +380,6 @@ h1,h2,.sf{font-family:'Libre Baskerville',serif}
   </div>
   <div id="aud-future-row" style="margin-bottom:12px"></div>
   <div class="sd"></div>
-  <div id="serv-section">
-  <div class="cg c1" style="margin-bottom:12px">
-    <div class="cc">
-      <div id="banner-sy" style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px"></div>
-      <div class="ch" style="height:260px"><canvas id="chsy"></canvas></div>
-    </div>
-  </div>
-  <div id="rowserv"></div>
-  </div><!-- /serv-section -->
   <div id="serv2-section" style="display:none">
     <div class="cg c1" style="margin-bottom:12px">
       <div class="cc">
@@ -1569,15 +1552,12 @@ function generate(){
   var warns = [];
 
   var procFld = getField(ST.proc, ['Cliente principal','cliente principal']);
-  var servFld = getField(ST.serv, ['Cliente principal','cliente principal']);
   var audFld  = ST.aud ? getField(ST.aud,  ['Cliente Processo','Cliente processo']) : null;
 
   if(clients && !procFld) warns.push('Campo "Cliente principal" não encontrado na planilha de Processos.');
-  if(clients && !servFld) warns.push('Campo "Cliente principal" não encontrado na planilha de Serviços.');
   if(ST.aud && clients && !audFld) warns.push('Campo "Cliente Processo" não encontrado na planilha de Audiências/Prazos.');
 
   var proc = !ST.proc ? [] : ((clients && procFld) ? filterClients(ST.proc, procFld, clients) : ST.proc);
-  var serv = !ST.serv ? [] : ((clients && servFld) ? filterClients(ST.serv, servFld, clients) : ST.serv);
   var aud  = ST.aud ? ((clients && audFld) ? filterClients(ST.aud, audFld, clients) : ST.aud) : [];
   var audfutFld = ST.audfut ? getField(ST.audfut, ['Cliente Processo','Cliente processo','Cliente principal']) : null;
   var audfut = ST.audfut ? ((clients && audfutFld) ? filterClients(ST.audfut, audfutFld, clients) : ST.audfut) : [];
@@ -1661,18 +1641,9 @@ function generate(){
     _setCp('cp-arcano','⚠ '+_diagMsg);
   }
 
-  // Services
-  // Detect date column name (old files use 'Data', new exports use 'Data do cadastro')
-  var servDateFld = (serv.length>0 && serv[0]['Data do cadastro']!==undefined) ? 'Data do cadastro' : 'Data';
-  var servY={};
-  serv.forEach(function(r){
-    var d=r[servDateFld]; if(!d) return;
-    var y=parseYear(d); if(y>=2012&&y<=2030) servY[y]=(servY[y]||0)+1;
-  });
-  var syArr = Object.keys(servY).map(Number).sort();
-  var refY = yrRaw ? parseInt(yrRaw) : (syArr[syArr.length-1] || new Date().getFullYear());
-  var refYCount = servY[refY] || 0;
-  if(refYCount===0 && serv.length>0) warns.push('Nenhum serviço encontrado para '+refY+'. Deixe o campo em branco para usar o ano mais recente.');
+  // Ano de referência do dashboard: ano mais recente com processos cadastrados, ou override manual
+  var regYArr = Object.keys(regY).map(Number).sort();
+  var refY = yrRaw ? parseInt(yrRaw) : (regYArr[regYArr.length-1] || new Date().getFullYear());
 
   // Audiências — separar realizadas (passado) / agendadas (futuro)
   var today=new Date(); today.setHours(0,0,0,0);
@@ -1751,72 +1722,11 @@ function generate(){
     if(audYears.indexOf(y)>=0 && String(r['Tipo']||'')==='Audiência') audByYear[y]=(audByYear[y]||0)+1;
   });
 
-  var sCompY={};
-  serv.forEach(function(r){
-    var d=r[servDateFld]; if(!d) return;
-    if(parseYear(d)!==refY) return;
-    var c=r[servFld||'Cliente principal']||'N/A'; sCompY[c]=(sCompY[c]||0)+1;
-  });
-  var sCYS = Object.entries(sCompY).sort(function(a,b){return b[1]-a[1];}).slice(0,8);
-
-  var sTipoY={};
-  serv.forEach(function(r){
-    var d=r[servDateFld]; if(!d) return;
-    if(parseYear(d)!==refY) return;
-    var t=uT(r['Tipo']);
-    if(t==null || t==='Atividade Interna' || t==='__DESCARTAR__') return;  // não mapeado ou descartado fica fora
-    sTipoY[t]=(sTipoY[t]||0)+1;
-  });
-  var sTYS = Object.entries(sTipoY).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
-  // Services by Natureza (refYear)
-  var sNatY={};
-  serv.forEach(function(r){
-    var d=r[servDateFld]; if(!d) return;
-    if(parseYear(d)!==refY) return;
-    var n=uNatFinal(r); if(n==='__DESCARTAR__') return; sNatY[n]=(sNatY[n]||0)+1;
-  });
-  var sNYS = Object.entries(sNatY).sort(function(a,b){return b[1]-a[1];}).slice(0,12);
-
-
   showWarns(warns);
 
   // Header
   document.getElementById('dtitle').textContent = title;
   document.getElementById('dsub').textContent = 'Dashboard de Governança Jurídica - Referência '+refY;
-  // Build services row dynamically — hide company chart for single client
-  var sMulti = sCYS.length > 1;
-  var rowserv = document.getElementById('rowserv');
-  rowserv.className = '';
-  // Empresa: full-width (linha própria). Atividades + Natureza: lado a lado (c2).
-  var compCard = sMulti
-    ? '<div class="cg c1" style="margin-bottom:12px"><div class="cc">' +
-        '<div id="banner-sc" style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px"></div>' +
-        '<div class="ch" style="height:340px"><canvas id="chsc"></canvas></div>' +
-      '</div></div>'
-    : '';
-  rowserv.innerHTML = compCard +
-    '<div class="cg c2">' +
-    '<div class="cc">' +
-      '<div id="banner-st" style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px"></div>' +
-      '<div class="ch" style="height:360px"><canvas id="chst"></canvas></div>' +
-    '</div>' +
-    '<div class="cc">' +
-      '<div id="banner-sn" style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r) var(--r) 0 0;margin:-16px -16px 16px;display:flex;flex-direction:column;gap:3px"></div>' +
-      '<div class="ch" style="height:360px"><canvas id="chsn"></canvas></div>' +
-    '</div>' +
-    '</div>';
-
-  if(sMulti){
-    document.getElementById('banner-sc').innerHTML =
-      '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">🏢 Total de Serviços por Empresa</div>' +
-      '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Base: Serviços | Ano de referência: '+refY+' | Agrupamento: Empresa | Naturezas: Todas</div>';
-  }
-  document.getElementById('banner-st').innerHTML =
-    '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">📋 10 Atividades Mais Executadas</div>' +
-    '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Base: Serviços | Ano de referência: '+refY+' | Ranking: 10 maiores | Agrupamento: Tipo de Serviço | Naturezas: Todas</div>';
-  document.getElementById('banner-sn').innerHTML =
-    '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">⚖️ Total de Serviços por Natureza</div>' +
-    '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Base: Serviços | Ano de referência: '+refY+' | Agrupamento: Natureza | Naturezas: Todas</div>';
   if(ST.logo){
     document.getElementById('clogoimg').src=ST.logo;
     document.getElementById('clogoimg').style.display='block';
@@ -1827,8 +1737,7 @@ function generate(){
   document.getElementById('kpi1').innerHTML =
     kpiCard('c7','Processos Ativos',active.length,'Ativos') +
     kpiCard('c8x','Processos Arquivados',archived.length,'Encerrados') +
-    kpiCard('c4','Total da Carteira',active.length+archived.length,'Ativos e Encerrados') +
-    kpiCard('gd','Serviços em '+refY,refYCount,'Serviços realizados');
+    kpiCard('c4','Total da Carteira',active.length+archived.length,'Ativos e Encerrados');
 
   var audLbl = ST.aud ? 'Realizadas em '+(new Date().getFullYear()) : 'Planilha não carregada';
   document.getElementById('kpi2').innerHTML =
@@ -2034,32 +1943,8 @@ function _setFilterSummary(id, items, extra){
     row.innerHTML=s;
   })();
 
-  mkBar('chsy', syArr, syArr.map(function(y){return servY[y]||0;}), false,
-    syArr.map(function(y){return y===refY?'#7E1F2C':'#E8A0A8';}));
-  document.getElementById('banner-sy').innerHTML =
-    '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">⚖️ Total de Serviços por Ano</div>' +
-    '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Período: Histórico completo | Agrupamento: Ano da data do cadastro | Ano em destaque: '+refY+' | Naturezas: Todas</div>';
-
-  if(sMulti && document.getElementById('chsc')){
-    mkBar('chsc',
-      sCYS.map(function(e){return e[0].length>22?e[0].substring(0,22)+'…':e[0];}),
-      sCYS.map(function(e){return e[1];}), true,
-      sCYS.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
-  }
-
-  mkBar('chst',
-    sTYS.map(function(e){return e[0];}),
-    sTYS.map(function(e){return e[1];}), true,
-    sTYS.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
-
-  mkBar('chsn',
-    sNYS.map(function(e){return e[0];}),
-    sNYS.map(function(e){return e[1];}), true,
-    sNYS.map(function(_,i){return COLORS[i]||COLORS[COLORS.length-1];}));
-
   // ══════════════════════════════════════════════════════════════
   // NOVA BASE DE SERVIÇOS — análise independente (fonte exclusiva: ST.serv2)
-  // Não reutiliza serv/servY/sCYS/sTYS/sNYS/refY da base de Serviços existente.
   // Reaplica as mesmas regras de classificação (uT/TAX, uNatFinal/NAT_MAP).
   // ══════════════════════════════════════════════════════════════
   (function(){
@@ -2167,21 +2052,19 @@ function _setFilterSummary(id, items, extra){
   })();
 
   window._rpt = {proc:proc, active:active, archived:archived, natSort:natSort, title:title, refY:refY, nAud:nAud, nPrz:nPrz, nPer:nPer,
-    serv:serv||[], aud:aud||[], audfut:audfut||[]};
+    aud:aud||[], audfut:audfut||[]};
 
   // Apply section visibility (checkbox E presença da planilha)
   (function(){
     var hasProc = !!(ST.proc && proc.length);
     var hasAud = !!(ST.aud && ST.aud.length);
-    var hasServ = !!(ST.serv && ST.serv.length);
     // mapa: id do bloco → [checkbox, condição de dados]
     var map={
       'row-evolucao':   ['vis-evolucao',     hasProc],
       'row-mensal':     ['vis-mensal',       hasProc],
       'potencial-reducao-row':['vis-potencial-reducao', hasProc],
       'aud-real-row':   ['vis-aud-real',     hasAud],
-      'aud-real-wrap':  ['vis-aud-real',     hasAud],
-      'serv-section':   ['vis-serv',         hasServ]
+      'aud-real-wrap':  ['vis-aud-real',     hasAud]
     };
     Object.keys(map).forEach(function(id){
       var el=document.getElementById(id); if(!el) return;
@@ -2297,23 +2180,6 @@ function exportXLS_proc(){
   hdrs=hdrs.filter(function(x){return present[x];});
   var tbl=_xlsGeneric(mapped,hdrs,d.title,'Processos Ativos');
   _xlsDl(new Blob(['\ufeff'+_xlsWrap(tbl)],{type:'application/vnd.ms-excel;charset=utf-8'}),_xlsName(d.title,'Processos'));
-}
-
-// ════ Serviços ════
-function exportXLS_serv(){
-  var d=window._rpt; if(!d||!d.serv||!d.serv.length){alert('Planilha de Serviços não carregada.');return;}
-  // adiciona colunas com a classificação validada (categoria PARA + natureza final)
-  var rows=d.serv.map(function(r){
-    var o={}; for(var k in r) o[k]=r[k];
-    var _cat=uT(r['Tipo']);
-    o['Categoria (classificada)']=(_cat==='__DESCARTAR__')?'(não usado)':(_cat||'(não mapeado)');
-    var _nat=uNatFinal(r);
-    o['Natureza (classificada)']=(_nat==='__DESCARTAR__')?'(não usado)':_nat;
-    return o;
-  });
-  var hdrs=Object.keys(rows[0]||{});
-  var tbl=_xlsGeneric(rows,hdrs,d.title,'Serviços');
-  _xlsDl(new Blob(['\ufeff'+_xlsWrap(tbl)],{type:'application/vnd.ms-excel;charset=utf-8'}),_xlsName(d.title,'Servicos'));
 }
 
 // ════ Aud / Prazos / Perícias ════
