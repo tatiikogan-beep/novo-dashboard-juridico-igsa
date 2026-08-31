@@ -1912,10 +1912,13 @@ function _setFilterSummary(id, items, extra){
         fAud++; if(dtz&&(!nextA||dtz<nextA)) nextA=new Date(dtz);
       }
     });
-    var s='<div class="sbn" style="background:var(--c7);margin-bottom:10px"><h2>📅 Audiências e Perícias Futuras</h2></div>';
+    var s='<div style="background:var(--c8);color:#fff;padding:12px 16px;border-radius:var(--r);margin-bottom:12px;display:flex;flex-direction:column;gap:3px">'+
+      '<div style="font-family:\'Libre Baskerville\',serif;font-size:1.05rem;font-weight:700;letter-spacing:.03em">📅 Audiências e Perícias Futuras</div>'+
+      '<div style="font-size:.68rem;color:var(--c2);line-height:1.4">Base: Pendentes | Agrupamento: Audiências e Perícias | Naturezas: Todas</div>'+
+    '</div>';
     s+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">';
-    s+='<div class="kp" style="border-top-color:var(--c7)"><div class="kl">AUDIÊNCIAS FUTURAS</div><div class="kv">'+fAud+'</div><div class="kd">Pendentes (agendadas)</div></div>';
-    s+='<div class="kp" style="border-top-color:var(--gd)"><div class="kl">PERÍCIAS FUTURAS</div><div class="kv">'+fPer+'</div><div class="kd">Pendentes (agendadas)</div></div>';
+    s+='<div class="kp" style="border-top-color:var(--c7)"><div class="kl">AUDIÊNCIAS FUTURAS</div><div class="kv">'+fAud+'</div><div class="kd">Pendentes • Agendadas</div></div>';
+    s+='<div class="kp" style="border-top-color:var(--gd)"><div class="kl">PERÍCIAS FUTURAS</div><div class="kv">'+fPer+'</div><div class="kd">Pendentes • Agendadas</div></div>';
     s+='<div class="kp" style="border-top-color:var(--c6)"><div class="kl">PRÓXIMA AUDIÊNCIA</div>';
     s+='<div class="kv" style="font-size:1.25rem;color:var(--c7)">'+fmtD(nextA)+'</div>';
     s+='<div class="kd">Data mais próxima</div></div>';
@@ -1923,11 +1926,7 @@ function _setFilterSummary(id, items, extra){
     s+='<div class="kv" style="font-size:1.25rem;color:var(--c7)">'+fmtD(nextP)+'</div>';
     s+='<div class="kd">Data mais próxima</div></div>';
     s+='</div>';
-    // Título (faixa vinho) ACIMA do resumo dos filtros
-    var _titBanner='<div class="sbn" style="background:var(--c7);margin-bottom:10px"><h2>📅 Audiências e Perícias Futuras</h2></div>';
-    var _sNoBanner=s.replace(_titBanner,'');
-    row.innerHTML=_titBanner+'<div class="cp" id="cp-futuras"></div>'+_sNoBanner;
-    _setFilterSummary('cp-futuras',[['Base','Audiências e Perícias Futuras (pendentes)'],['Agrupamento','Tipo (Audiência · Perícia)'],['Naturezas','Todas']]);
+    row.innerHTML=s;
   })();
 
   mkBar('chsy', syArr, syArr.map(function(y){return servY[y]||0;}), false,
